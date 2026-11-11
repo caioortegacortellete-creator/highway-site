@@ -18,8 +18,10 @@
   --magenta: #ef3df5;
   --wpp: #25d366;
   --rastro: linear-gradient(90deg, var(--ciano), var(--azul) 38%, var(--roxo) 68%, var(--magenta));
-  --f-titulo: "Archivo", "Arial Black", system-ui, sans-serif;
-  --f-texto: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-titulo: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-texto: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-marca: "Archivo", "Arial Black", system-ui, sans-serif;
+  --f-serifa: "Instrument Serif", Georgia, serif;
   --f-km: "JetBrains Mono", ui-monospace, "Consolas", monospace;
   --c: 14px;
   --chanfro: polygon(var(--c) 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%, 0 var(--c));
@@ -806,3 +808,61 @@ h1 em, h2 em, h3 em { filter: drop-shadow(0 0 16px rgba(179, 80, 255, .5)); }
 .mensal-op p { color: var(--neblina); font-size: 14.5px; line-height: 1.45; }
 @media (max-width: 860px) { .mensal { grid-template-columns: 1fr; } }
 @media (max-width: 520px) { .mensal-opcoes { grid-template-columns: 1fr; } }
+
+/* =========================================================
+   REFINO: tipografia mais leve e topo mais limpo
+   Títulos em Plus Jakarta Sans (seminegrito, sem esticar),
+   destaques em Instrument Serif itálica com o degradê da marca.
+   O nome HIGHWAY continua em Archivo largo.
+   ========================================================= */
+body { font-size: 16.5px; }
+.marca span, .abertura-logo span, .hc-marca strong, .marca-gigante text { font-family: var(--f-marca); }
+
+/* títulos grandes */
+.hero h1, .cab h2, .titulo-grande, .niveis-txt h2, .manifesto-texto { font-stretch: 100%; font-weight: 600; letter-spacing: -.035em; }
+.hero h1 { font-size: clamp(36px, 4.6vw, 64px); line-height: 1.05; }
+.cab h2, .niveis-txt h2 { font-size: clamp(30px, 3.8vw, 50px); line-height: 1.08; }
+.titulo-grande { font-size: clamp(36px, 4.9vw, 66px); line-height: 1.04; }
+.manifesto-texto { font-weight: 500; font-size: clamp(25px, 3.3vw, 44px); line-height: 1.24; letter-spacing: -.025em; max-width: 27ch; }
+
+/* destaque em serifa itálica */
+h1 em, h2 em, .hist-legenda em, .quiz-resultado h3 em { font-family: var(--f-serifa); font-style: italic; font-weight: 400; letter-spacing: -.005em; font-size: 1.12em; line-height: .9; padding-right: .08em; filter: drop-shadow(0 0 12px rgba(179, 80, 255, .3)); }
+.hero h1 em { filter: drop-shadow(0 0 14px rgba(255, 61, 242, .3)); }
+.js .hero h1 .pal:last-child em { animation: corre 7s linear infinite; }
+.hist-legenda { font-weight: 600; letter-spacing: -.02em; }
+
+/* títulos médios e números */
+.plano h3, .painel h3, .passo h3, .cf-info h3, .visor-txt h3, .mensal-op h3, .quiz-etapa legend, .quiz-resultado h3 { font-stretch: 100%; font-weight: 700; letter-spacing: -.02em; }
+.plano h3 { font-size: 26px; }
+.preco .valor, .mensal-preco, .hc-metrica strong { font-stretch: 100%; font-weight: 700; letter-spacing: -.035em; }
+.preco .valor { text-shadow: none; }
+.plano.destaque .preco .valor { text-shadow: 0 0 22px rgba(255, 61, 242, .35); }
+.esteira-trilho span { font-stretch: 100%; font-weight: 600; letter-spacing: -.02em; }
+.passo-marco, .nivel, .cf-nv b, .cf-selo { font-stretch: 100%; font-weight: 700; }
+
+/* rótulos de KM mais discretos */
+.km { font-size: 11.5px; letter-spacing: .12em; gap: 10px; color: var(--neblina); }
+.km b { padding: 4px 8px; font-weight: 500; color: var(--neon-c); background: rgba(41, 236, 255, .06); box-shadow: inset 0 0 0 1px rgba(41, 236, 255, .45); text-shadow: none; }
+
+/* topo mais limpo */
+.hero-txt { gap: 22px; }
+.hero-sub { font-size: clamp(16.5px, 1.3vw, 18px); line-height: 1.65; color: var(--texto); max-width: 44ch; }
+.selos { font-size: 13.5px; gap: 8px 20px; }
+.selos li { gap: 8px; }
+.selos li::before { width: 5px; height: 5px; border-radius: 50%; background: var(--neon-c); box-shadow: 0 0 6px rgba(41, 236, 255, .7); }
+.ctas { filter: none; }
+.btn { font-weight: 600; letter-spacing: -.01em; }
+.btn.p { text-shadow: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25); }
+.hero-estrada { opacity: .7; }
+.hero::before { background: linear-gradient(90deg, rgba(6, 8, 22, .96) 0%, rgba(6, 8, 22, .78) 36%, rgba(6, 8, 22, .12) 62%, rgba(6, 8, 22, 0) 75%), linear-gradient(0deg, var(--asfalto) 0%, rgba(6, 8, 22, 0) 18%); }
+@media (max-width: 900px) {
+  .hero::before { background: linear-gradient(180deg, rgba(6, 8, 22, .88) 0%, rgba(6, 8, 22, .62) 45%, rgba(6, 8, 22, .3) 72%, var(--asfalto) 100%); }
+}
+
+/* textos de apoio um pouco mais leves */
+.cab p, .niveis-txt > p, .destino-txt > p { line-height: 1.65; }
+.menu a, .btn-topo { letter-spacing: -.01em; }
+.hero h1, .cab h2, .titulo-grande, .niveis-txt h2 { letter-spacing: -.03em; word-spacing: .07em; }
+.manifesto-texto { word-spacing: .05em; }
+body { word-spacing: .04em; }
+.btn, .menu a, .btn-topo { letter-spacing: 0; }
