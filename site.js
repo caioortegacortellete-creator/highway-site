@@ -298,9 +298,35 @@
     hero.addEventListener("pointerleave", () => { alvoX = alvoY = 0; if (moldura) { ry(BASE_Y); rx(BASE_X); } });
   }
   if (animar) {
-    gsap.to(".hero-txt", { y: -80, opacity: 0.2, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
-    gsap.to(".historia", { y: 60, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
-    ScrollTrigger.create({ trigger: hero, start: "top top", end: "bottom top", onUpdate: (s) => { velExtra = Math.min(3, Math.abs(s.getVelocity()) / 900); } });
+    /* passagem do topo para a rodovia: o topo segura em tela cheia, o conteúdo sai,
+       as faixas de velocidade aceleram, "PÉ NA ESTRADA" passa pela câmera e a rodovia assume */
+    const veuP = $(".estrada-veu");
+    const passagem = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: hero, pin: true, scrub: 0.7, anticipatePin: 1,
+        start: () => (hero.offsetHeight > window.innerHeight + 4 ? "bottom bottom" : "top top"),
+        end: () => "+=" + Math.round(window.innerHeight * (window.innerWidth > 900 ? 1.35 : 1.0)),
+        invalidateOnRefresh: true,
+        onUpdate: (s) => {
+          const p = s.progress;
+          if (window.HighwayEstrada && window.HighwayEstrada.impulso) window.HighwayEstrada.impulso(Math.sin(Math.PI * clamp((p - 0.15) / 0.8, 0, 1)));
+          if (veuP) veuP.style.setProperty("--veu", (0.12 + clamp((p - 0.78) / 0.22, 0, 1) * 0.34).toFixed(3));
+        }
+      }
+    });
+    passagem
+      .fromTo(".hero-txt", { y: 0, opacity: 1, filter: "blur(0px)" }, { y: -140, opacity: 0, filter: "blur(12px)", duration: 0.32, ease: "power2.in" }, 0)
+      .fromTo(".historia", { x: 0, opacity: 1, rotationY: 0, filter: "blur(0px)" }, { x: 260, opacity: 0, rotationY: -40, filter: "blur(10px)", duration: 0.32, ease: "power2.in" }, 0.02)
+      .fromTo(hero, { "--hero-veu": 1 }, { "--hero-veu": 0, duration: 0.3 }, 0.08)
+      .fromTo(".hero-passagem", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12 }, 0.22)
+      .fromTo(".hp-riscos", { scale: 0.45, opacity: 0, rotation: 0 }, { scale: 1.5, opacity: 1, rotation: 12, duration: 0.5 }, 0.22)
+      .fromTo(".hp-faixas i", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, stagger: 0.03, duration: 0.25, ease: "power2.out" }, 0.26)
+      .fromTo(".hp-frase", { scale: 0.3, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.26, ease: "power3.out" }, 0.3)
+      .to(".hp-frase", { scale: 4.2, opacity: 0, filter: "blur(8px)", duration: 0.26, ease: "power2.in" }, 0.66)
+      .to(".hp-faixas i", { scaleY: 2.4, opacity: 0, duration: 0.2 }, 0.74)
+      .to(".hp-riscos", { scale: 2.4, opacity: 0, duration: 0.2 }, 0.78)
+      .to(".hero-passagem", { autoAlpha: 0, duration: 0.06 }, 0.94);
   }
 
   /* ---------- KM 02 · caminho do cliente ---------- */
@@ -326,23 +352,25 @@
     const mm = gsap.matchMedia();
     mm.add("(min-width: 1081px)", () => {
       const cenas = $$(".cena");
-      gsap.set(cenas, { opacity: 0.18, y: 40, "--prog": 0 });
+      gsap.set(cenas, { opacity: 0.22, y: 40, "--prog": 0, "--aceso": 0 });
       const tl = gsap.timeline({ scrollTrigger: { trigger: ".caminho", start: "top top", end: "+=220%", pin: true, scrub: 0.8, anticipatePin: 1 } });
       tl.from(".caminho .cab", { y: 40, opacity: 0, duration: 0.6 });
       cenas.forEach((cena, k) => {
         tl.to(cena, { opacity: 1, y: 0, duration: 0.6 }, k === 0 ? ">-0.2" : ">")
-          .to(cena, { "--prog": 1, duration: 0.6, ease: "none" }, "<");
+          .to(cena, { "--prog": 1, duration: 0.6, ease: "none" }, "<")
+          .to(cena, { "--aceso": 1, duration: 0.35, ease: "power2.out" }, "<0.25");
         if (k === 1) tl.from(".resultado.vazio", { scale: 0.85, opacity: 0, duration: 0.4, ease: "back.out(2)" }, "<0.2");
         if (k === 2) tl.from(".cena-site img", { scale: 1.3, rotation: -4, opacity: 0, duration: 0.6 }, "<");
         if (k === 3) tl.from(".balao", { y: 24, opacity: 0, stagger: 0.25, duration: 0.4 }, "<0.1");
-        if (k < cenas.length - 1) tl.to(cena, { opacity: 0.55, duration: 0.4 }, ">");
+        tl.to({}, { duration: 0.25 });
       });
-      tl.to(cenas, { opacity: 1, duration: 0.4 });
+      tl.to(cenas, { scale: 1.02, duration: 0.25, yoyo: true, repeat: 1, stagger: 0.05 });
       return () => gsap.set(cenas, { clearProps: "all" });
     });
     mm.add("(max-width: 1080px)", () => {
       $$(".cena").forEach((cena) => {
         entrar(cena, { y: 50, opacity: 0, duration: 0.8, scrollTrigger: { trigger: cena, start: "top 85%" } });
+        gsap.fromTo(cena, { "--aceso": 0 }, { "--aceso": 1, duration: 0.8, delay: 0.3, scrollTrigger: { trigger: cena, start: "top 70%" } });
         const baloes = $$(".balao", cena);
         if (baloes.length) entrar(baloes, { y: 20, opacity: 0, stagger: 0.3, duration: 0.5, scrollTrigger: { trigger: cena, start: "top 70%" } });
       });
@@ -840,10 +868,6 @@
       gsap.fromTo(t, { rotationX: 38, z: -120, opacity: 0, transformPerspective: 900, transformOrigin: "50% 100%" },
         { rotationX: 0, z: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: t, start: "top 90%" } });
     });
-  }
-  const veu = $(".estrada-veu");
-  if (veu && temGSAP) {
-    ScrollTrigger.create({ trigger: "#hero", start: "top top", end: "bottom 40%", scrub: true, onUpdate: (s) => veu.style.setProperty("--veu", (0.12 + s.progress * 0.46).toFixed(3)) });
   }
 
   /* ---------- menu marca a seção atual ---------- */

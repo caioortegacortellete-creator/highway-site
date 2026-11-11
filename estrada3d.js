@@ -473,6 +473,7 @@
   };
 
   /* ---------- câmera ---------- */
+  let impulso = 0;
   let dCam = 6, dAntes = 6, vel = 0, mx = 0, my = 0, alvoMx = 0, alvoMy = 0, tempo = 0;
   window.addEventListener("pointermove", (e) => { alvoMx = e.clientX / window.innerWidth - 0.5; alvoMy = e.clientY / window.innerHeight - 0.5; }, { passive: true });
   const olhar = new THREE.Vector3();
@@ -485,7 +486,7 @@
     let curva = f.h - atras.h;
     cam.rotateZ(clamp(-curva * 0.9, -0.12, 0.12));
     ceu.position.set(pos.x, 0, pos.z);
-    const fov = 62 + clamp(Math.abs(vel) * 0.55, 0, 14);
+    const fov = 62 + clamp(Math.abs(vel) * 0.55, 0, 14) + impulso * 24;
     if (Math.abs(cam.fov - fov) > 0.05) { cam.fov += (fov - cam.fov) * 0.12; cam.updateProjectionMatrix(); }
   };
 
@@ -520,5 +521,5 @@
   if (window.gsap) window.gsap.ticker.add(quadro);
   else { const loop = () => { quadro(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
 
-  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL };
+  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); } };
 })();
