@@ -900,3 +900,56 @@ body { word-spacing: .04em; }
 .abertura { z-index: 150; }
 .pm-txt { font-size: clamp(22px, min(2.6vw, 6.8vw), 35px); white-space: nowrap; }
 .pm-lista a { align-items: center; }
+
+/* =========================================================
+   TOPO EM TELA CHEIA, LOGO CENTRAL E QUADRO EM 3D
+   ========================================================= */
+/* linha do alto: Instagram · logo no centro · conversar */
+.topo-int { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+.topo-insta { justify-self: start; display: inline-flex; align-items: center; gap: 9px; color: var(--neblina); text-decoration: none; font-family: var(--f-km); font-size: 12px; letter-spacing: .08em; transition: color .3s; }
+.topo-insta i { width: 7px; height: 7px; border-radius: 50%; background: var(--neon-m); box-shadow: 0 0 10px var(--neon-m); }
+.topo-insta:hover { color: var(--faixa); }
+.btn-conversar { justify-self: end; }
+.marca-centro { position: relative; justify-self: center; gap: 13px; padding: 0 64px; }
+.marca-centro::before, .marca-centro::after { content: ""; position: absolute; top: 50%; width: 48px; height: 1px; }
+.marca-centro::before { left: 0; background: linear-gradient(90deg, transparent, var(--neon-c)); box-shadow: 0 0 8px var(--neon-c); }
+.marca-centro::after { right: 0; background: linear-gradient(90deg, var(--neon-m), transparent); box-shadow: 0 0 8px var(--neon-m); }
+.marca-centro img { width: 40px; height: 40px; filter: drop-shadow(0 0 10px rgba(123, 45, 255, .8)) drop-shadow(0 0 22px rgba(41, 236, 255, .35)); transition: transform .6s var(--ease); }
+.marca-centro:hover img { transform: rotate(-8deg) scale(1.06); }
+.marca-centro span { font-size: 17px; letter-spacing: .3em; text-shadow: 0 0 18px rgba(179, 80, 255, .45); }
+.marca-centro small { letter-spacing: .62em; }
+@media (max-width: 900px) {
+  .topo-int { grid-template-columns: auto 1fr; }
+  .topo-insta { display: none; }
+  .marca-centro { justify-self: start; padding: 0; }
+  .marca-centro::before, .marca-centro::after { display: none; }
+}
+
+/* topo ocupa a tela inteira e recua ao rolar */
+.hero { --hero-escurece: 0; min-height: 100vh; min-height: 100svh; padding-block: calc(var(--topo-h) + 20px) 80px; transform-origin: 50% 30%; will-change: transform; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: #04050e; opacity: var(--hero-escurece); border-radius: inherit; }
+@media (max-width: 900px) { .hero { min-height: 100svh; padding-bottom: 70px; } }
+
+/* quadro da história em 3D: placa inclinada com espessura e camadas em profundidade */
+.historia { perspective: 1300px; perspective-origin: 30% 40%; }
+.historia::after { content: ""; position: absolute; left: 6%; right: 6%; bottom: -34px; height: 70px; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, rgba(179, 80, 255, .45), rgba(41, 236, 255, .12) 60%, transparent); filter: blur(14px); }
+.hist-moldura { overflow: visible; backdrop-filter: none; -webkit-backdrop-filter: none; transform-style: preserve-3d; transform: rotateY(-10deg) rotateX(7deg); background: linear-gradient(160deg, rgba(16, 19, 50, .96), rgba(8, 10, 28, .97)); box-shadow: inset 0 0 0 1px rgba(150, 170, 255, .18), inset 0 0 60px rgba(123, 45, 255, .12), 30px 50px 90px -30px rgba(0, 0, 0, .9), 0 0 60px -10px rgba(123, 45, 255, .45); }
+.hist-moldura::after { content: ""; position: absolute; inset: 0; border-radius: inherit; transform: translateZ(-22px); background: linear-gradient(160deg, #0d1035, #05060f); box-shadow: 0 0 0 1px rgba(41, 236, 255, .35), 0 0 30px rgba(41, 236, 255, .25), 0 0 0 1px rgba(255, 61, 242, .2) inset; pointer-events: none; }
+.hist-grade { border-radius: inherit; transform: translateZ(1px); }
+.hist-palco { transform: translateZ(46px); transform-style: preserve-3d; }
+.hist-legenda { transform: translateZ(72px); text-shadow: 0 10px 30px rgba(0, 0, 0, .6); }
+.hist-moldura::before { transform: translateZ(2px); }
+.hc { border-radius: 14px; }
+.hc-search, .hc-voce, .hc-msg, .hc-proj img, .hs-wpp { box-shadow: 0 18px 30px -16px rgba(0, 0, 0, .8); }
+.hc-search { box-shadow: inset 0 0 0 1px rgba(41, 236, 255, .45), 0 0 22px rgba(41, 236, 255, .18), 0 18px 30px -16px rgba(0, 0, 0, .8); }
+.hist-rota { transform: perspective(900px) rotateX(48deg); transform-origin: 50% 0; margin-top: 10px; }
+@media (max-width: 900px) {
+  .hist-moldura { transform: rotateY(-7deg) rotateX(6deg); }
+  .hist-palco { transform: translateZ(30px); }
+  .hist-legenda { transform: translateZ(46px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero { transform: none !important; }
+}
+.hist-palco { transform: translateZ(32px); }
+.hist-legenda { transform: translateZ(48px); }

@@ -39,7 +39,7 @@
   /* ---------- rolagem suave (Lenis, só no computador) ---------- */
   let lenis = null;
   if (animar && fino && window.Lenis) {
-    lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1 });
+    lenis = new Lenis({ lerp: 0.075, wheelMultiplier: 0.95, smoothWheel: true });
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
@@ -503,18 +503,22 @@
   /* inclinação suave da história e a avenida seguindo o mouse */
   if (animar && fino && hero) {
     const moldura = $(".hist-moldura");
-    const rx = moldura && gsap.quickTo(moldura, "rotationX", { duration: 0.9 }), ry = moldura && gsap.quickTo(moldura, "rotationY", { duration: 0.9 });
+    const BASE_Y = -16, BASE_X = 8;
+    if (moldura) gsap.set(moldura, { rotationY: BASE_Y, rotationX: BASE_X });
+    const rx = moldura && gsap.quickTo(moldura, "rotationX", { duration: 1.1, ease: "power3.out" }), ry = moldura && gsap.quickTo(moldura, "rotationY", { duration: 1.1, ease: "power3.out" });
     hero.addEventListener("pointermove", (e) => {
       const r = hero.getBoundingClientRect();
       alvoX = (e.clientX - r.left) / r.width - 0.5;
       alvoY = (e.clientY - r.top) / r.height - 0.5;
-      if (moldura) { ry(alvoX * 8); rx(-alvoY * 6); }
+      if (moldura) { ry(BASE_Y + alvoX * 18); rx(BASE_X - alvoY * 12); }
     });
-    hero.addEventListener("pointerleave", () => { alvoX = alvoY = 0; if (moldura) { ry(0); rx(0); } });
+    hero.addEventListener("pointerleave", () => { alvoX = alvoY = 0; if (moldura) { ry(BASE_Y); rx(BASE_X); } });
   }
   if (animar) {
     gsap.to(".hero-txt", { y: -80, opacity: 0.2, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
     gsap.to(".historia", { y: 60, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
+    /* ao sair do topo em tela cheia, ele recua como um cartão de cantos arredondados */
+    gsap.fromTo(hero, { scale: 1, borderRadius: 0, "--hero-escurece": 0 }, { scale: 0.9, borderRadius: 36, "--hero-escurece": 0.55, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
     ScrollTrigger.create({ trigger: hero, start: "top top", end: "bottom top", onUpdate: (s) => { velExtra = Math.min(3, Math.abs(s.getVelocity()) / 900); } });
   }
 
