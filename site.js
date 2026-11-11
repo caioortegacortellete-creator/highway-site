@@ -622,9 +622,9 @@
 
   /* ---------- KM 04 · portfólio em carrossel 3D por nível + visor com o site de verdade ---------- */
   const NIVEIS = {
-    1: { nome: "Nível 1 · Essencial", txt: "Uma página direta, rápida no celular, com botão de WhatsApp e mapa. A partir de R$ 597." },
-    2: { nome: "Nível 2 · Profissional", txt: "Mais seções para passar confiança: equipe, galeria, avaliações, perguntas e formulário. A partir de R$ 997." },
-    3: { nome: "Nível 3 · Premium", txt: "Topo interativo, teste que indica o serviço, agendamento e páginas por serviço. A partir de R$ 1.297." }
+    1: { nome: "Nível 1 · Essencial", txt: "Uma página direta, rápida no celular, com botão de WhatsApp e mapa. A partir de R$ 597,90." },
+    2: { nome: "Nível 2 · Profissional", txt: "Mais seções para passar confiança: equipe, galeria, avaliações, perguntas e formulário. A partir de R$ 997,90." },
+    3: { nome: "Nível 3 · Premium", txt: "Topo interativo, teste que indica o serviço, agendamento e páginas por serviço. A partir de R$ 1.297,90." }
   };
   const cf = $("#coverflow");
   let visorAberto = false, fecharVisor = () => {};
@@ -866,10 +866,10 @@
   if (animar) {
     entrar(".planos .cab > *", { y: 30, opacity: 0, stagger: 0.08, duration: 0.8, scrollTrigger: { trigger: ".planos", start: "top 75%" } });
     entrar(".plano", { y: 90, opacity: 0, rotationX: 14, stagger: 0.14, duration: 1.1, ease: "power4.out", scrollTrigger: { trigger: ".planos-grade", start: "top 82%" } });
-    const fmt = (n) => "R$ " + n.toLocaleString("pt-BR");
+    const fmt = (n) => "R$ " + n.toLocaleString("pt-BR") + '<span class="cent">,90</span>';
     $$(".preco .valor").forEach((el) => {
       const alvo = +el.dataset.valor, obj = { v: 0 };
-      gsap.to(obj, { v: alvo, duration: 1.6, ease: "power2.out", onUpdate: () => { el.textContent = fmt(Math.round(obj.v)); }, scrollTrigger: { trigger: el, start: "top 88%" } });
+      gsap.to(obj, { v: alvo, duration: 1.6, ease: "power2.out", onUpdate: () => { el.innerHTML = fmt(Math.round(obj.v)); }, scrollTrigger: { trigger: el, start: "top 88%" } });
     });
   }
 
@@ -982,7 +982,11 @@
     entrar("#pino", { y: -160, opacity: 0, duration: 1.3, ease: "bounce.out", scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     entrar(".destino-txt > *:not(#pino)", { y: 40, opacity: 0, stagger: 0.1, duration: 0.9, delay: 0.2, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     entrar(".formulario", { x: 60, opacity: 0, duration: 1.1, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
-    entrar(".marca-gigante span", { yPercent: 100, opacity: 0, stagger: 0.06, duration: 1, ease: "power4.out", scrollTrigger: { trigger: ".rodape", start: "top 92%" } });
+    const letras = $$(".marca-gigante tspan");
+    gsap.set(letras, { strokeOpacity: 0.06 });
+    gsap.timeline({ scrollTrigger: { trigger: ".rodape", start: "top 85%" } })
+      .to(letras, { keyframes: [{ strokeOpacity: 1, duration: 0.05 }, { strokeOpacity: 0.15, duration: 0.07 }, { strokeOpacity: 1, duration: 0.06 }, { strokeOpacity: 0.4, duration: 0.05 }, { strokeOpacity: 1, duration: 0.12 }], stagger: 0.13 })
+      .fromTo(".marca-gigante svg", { y: 30 }, { y: 0, duration: 1.2, ease: "power3.out" }, 0);
   }
   const form = $("#formulario");
   if (form) {
