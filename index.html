@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Highway Agência | Sites sob medida que levam clientes ao seu WhatsApp</title>
+<meta name="description" content="Sites sob medida para negócios locais, feitos para o celular e para aparecer no Google. Três planos a partir de R$ 597 + R$ 80/mês com domínio e hospedagem inclusos, sem fidelidade.">
+<meta name="theme-color" content="#060816">
+<link rel="icon" type="image/png" href="imagens/favicon.png">
+<link rel="apple-touch-icon" href="imagens/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Highway Agência">
+<meta property="og:title" content="Highway Agência | Sites que levam clientes ao seu WhatsApp">
+<meta property="og:description" content="Sites sob medida para negócios locais. A partir de R$ 597 + R$ 80/mês, domínio e hospedagem inclusos, sem fidelidade.">
+<meta property="og:image" content="imagens/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<script>try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches&&sessionStorage.getItem("hw-abertura")!=="1")document.documentElement.classList.add("js-abertura")}catch(e){}</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Highway Agência",
+  "description": "Criação de sites sob medida para negócios locais, com foco em celular, Google e WhatsApp.",
+  "telephone": "+55 43 98412-4448",
+  "image": "imagens/logo-h-512.webp",
+  "sameAs": ["https://www.instagram.com/highwayagencia/"],
+  "priceRange": "R$ 597 - R$ 1.297",
+  "makesOffer": [
+    {"@type": "Offer", "name": "Site Nível 1 · Essencial", "price": "597", "priceCurrency": "BRL"},
+    {"@type": "Offer", "name": "Site Nível 2 · Profissional", "price": "997", "priceCurrency": "BRL"},
+    {"@type": "Offer", "name": "Site Nível 3 · Premium", "price": "1297", "priceCurrency": "BRL"}
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- Abertura (só na primeira visita; desligar em site.js -> ABERTURA) -->
+<div class="abertura" id="abertura" aria-hidden="true">
+  <div class="abertura-velocidade"></div>
+  <div class="abertura-logo">
+    <img src="imagens/logo-h.webp" alt="" width="120" height="120">
+    <span>HIGHWAY</span>
+  </div>
+  <div class="abertura-cortina c1"></div><div class="abertura-cortina c2"></div>
+</div>
+
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<!-- Avenida que acompanha a página (bordas neon, faixas, guard-rail e postes) -->
+<div class="avenida" id="avenida" aria-hidden="true">
+  <i class="av-guarda esq"></i><i class="av-guarda dir"></i>
+  <i class="av-borda esq"></i><i class="av-borda dir"></i>
+  <i class="av-faixa esq"></i><i class="av-faixa dir"></i>
+  <div class="av-postes" id="avPostes"></div>
+</div>
+<div class="carro" id="carro" aria-hidden="true">
+  <svg viewBox="0 0 30 56"><rect class="lataria" x="3" y="3" width="24" height="50" rx="9"/><path class="vidro" d="M7 34h16l-2 7H9z"/><path class="vidro" d="M8 15h14l-1.5-5h-11z"/><rect class="farois" x="6" y="49" width="6" height="3" rx="1.5"/><rect class="farois" x="18" y="49" width="6" height="3" rx="1.5"/><rect class="lanternas" x="6" y="4" width="6" height="2.5" rx="1.2"/><rect class="lanternas" x="18" y="4" width="6" height="2.5" rx="1.2"/></svg>
+</div>
+
+<header class="topo-fixo" id="topoFixo">
+  <div class="faixa-int">
+    <a class="marca" href="#inicio" aria-label="Highway Agência, voltar ao início">
+      <img src="imagens/logo-h.webp" alt="" width="34" height="34">
+      <span>HIGHWAY</span>
+    </a>
+    <nav class="menu" id="menu" aria-label="Seções do site">
+      <a href="#portfolio">Portfólio</a>
+      <a href="#planos">Planos</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#duvidas">Dúvidas</a>
+      <a class="menu-wpp" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener">Falar no WhatsApp</a>
+    </nav>
+    <div class="topo-dir">
+      <span class="status"><i></i>Agenda aberta para dezembro</span>
+      <a class="btn s mag so-desk" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <button class="hamburguer" id="hamburguer" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="inicio">
+
+  <!-- KM 01 · TOPO -->
+  <section class="hero" id="hero" aria-labelledby="hero-titulo">
+    <canvas class="hero-estrada" id="heroEstrada" aria-hidden="true"></canvas>
+    <div class="faixa-int hero-grade">
+      <div class="hero-txt">
+        <span class="km"><b>KM 01</b> Sites sob medida para negócios locais</span>
+        <h1 id="hero-titulo" class="divide-palavras">Seu site pronto para levar clientes <em>direto ao seu WhatsApp.</em></h1>
+        <p class="hero-sub">Três planos, preço fechado e nenhum template. Cada site é desenhado do zero para o seu negócio e funciona perfeito no celular.</p>
+        <div class="ctas">
+          <a class="btn p mag" href="#planos">Ver os planos
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn s mag" href="#portfolio">Ver portfólio</a>
+        </div>
+        <ul class="selos">
+          <li>Domínio e hospedagem inclusos</li>
+          <li>Sem fidelidade</li>
+          <li>A partir de R$ 597</li>
+        </ul>
+      </div>
+      <div class="vitrine" id="vitrine" aria-hidden="true">
+        <div class="navegador" id="navegador">
+          <div class="barra"><i></i><i></i><i></i><span id="vitrineUrl">clinica-alba.com.br</span></div>
+          <div class="tela">
+            <img class="ativa" src="imagens/prints/estetica-n3-inteiro.webp" alt="" data-url="clinica-alba.com.br">
+            <img src="imagens/prints/advocacia-n2-inteiro.webp" alt="" data-url="rafaelduarte.adv.br" loading="lazy">
+            <img src="imagens/prints/otica-n2-inteiro.webp" alt="" data-url="oticamirante.com.br" loading="lazy">
+          </div>
+        </div>
+        <div class="celular" id="celular">
+          <div class="tela">
+            <img class="ativa" src="imagens/prints/estetica-n3-celular.webp" alt="">
+            <img src="imagens/prints/advocacia-n2-celular.webp" alt="" loading="lazy">
+            <img src="imagens/prints/otica-n2-celular.webp" alt="" loading="lazy">
+          </div>
+        </div>
+        <span class="etiqueta">Projetos conceito da Highway</span>
+      </div>
+    </div>
+    <a class="rolar" href="#caminho" aria-label="Rolar para a próxima seção"><span></span></a>
+  </section>
+
+  <div class="travessia" aria-hidden="true"></div>
+
+  <!-- KM 02 · CAMINHO DO CLIENTE -->
+  <section class="caminho" id="caminho" aria-labelledby="caminho-titulo">
+    <div class="caminho-pino">
+      <div class="faixa-int">
+        <header class="cab">
+          <span class="km"><b>KM 02</b> O caminho do cliente</span>
+          <h2 id="caminho-titulo">Seu cliente já está procurando. <em>Ele encontra você?</em></h2>
+        </header>
+        <div class="cenas">
+          <article class="cena" data-cena="1">
+            <span class="cena-num">1 · A busca</span>
+            <div class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg><span id="termoBusca">clínica de estética perto de mim</span><i class="caret"></i></div>
+            <div class="resultado"><b>Concorrente A</b><span>concorrentea.com.br</span></div>
+            <div class="resultado"><b>Concorrente B</b><span>concorrenteb.com.br</span></div>
+            <p>Todo dia alguém da sua cidade procura o que você faz.</p>
+          </article>
+          <article class="cena" data-cena="2">
+            <span class="cena-num">2 · Não te acha</span>
+            <div class="resultado apagado"><b>Concorrente A</b><span>4,8 ★ · 120 avaliações</span></div>
+            <div class="resultado apagado"><b>Concorrente B</b><span>4,6 ★ · 64 avaliações</span></div>
+            <div class="resultado vazio"><b>O seu negócio não aparece aqui.</b><span>seunegocio.com.br</span></div>
+            <p>Quem não está no Google perde o cliente para quem está.</p>
+          </article>
+          <article class="cena" data-cena="3">
+            <span class="cena-num">3 · O site</span>
+            <div class="cena-site"><img src="imagens/prints/estetica-n2-topo.webp" alt="Topo do site conceito da Clínica Alba" loading="lazy" width="1200" height="750"></div>
+            <ul class="mini-selos"><li>Rápido no celular</li><li>Aparece no Google</li><li>Botão de WhatsApp</li></ul>
+            <p>Um site que apresenta você antes da primeira conversa.</p>
+          </article>
+          <article class="cena" data-cena="4">
+            <span class="cena-num">4 · A conversa</span>
+            <div class="chat">
+              <div class="balao"><b>Mariana</b>Oi! Vi o site, vocês têm horário no sábado?<time>09:12</time></div>
+              <div class="balao"><b>Carlos</b>Quanto fica a limpeza de pele?<time>09:40</time></div>
+              <div class="balao"><b>Juliana</b>Consigo agendar uma avaliação essa semana?<time>10:03</time></div>
+            </div>
+            <p>E o cliente chega no seu WhatsApp já sabendo quem você é.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KM 03 · NICHOS -->
+  <section class="nichos" aria-label="Para quem fazemos sites">
+    <p class="nichos-rotulo">Sites sob medida para</p>
+    <div class="esteira" id="esteira">
+      <div class="esteira-trilho">
+        <span>Advocacia</span><span>Clínica de estética</span><span>Ótica</span><span>Odontologia</span><span>Psicologia</span><span>Salão de beleza</span><span>Contabilidade</span><span>Comércio local</span><span>+ o seu negócio</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- KM 04 · MANIFESTO -->
+  <section class="manifesto" aria-labelledby="manifesto-texto">
+    <div class="faixa-int">
+      <span class="km"><b>KM 03</b> Por que um site</span>
+      <p class="manifesto-texto" id="manifesto-texto">Seu cliente decide em segundos se confia em você. Boa parte dessa decisão acontece no seu site, antes da primeira mensagem. <span class="destaque-frase">Por isso cada site da Highway é desenhado do zero, para o seu negócio e para a sua cidade.</span></p>
+    </div>
+  </section>
+
+  <!-- KM 05 · PORTFÓLIO -->
+  <section class="portfolio" id="portfolio" aria-labelledby="portfolio-titulo">
+    <div class="portfolio-pino">
+      <div class="faixa-int portfolio-cab">
+        <header class="cab">
+          <span class="km"><b>KM 04</b> Portfólio</span>
+          <h2 id="portfolio-titulo">Projetos que mostram <em>cada nível.</em></h2>
+          <p>Sites conceito criados pela Highway para três tipos de negócio, em cada um dos três níveis. Os nomes e contatos são fictícios. Passe o mouse para ver o site inteiro.</p>
+        </header>
+        <div class="filtros" role="group" aria-label="Filtrar por nível">
+          <button class="chip ativo" data-filtro="todos" aria-pressed="true">Todos</button>
+          <button class="chip" data-filtro="1" aria-pressed="false">Nível 1</button>
+          <button class="chip" data-filtro="2" aria-pressed="false">Nível 2</button>
+          <button class="chip" data-filtro="3" aria-pressed="false">Nível 3</button>
+        </div>
+      </div>
+      <div class="trilho-wrap">
+        <div class="trilho" id="trilho">
+          <article class="projeto" data-nivel="3">
+            <a class="projeto-print" href="modelos/estetica-n3/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Clínica Alba, Nível 3">
+              <img src="imagens/prints/estetica-n3-inteiro.webp" alt="Página inteira do site conceito da Clínica Alba, Nível 3" loading="lazy" width="900" height="3938">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Clínica Alba</h3><p>Estética · Cascavel</p></div><span class="nivel">N3</span></div>
+          </article>
+          <article class="projeto" data-nivel="2">
+            <a class="projeto-print" href="modelos/advocacia-n2/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Rafael Duarte Advocacia, Nível 2">
+              <img src="imagens/prints/advocacia-n2-inteiro.webp" alt="Página inteira do site conceito Rafael Duarte Advocacia, Nível 2" loading="lazy" width="900" height="5625">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Rafael Duarte Advocacia</h3><p>Advocacia · Londrina</p></div><span class="nivel">N2</span></div>
+          </article>
+          <article class="projeto" data-nivel="3">
+            <a class="projeto-print" href="modelos/otica-n3/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Ótica Mirante, Nível 3">
+              <img src="imagens/prints/otica-n3-inteiro.webp" alt="Página inteira do site conceito da Ótica Mirante, Nível 3" loading="lazy" width="900" height="3938">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Ótica Mirante</h3><p>Ótica · Maringá</p></div><span class="nivel">N3</span></div>
+          </article>
+          <article class="projeto" data-nivel="2">
+            <a class="projeto-print" href="modelos/estetica-n2/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Clínica Alba, Nível 2">
+              <img src="imagens/prints/estetica-n2-inteiro.webp" alt="Página inteira do site conceito da Clínica Alba, Nível 2" loading="lazy" width="900" height="5625">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Clínica Alba</h3><p>Estética · Cascavel</p></div><span class="nivel">N2</span></div>
+          </article>
+          <article class="projeto" data-nivel="1">
+            <a class="projeto-print" href="modelos/advocacia-n1/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Rafael Duarte, Nível 1">
+              <img src="imagens/prints/advocacia-n1-inteiro.webp" alt="Página inteira do site conceito Rafael Duarte, Nível 1" loading="lazy" width="900" height="2887">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Rafael Duarte</h3><p>Advocacia · Londrina</p></div><span class="nivel">N1</span></div>
+          </article>
+          <article class="projeto" data-nivel="2">
+            <a class="projeto-print" href="modelos/otica-n2/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Ótica Mirante, Nível 2">
+              <img src="imagens/prints/otica-n2-inteiro.webp" alt="Página inteira do site conceito da Ótica Mirante, Nível 2" loading="lazy" width="900" height="5625">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Ótica Mirante</h3><p>Ótica · Maringá</p></div><span class="nivel">N2</span></div>
+          </article>
+          <article class="projeto" data-nivel="1">
+            <a class="projeto-print" href="modelos/estetica-n1/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Clínica Alba, Nível 1">
+              <img src="imagens/prints/estetica-n1-inteiro.webp" alt="Página inteira do site conceito da Clínica Alba, Nível 1" loading="lazy" width="900" height="2980">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Clínica Alba</h3><p>Estética · Cascavel</p></div><span class="nivel">N1</span></div>
+          </article>
+          <article class="projeto" data-nivel="3">
+            <a class="projeto-print" href="modelos/advocacia-n3/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Rafael Duarte Advocacia, Nível 3">
+              <img src="imagens/prints/advocacia-n3-inteiro.webp" alt="Página inteira do site conceito Rafael Duarte Advocacia, Nível 3" loading="lazy" width="900" height="3938">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Rafael Duarte Advocacia</h3><p>Advocacia · Londrina</p></div><span class="nivel">N3</span></div>
+          </article>
+          <article class="projeto" data-nivel="1">
+            <a class="projeto-print" href="modelos/otica-n1/index.html" target="_blank" rel="noopener" aria-label="Abrir o site conceito Ótica Mirante, Nível 1">
+              <img src="imagens/prints/otica-n1-inteiro.webp" alt="Página inteira do site conceito da Ótica Mirante, Nível 1" loading="lazy" width="900" height="2849">
+            </a>
+            <div class="projeto-info"><div><span class="selo-conceito">Projeto conceito</span><h3>Ótica Mirante</h3><p>Ótica · Maringá</p></div><span class="nivel">N1</span></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KM 06 · TRÊS NÍVEIS -->
+  <section class="niveis" id="niveis" aria-labelledby="niveis-titulo">
+    <div class="niveis-pino">
+      <div class="faixa-int niveis-grade">
+        <div class="niveis-txt">
+          <span class="km"><b>KM 05</b> Mesmo negócio, três níveis</span>
+          <h2 id="niveis-titulo">Veja a diferença <em>na prática.</em></h2>
+          <p>O mesmo negócio feito nos três planos. Role a página ou toque nos níveis para comparar.</p>
+          <div class="abas" role="tablist" aria-label="Escolher o negócio">
+            <button class="chip ativo" role="tab" aria-selected="true" data-nicho="estetica">Estética</button>
+            <button class="chip" role="tab" aria-selected="false" data-nicho="advocacia">Advocacia</button>
+            <button class="chip" role="tab" aria-selected="false" data-nicho="otica">Ótica</button>
+          </div>
+          <ol class="niveis-lista" id="niveisLista">
+            <li data-n="0"><button type="button"><b>Nível 1 · Essencial</b><span>Uma página direta: topo, sobre, serviços, como funciona e contato com mapa.</span></button></li>
+            <li data-n="1"><button type="button"><b>Nível 2 · Profissional</b><span>+ galeria do espaço, equipe, avaliações, perguntas frequentes, formulário e animações suaves.</span></button></li>
+            <li data-n="2"><button type="button"><b>Nível 3 · Premium</b><span>+ topo interativo exclusivo, teste que indica o serviço, pedido de agendamento e páginas por serviço.</span></button></li>
+          </ol>
+        </div>
+        <div class="comparador" id="comparador" aria-hidden="true">
+          <div class="comp-barra"><i></i><i></i><i></i><span id="compUrl">clinica-alba.com.br</span><b id="compNivel">Nível 1</b></div>
+          <div class="comp-tela">
+            <img class="c1" src="imagens/prints/estetica-n1-topo.webp" alt="" width="1200" height="750">
+            <img class="c2" src="imagens/prints/estetica-n2-topo.webp" alt="" width="1200" height="750">
+            <img class="c3" src="imagens/prints/estetica-n3-topo.webp" alt="" width="1200" height="750">
+            <div class="comp-linha" id="compLinha"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="travessia" aria-hidden="true"><span class="pintura">PLANOS</span></div>
+
+  <!-- KM 07 · PLANOS -->
+  <section class="planos" id="planos" aria-labelledby="planos-titulo">
+    <div class="faixa-int">
+      <header class="cab centro">
+        <span class="km"><b>KM 06</b> Planos</span>
+        <h2 id="planos-titulo">Escolha o site certo <em>para o seu negócio.</em></h2>
+        <p>Implantação paga uma vez + <strong>R$ 80/mês</strong> nos três planos, com domínio e hospedagem inclusos. Sem fidelidade.</p>
+      </header>
+      <div class="planos-grade">
+        <article class="plano tilt">
+          <div class="plano-nv">Nível 1</div>
+          <h3>Essencial</h3>
+          <p class="plano-ideal">Para quem ainda não tem site e quer aparecer bem no Google e receber contatos pelo WhatsApp.</p>
+          <div class="preco"><span class="valor" data-valor="597">R$ 597</span><small>implantação + R$ 80/mês</small></div>
+          <ul>
+            <li>1 página com 5 a 6 seções</li>
+            <li>Botão de WhatsApp e mapa de como chegar</li>
+            <li>Feito para celular, tablet e computador</li>
+            <li>Título e descrição para o Google</li>
+          </ul>
+          <a class="btn s mag" href="https://wa.me/5543984124448?text=Oi!%20Vi%20o%20site%20da%20Highway%20e%20quero%20o%20plano%20Essencial%20(N%C3%ADvel%201)." target="_blank" rel="noopener">Quero o Essencial</a>
+        </article>
+        <article class="plano destaque tilt">
+          <div class="plano-nv">Nível 2 <em>Mais escolhido</em></div>
+          <h3>Profissional</h3>
+          <p class="plano-ideal">Para quem já tem clientes e quer mostrar equipe, espaço e avaliações para passar mais confiança.</p>
+          <div class="preco"><span class="valor" data-valor="997">R$ 997</span><small>implantação + R$ 80/mês</small></div>
+          <ul>
+            <li>Tudo do Essencial, numa página mais completa</li>
+            <li>Equipe e galeria de fotos do espaço</li>
+            <li>Avaliações com a nota do Google</li>
+            <li>Perguntas frequentes</li>
+            <li>Formulário que chega pronto no WhatsApp</li>
+            <li>Prévia bonita ao compartilhar o link</li>
+            <li>Animações suaves</li>
+          </ul>
+          <a class="btn p mag" href="https://wa.me/5543984124448?text=Oi!%20Vi%20o%20site%20da%20Highway%20e%20quero%20o%20plano%20Profissional%20(N%C3%ADvel%202)." target="_blank" rel="noopener">Quero o Profissional</a>
+        </article>
+        <article class="plano tilt">
+          <div class="plano-nv">Nível 3</div>
+          <h3>Premium</h3>
+          <p class="plano-ideal">Para quem quer ser referência na cidade, com um site que ninguém da concorrência tem.</p>
+          <div class="preco"><span class="a-partir">a partir de</span><span class="valor" data-valor="1297">R$ 1.297</span><small>implantação + R$ 80/mês</small></div>
+          <ul>
+            <li>Tudo do Profissional</li>
+            <li>Topo interativo, que reage ao mouse e à rolagem</li>
+            <li>Teste que indica o serviço certo para o cliente</li>
+            <li>Pedido de agendamento com dia e horário</li>
+            <li>Uma página para cada serviço + artigos</li>
+            <li>Aviso de cookies (LGPD), Analytics e Pixel</li>
+          </ul>
+          <a class="btn s mag" href="https://wa.me/5543984124448?text=Oi!%20Vi%20o%20site%20da%20Highway%20e%20quero%20o%20plano%20Premium%20(N%C3%ADvel%203)." target="_blank" rel="noopener">Quero o Premium</a>
+        </article>
+      </div>
+      <p class="pagamento">Implantação: <strong>50% na entrada e 50% na entrega</strong>, ou à vista no PIX.</p>
+
+      <details class="comparativo" id="comparativo">
+        <summary><span>Ver a comparação completa</span><i aria-hidden="true"></i></summary>
+        <div class="comparativo-corpo">
+          <div class="tabela-rolagem">
+            <table>
+              <thead><tr><th scope="col">O que o site tem</th><th scope="col">Essencial</th><th scope="col">Profissional</th><th scope="col">Premium</th></tr></thead>
+              <tbody>
+                <tr class="grupo"><th colspan="4" scope="colgroup">O básico bem feito</th></tr>
+                <tr><th scope="row">Topo, sobre, serviços, como funciona e contato</th><td class="sim">Sim</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Botão do WhatsApp e mapa de como chegar</th><td class="sim">Sim</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Feito para celular, tablet e computador</th><td class="sim">Sim</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Aparece no Google com título e descrição</th><td class="sim">Sim</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr class="grupo"><th colspan="4" scope="colgroup">Mais confiança</th></tr>
+                <tr><th scope="row">Equipe e galeria de fotos do espaço</th><td class="nao">Não</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Avaliações de clientes com nota do Google</th><td class="nao">Não</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Perguntas frequentes</th><td class="nao">Não</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Formulário que chega pronto no WhatsApp</th><td class="nao">Não</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Prévia bonita ao compartilhar o link</th><td class="nao">Não</td><td class="sim">Sim</td><td class="sim">Sim</td></tr>
+                <tr class="grupo"><th colspan="4" scope="colgroup">Experiência</th></tr>
+                <tr><th scope="row">Animações</th><td class="nao">Não</td><td>Suaves</td><td>Exclusivas</td></tr>
+                <tr><th scope="row">Topo interativo, que reage ao mouse e à rolagem</th><td class="nao">Não</td><td class="nao">Não</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Teste que indica o serviço certo</th><td class="nao">Não</td><td class="nao">Não</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Pedido de agendamento com dia e horário</th><td class="nao">Não</td><td class="nao">Não</td><td class="sim">Sim</td></tr>
+                <tr class="grupo"><th colspan="4" scope="colgroup">Mais alcance</th></tr>
+                <tr><th scope="row">Uma página para cada serviço e artigos com dicas</th><td class="nao">Não</td><td class="nao">Não</td><td class="sim">Sim</td></tr>
+                <tr><th scope="row">Aviso de cookies (LGPD), Analytics e Pixel</th><td class="nao">Não</td><td class="nao">Não</td><td class="sim">Sim</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- KM 08 · QUAL PLANO -->
+  <section class="quiz" id="quiz" aria-labelledby="quiz-titulo">
+    <div class="faixa-int">
+      <header class="cab">
+        <span class="km"><b>KM 07</b> Qual plano é o seu?</span>
+        <h2 id="quiz-titulo">Não sabe qual escolher? <em>Responda 3 perguntas.</em></h2>
+      </header>
+      <div class="quiz-caixa" id="quizCaixa">
+        <div class="quiz-progresso" aria-hidden="true"><div class="quiz-pista"><i id="quizCarro"></i></div><span id="quizPasso">Pergunta 1 de 3</span></div>
+        <div class="quiz-etapas">
+          <fieldset class="quiz-etapa ativa" data-etapa="0">
+            <legend>Onde o seu negócio está hoje?</legend>
+            <div class="quiz-opcoes tres">
+              <button type="button" data-valor="0"><b>Ainda não tenho site</b><span>Quem recebe a sua indicação te procura no Google e não acha nada.</span></button>
+              <button type="button" data-valor="1"><b>Tenho site, mas ele não traz cliente</b><span>Está velho, lento no celular ou ninguém encontra.</span></button>
+              <button type="button" data-valor="2"><b>Quero ser a referência da cidade</b><span>Um site que nenhum concorrente tem.</span></button>
+            </div>
+          </fieldset>
+          <fieldset class="quiz-etapa" data-etapa="1">
+            <legend>Você tem fotos da equipe e do espaço?</legend>
+            <div class="quiz-opcoes">
+              <button type="button" data-valor="1"><b>Sim, tenho boas fotos</b></button>
+              <button type="button" data-valor="0.5"><b>Algumas</b></button>
+              <button type="button" data-valor="0"><b>Ainda não</b></button>
+            </div>
+          </fieldset>
+          <fieldset class="quiz-etapa" data-etapa="2">
+            <legend>Seu negócio tem avaliações no Google?</legend>
+            <div class="quiz-opcoes">
+              <button type="button" data-valor="1"><b>Sim, várias</b></button>
+              <button type="button" data-valor="0.5"><b>Poucas</b></button>
+              <button type="button" data-valor="0"><b>Nenhuma ainda</b></button>
+            </div>
+          </fieldset>
+          <div class="quiz-etapa quiz-resultado" data-etapa="3" aria-live="polite">
+            <span class="km"><b>RESULTADO</b></span>
+            <h3>O plano <em id="quizPlano">Profissional</em> combina com você.</h3>
+            <p id="quizMotivo"></p>
+            <div class="ctas">
+              <a class="btn p mag" id="quizLink" href="https://wa.me/5543984124448" target="_blank" rel="noopener">Pedir esse plano no WhatsApp</a>
+              <button class="btn s" type="button" id="quizRefazer">Refazer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KM 09 · COMO FUNCIONA -->
+  <section class="processo" id="como-funciona" aria-labelledby="processo-titulo">
+    <div class="faixa-int">
+      <header class="cab">
+        <span class="km"><b>KM 08</b> Como funciona</span>
+        <h2 id="processo-titulo">Do primeiro oi <em>ao site no ar.</em></h2>
+      </header>
+      <ol class="passos" id="passos">
+        <li class="passo"><span class="passo-marco">1</span><h3>Conversa</h3><p>Você conta sobre o seu negócio, seus clientes e o que te diferencia. A gente monta o briefing.</p></li>
+        <li class="passo"><span class="passo-marco">2</span><h3>Proposta visual</h3><p>Cores, fontes e o conceito do seu site, para você aprovar antes de começarmos.</p></li>
+        <li class="passo"><span class="passo-marco">3</span><h3>Criação</h3><p>Desenvolvimento do site, com os ajustes combinados com você no caminho.</p></li>
+        <li class="passo"><span class="passo-marco">4</span><h3>No ar</h3><p>Publicação com domínio, Google e todos os botões de WhatsApp testados.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- KM 10 · POR QUE A HIGHWAY -->
+  <section class="porque" aria-labelledby="porque-titulo">
+    <div class="faixa-int">
+      <header class="cab">
+        <span class="km"><b>KM 09</b> Por que a Highway</span>
+        <h2 id="porque-titulo">Feito para trazer cliente, <em>não só para ficar bonito.</em></h2>
+      </header>
+      <div class="porque-grade">
+        <article class="painel nenhum-igual">
+          <div class="troca" id="troca" aria-hidden="true">
+            <img class="ativa" src="imagens/prints/estetica-n1-topo.webp" alt="" loading="lazy" width="1200" height="750">
+            <img src="imagens/prints/advocacia-n1-topo.webp" alt="" loading="lazy" width="1200" height="750">
+            <img src="imagens/prints/otica-n1-topo.webp" alt="" loading="lazy" width="1200" height="750">
+          </div>
+          <h3>Nenhum site é igual</h3>
+          <p>Três sites do mesmo plano, três caras diferentes. Antes de entregar, a gente confere: trocando logo e fotos, o seu site não vira o de outro cliente.</p>
+        </article>
+        <article class="painel">
+          <svg class="icone" viewBox="0 0 48 48" aria-hidden="true"><rect x="14" y="4" width="20" height="40" rx="4"/><path d="M21 38h6"/></svg>
+          <h3>Feito para o celular e para o Google</h3>
+          <p>A maioria dos clientes chega pelo celular, vindo de uma busca. O site é pensado primeiro para isso: rápido, leve e com título e descrição certos.</p>
+        </article>
+        <article class="painel">
+          <svg class="icone" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 40l3-9a16 16 0 1 1 6 6z"/><path d="M18 20c1 5 5 9 10 10l3-3-4-3-2 2c-2-1-3-2-4-4l2-2-3-4z"/></svg>
+          <h3>Cliente direto no WhatsApp</h3>
+          <p>Cada botão abre uma conversa com a mensagem pronta. Nada de formulário perdido no e-mail.</p>
+        </article>
+        <article class="painel">
+          <svg class="icone" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l16 6v12c0 10-7 18-16 22C15 40 8 32 8 22V10z"/><path d="M17 24l5 5 9-10"/></svg>
+          <h3>Regras do seu ramo</h3>
+          <p>Os textos seguem as regras da OAB, dos conselhos de saúde e de cada profissão.</p>
+        </article>
+        <article class="painel">
+          <svg class="icone" viewBox="0 0 48 48" aria-hidden="true"><path d="M6 14h36v24H6z"/><path d="M6 20h36M14 30h8"/></svg>
+          <h3>R$ 80 por mês, sem fidelidade</h3>
+          <p>Domínio, hospedagem e manutenção ficam com a gente. Cancela quando quiser e o site continua seu.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- KM 12 · DÚVIDAS -->
+  <section class="duvidas" id="duvidas" aria-labelledby="duvidas-titulo">
+    <div class="faixa-int duvidas-grade">
+      <header class="cab">
+        <span class="km"><b>KM 10</b> Dúvidas</span>
+        <h2 id="duvidas-titulo">Perguntas <em>frequentes.</em></h2>
+        <p>Não achou a sua? Manda no WhatsApp que a gente responde.</p>
+      </header>
+      <div class="faq">
+        <details><summary>O que a mensalidade de R$ 80 inclui?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>Domínio, hospedagem e a manutenção do site. Você não paga nada à parte para o site ficar no ar.</p></div></details>
+        <details><summary>Tem fidelidade?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>Não. Você pode cancelar a mensalidade quando quiser, sem multa.</p></div></details>
+        <details><summary>Se eu cancelar, o site continua meu?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>Sim, o site é seu. A partir do cancelamento, os custos para mantê-lo no ar, como domínio e hospedagem, passam a ser pagos por você.</p></div></details>
+        <details><summary>Como funciona o pagamento?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>A implantação pode ser paga em duas partes, 50% na entrada e 50% na entrega, ou à vista no PIX. A mensalidade começa depois que o site vai ao ar.</p></div></details>
+        <details><summary>Quanto tempo leva para o site ficar pronto?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>O prazo depende do plano e de quando recebemos as suas fotos e informações. Ele fica definido no contrato de cada projeto, antes de começarmos.</p></div></details>
+        <details><summary>Posso começar no Essencial e mudar de plano depois?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>Pode. A mudança de plano é feita como um upgrade: a gente acrescenta o que o novo nível entrega e você paga a diferença combinada.</p></div></details>
+        <details><summary>Consigo editar o site sozinho?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>Os planos não incluem painel de edição. Quando precisar trocar um texto, foto ou horário, é só pedir pelo WhatsApp.</p></div></details>
+        <details><summary>Vocês fazem loja virtual?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>Não. Nenhum dos planos tem loja virtual ou pagamento on-line. O foco é levar o cliente até o seu WhatsApp.</p></div></details>
+        <details><summary>Posso usar as minhas próprias fotos?<i aria-hidden="true"></i></summary><div class="faq-corpo"><p>Deve! Fotos reais do seu espaço e da sua equipe passam muito mais confiança. Se faltar alguma, a gente usa imagens de banco gratuitas e avisa o que é provisório.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <div class="travessia" aria-hidden="true"></div>
+
+  <!-- KM 13 · DESTINO -->
+  <section class="destino" id="contato" aria-labelledby="destino-titulo">
+    <div class="faixa-int destino-grade">
+      <div class="destino-txt">
+        <div class="pino" id="pino" aria-hidden="true"><svg viewBox="0 0 40 52"><path d="M20 2C10 2 3 9 3 19c0 12 17 31 17 31s17-19 17-31C37 9 30 2 20 2z"/><circle cx="20" cy="19" r="6"/></svg></div>
+        <span class="km"><b>KM 11</b> Destino</span>
+        <h2 id="destino-titulo" class="titulo-grande">Vamos colocar seu negócio <em>na estrada?</em></h2>
+        <p>Responda rapidinho e a conversa já começa no WhatsApp, com tudo que precisamos para te atender.</p>
+      </div>
+      <form class="formulario" id="formulario" novalidate>
+        <div class="campo">
+          <label for="fNome">Seu nome</label>
+          <input id="fNome" name="nome" type="text" autocomplete="name" required placeholder="Como podemos te chamar?">
+        </div>
+        <div class="campo">
+          <label for="fNegocio">Nome e tipo do negócio</label>
+          <input id="fNegocio" name="negocio" type="text" required placeholder="Ex.: Clínica Bella, estética">
+        </div>
+        <div class="campo">
+          <label for="fPlano">Plano de interesse</label>
+          <select id="fPlano" name="plano">
+            <option value="Ainda não sei">Ainda não sei</option>
+            <option value="Essencial (Nível 1)">Essencial · R$ 597</option>
+            <option value="Profissional (Nível 2)">Profissional · R$ 997</option>
+            <option value="Premium (Nível 3)">Premium · a partir de R$ 1.297</option>
+          </select>
+        </div>
+        <label class="aceite" for="fAceite"><input id="fAceite" type="checkbox" required> <span>Concordo em enviar esses dados pelo WhatsApp para a Highway entrar em contato.</span></label>
+        <p class="form-erro" id="formErro" role="alert"></p>
+        <button class="btn p mag" type="submit">Continuar no WhatsApp
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </form>
+    </div>
+  </section>
+  <div class="chegada" id="chegada" aria-hidden="true"></div>
+</main>
+
+<footer class="rodape">
+  <div class="cidade" id="cidade" aria-hidden="true"></div>
+  <div class="faixa-int rodape-linha">
+    <a class="marca" href="#inicio"><img src="imagens/logo-h.webp" alt="" width="34" height="34"><span>HIGHWAY</span></a>
+    <nav class="rodape-links" aria-label="Contato">
+      <a href="https://www.instagram.com/highwayagencia/" target="_blank" rel="noopener">Instagram @highwayagencia</a>
+      <a href="https://wa.me/5543984124448" target="_blank" rel="noopener">WhatsApp (43) 98412-4448</a>
+    </nav>
+    <p>© 2026 Highway Agência</p>
+  </div>
+  <div class="marca-gigante" aria-hidden="true"><span>H</span><span>I</span><span>G</span><span>H</span><span>W</span><span>A</span><span>Y</span></div>
+</footer>
+
+<a class="wpp-flutuante" id="wppFlutuante" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

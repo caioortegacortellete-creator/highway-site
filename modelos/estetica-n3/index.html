@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clínica Alba | Estética facial e corporal em Cascavel</title>
+<meta name="description" content="Clínica de estética em Cascavel/PR desde 2016: limpeza de pele, peeling, microagulhamento, harmonização facial, depilação a laser e massagem. Agende sua avaliação.">
+<meta name="theme-color" content="#1f0e16">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Clínica Alba | Natural, sem exagero">
+<meta property="og:description" content="Cuidados para o rosto e o corpo, indicados depois de uma conversa sem pressa.">
+<meta property="og:image" content="rosto-depois.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='31' fill='%231f0e16'/%3E%3Cg fill='none' stroke='%23e5b9a6' stroke-width='2.6'%3E%3Cellipse cx='32' cy='32' rx='13' ry='18'/%3E%3Cellipse cx='32' cy='32' rx='13' ry='18' transform='rotate(16 32 32)' opacity='.6'/%3E%3C/g%3E%3C/svg%3E">
+<!--
+  SITE MODELO — HIGHWAY AGÊNCIA — CLÍNICA DE ESTÉTICA NÍVEL 3 (PREMIUM)
+  Os dados do cliente ficam em dados.js. Esta página tem o conteúdo da inicial.
+  Espaço para Analytics/Pixel: cole aqui o código do cliente, carregando só depois do aceite de cookies.
+  Dados fictícios — apenas para demonstração.
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HealthAndBeautyBusiness",
+  "name": "Clínica Alba",
+  "description": "Limpeza de pele, peeling, microagulhamento, harmonização facial, depilação a laser, massagem e drenagem.",
+  "telephone": "+55 45 99999-9999",
+  "email": "contato@clinicaalba.com.br",
+  "image": "rosto-depois.webp",
+  "address": { "@type": "PostalAddress", "streetAddress": "Av. Brasil, 0000, Sala 00", "addressLocality": "Cascavel", "addressRegion": "PR", "addressCountry": "BR" },
+  "openingHours": ["Mo-Fr 09:00-19:00", "Sa 09:00-13:00"]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('transicao')==='1')document.documentElement.classList.add('em-transicao')}catch(e){}</script>
+<link rel="stylesheet" href="estilo.css">
+<style>
+  /* ---------- Topo: um rosto; o mouse deixa um rastro líquido que revela o outro rosto, alinhado olho a olho ---------- */
+  .hero-rosto { position: relative; height: 230vh; padding: 0; background: var(--nude); color: var(--ameixa); }
+  .hero-palco { position: sticky; top: 0; height: 100vh; height: 100svh; min-height: 620px; overflow: hidden; }
+  .rosto-movel { position: absolute; inset: 0; transform-origin: 50% 100%; will-change: transform; }
+  .contornos { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .contornos path { fill: none; stroke: var(--rose-escuro); stroke-width: 1; opacity: .2; vector-effect: non-scaling-stroke; }
+  .rosto-caixa { position: absolute; left: -100%; right: -100%; margin-inline: auto; bottom: 0; height: calc(100% - 12px); aspect-ratio: 1300 / 1148; }
+  .rosto-caixa img { width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
+  #rosto-gl { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  /* "Estética" atrás do rosto: uma camada dourada apagada e outra que acende em volta do cursor */
+  .palavra-fundo { position: absolute; inset: 0; pointer-events: none; }
+  .palavra-fundo p { position: absolute; left: 0; right: 0; top: 18%; margin: 0; max-width: none; text-align: center; font-family: var(--serif); font-weight: 500; text-transform: uppercase; font-size: min(19vw, 40vh); line-height: 1; letter-spacing: 0; white-space: nowrap; color: rgba(176, 135, 62, .26); user-select: none; }
+  .palavra-fundo p.acesa { color: #b98c32; text-shadow: 0 0 34px rgba(226, 186, 92, .55); opacity: 0; transition: opacity .6s var(--suave);
+    -webkit-mask-image: radial-gradient(circle 270px at var(--cx, 50%) var(--cy, 40%), #000 0%, rgba(0,0,0,.5) 45%, transparent 100%);
+    mask-image: radial-gradient(circle 270px at var(--cx, 50%) var(--cy, 40%), #000 0%, rgba(0,0,0,.5) 45%, transparent 100%); }
+  .palavra-fundo.com-luz p.acesa { opacity: 1; }
+  .hero-texto { position: absolute; z-index: 2; top: 0; bottom: 0; left: max(28px, calc((100vw - 1220px) / 2 + 28px)); width: min(40vw, 560px); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; pointer-events: none; transform: translateY(var(--sobe, 0px)); }
+  .hero-texto a { pointer-events: auto; }
+  .hero-texto h1 { font-family: var(--serif); font-weight: 300; font-size: clamp(52px, 6.4vw, 118px); line-height: .96; letter-spacing: -.012em; margin-bottom: 24px; }
+  .hero-texto h1 em { color: var(--rose-escuro); }
+  .hero-texto p { color: var(--texto-suave); font-size: 19px; line-height: 1.5; max-width: 25rem; margin-bottom: 30px; }
+  .hero-acoes { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .hero-texto .btn { background: var(--ameixa); color: var(--claro); }
+  .hero-texto .btn:hover { background: var(--ameixa-escuro); }
+  .hero-texto .link-seta { color: var(--ameixa); font-size: 16px; }
+  /* ao abrir, só o rosto: menu, botão do WhatsApp e cookies também entram com a rolagem */
+  .topo, .whats-flutuante, .cookies, .progresso-leitura { transition-property: background, box-shadow, transform, opacity, visibility; transition-duration: .4s; }
+  .so-rosto .topo, .so-rosto .whats-flutuante, .so-rosto .cookies, .so-rosto .progresso-leitura { opacity: 0; visibility: hidden; pointer-events: none; }
+  /* ao abrir, só o rosto; os textos entram com a rolagem */
+  .js .hero-texto { opacity: 0; visibility: hidden; }
+  /* sobre o fundo claro, o topo começa com texto escuro */
+  .topo:not(.rolado) { color: var(--ameixa); }
+  .topo:not(.rolado) .marca small { color: var(--texto-suave); }
+  .topo:not(.rolado) .marca svg ellipse { stroke: var(--rose-escuro); }
+  .topo:not(.rolado) .btn { background: var(--ameixa); color: var(--claro); }
+  .topo:not(.rolado) .hamburguer { border-color: rgba(67,32,47,.35); }
+  .topo:not(.rolado) .hamburguer span { background: var(--ameixa); }
+  body.menu-aberto .topo { color: var(--claro); }
+  body.menu-aberto .topo .hamburguer span { background: var(--claro); }
+
+  /* ---------- A clínica ---------- */
+  .sobre .container { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: 96px; align-items: center; }
+  .sobre-foto { position: relative; }
+  .sobre-foto .moldura { aspect-ratio: 4 / 5; border-radius: 280px 280px 8px 8px; overflow: hidden; }
+  .sobre-foto img { width: 100%; height: 118%; object-fit: cover; will-change: transform; }
+  .selo-giro { position: absolute; right: -44px; top: 34px; width: 150px; height: 150px; animation: girar 22s linear infinite; }
+  .selo-giro text { font-size: 10.6px; letter-spacing: .2em; text-transform: uppercase; fill: var(--ameixa); font-family: var(--sans); font-weight: 500; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  .frase-acende { font-family: var(--serif); font-size: clamp(34px, 3.5vw, 50px); line-height: 1.16; color: var(--ameixa); margin-bottom: 32px; }
+  .frase-acende span { opacity: .16; transition: opacity .35s; }
+  .frase-acende span.aceso { opacity: 1; }
+  .sobre-texto > p:not(.rotulo):not(.frase-acende) { color: var(--texto-suave); font-size: 18px; margin-bottom: 16px; }
+  .numeros { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 34px 0; border-block: 1px solid var(--linha); }
+  .numeros div { padding: 22px 0 20px 22px; border-left: 1px solid var(--linha); }
+  .numeros div:first-child { padding-left: 0; border-left: 0; }
+  .numeros strong { display: block; font-family: var(--serif); font-size: 54px; font-weight: 300; line-height: 1; color: var(--ameixa); }
+  .numeros span { font-size: 14px; color: var(--texto-suave); }
+  .assinatura { display: flex; align-items: center; gap: 16px; }
+  .assinatura img { width: 64px; height: 80px; border-radius: 50%; object-fit: cover; object-position: top; }
+  .assinatura b { display: block; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 30px; line-height: 1.1; color: var(--ameixa); }
+  .assinatura small { font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--texto-suave); }
+
+  /* ---------- Antes e depois: dois rostos se olhando, títulos no meio ---------- */
+  .ad { position: relative; z-index: 4; height: 100vh; height: 100svh; min-height: 620px; padding: 0; overflow: hidden; background: var(--nude); }
+  .ad-foto { position: absolute; max-width: none; pointer-events: none; will-change: transform; }
+  .ad { --meia: calc(clamp(180px, 17vw, 270px) + clamp(12px, 1.5vw, 26px) + 24px); }
+  .ad-antes { height: 100%; bottom: 0; left: calc(50vw - var(--meia) - 71.1vh); }
+  .ad-depois { height: 100%; bottom: 0; left: calc(50vw + var(--meia) - 49.5vh); }
+  .ad-fotos { position: absolute; inset: 0; }
+  .ad-meio { position: absolute; z-index: 2; inset: 0; display: flex; justify-content: center; align-items: center; gap: clamp(24px, 3vw, 52px); }
+  .ad-col { width: clamp(180px, 17vw, 270px); }
+  .ad-col h2 { font-size: clamp(44px, 5vw, 84px); line-height: .94; margin-bottom: 18px; }
+  .ad-col h2 em { display: block; font-size: .56em; line-height: 1.15; }
+  .ad-col p { color: var(--texto-suave); font-size: 16px; line-height: 1.45; margin-bottom: 20px; }
+  .ad-seta { display: inline-flex; width: 46px; height: 46px; align-items: center; justify-content: center; border-radius: 50%; background: var(--ameixa); transition: background .2s, transform .3s var(--suave); }
+  .ad-seta:hover { background: var(--rose-escuro); transform: translateX(4px); }
+  .ad-seta svg { width: 18px; height: 18px; fill: none; stroke: var(--claro); stroke-width: 1.8; }
+  .ad-aviso { position: absolute; z-index: 2; left: 0; right: 0; bottom: 14px; text-align: center; font-size: 12px; color: var(--texto-suave); }
+  @media (max-width: 920px) {
+    .ad { height: auto; min-height: 0; padding: 0 0 72px; }
+    .ad-fotos { position: relative; inset: auto; height: 300px; overflow: hidden; }
+    .ad-antes { left: calc(50vw - 231px); }
+    .ad-depois { left: calc(50vw - 130px); }
+    .ad-meio { position: static; padding: 28px 22px 0; gap: 18px; align-items: flex-start; }
+    .ad-col { width: 50%; }
+    .ad-col h2 { font-size: 44px; }
+    .ad-col p { font-size: 15px; }
+    .ad-aviso { position: static; padding: 26px 22px 0; }
+  }
+
+  /* ---------- Tratamentos: a penteadeira. Cada frasco da bancada acende o espelho e abre a ficha de cuidado ---------- */
+  .pente { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-areas: "espelho ficha" "bancada bancada"; gap: 34px clamp(32px, 5vw, 80px); align-items: center; }
+  .espelho { grid-area: espelho; position: relative; padding: 26px; border-radius: 18px; background: linear-gradient(145deg, #f3d6c6, #b98270 48%, #e8c3b0); box-shadow: 0 34px 70px -30px rgba(0,0,0,.8), inset 0 0 0 1px rgba(255,255,255,.35); }
+  .espelho-vidro { position: relative; height: min(56vh, 470px); border-radius: 8px; overflow: hidden; background: var(--noite); box-shadow: inset 0 0 0 2px rgba(39,17,27,.5); }
+  .espelho-vidro::after { content: ""; position: absolute; z-index: 40; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.16), transparent 34%, transparent 70%, rgba(255,255,255,.07)); }
+  .espelho-vidro img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; clip-path: inset(100% 0 0 0); transform: scale(1.12); }
+  .espelho-vidro img.ativa { clip-path: inset(0); transform: none; transition: clip-path .55s cubic-bezier(.65, 0, .2, 1), transform .9s var(--suave); }
+  .lampadas { position: absolute; display: flex; justify-content: space-between; pointer-events: none; }
+  .lampadas.topo-l { left: 34px; right: 34px; top: 7px; }
+  .lampadas.esq, .lampadas.dir { top: 34px; bottom: 34px; flex-direction: column; }
+  .lampadas.esq { left: 7px; } .lampadas.dir { right: 7px; }
+  .lampadas i { width: 12px; height: 12px; border-radius: 50%; background: #fff6e8; box-shadow: 0 0 10px 3px rgba(255,232,196,.85); }
+  .espelho.acende .lampadas i { animation: lampada .7s ease-out; animation-delay: calc(var(--n) * 28ms); }
+  @keyframes lampada { 0% { box-shadow: 0 0 2px 0 rgba(255,232,196,.3); opacity: .45; } 60% { box-shadow: 0 0 22px 8px rgba(255,232,196,1); opacity: 1; } 100% { box-shadow: 0 0 10px 3px rgba(255,232,196,.85); } }
+  .ficha-trat { grid-area: ficha; position: relative; min-height: 470px; }
+  .ficha-item { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: 34px 40px; border-radius: 6px; background: var(--nude); color: var(--texto); box-shadow: 0 30px 60px -28px rgba(0,0,0,.75); visibility: hidden; opacity: 0; transform: translateY(16px) rotate(1.2deg); }
+  .ficha-item.ativa { visibility: visible; opacity: 1; transform: rotate(-.5deg); transition: opacity .3s, transform .5s var(--suave); }
+  .ficha-item header { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 12px; margin-bottom: 18px; border-bottom: 1px dashed var(--linha); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--texto-suave); }
+  .ficha-item header b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 26px; letter-spacing: 0; text-transform: none; color: var(--rose-escuro); line-height: 1; }
+  .ficha-item h3 { font-family: var(--serif); font-weight: 300; font-size: clamp(38px, 3.8vw, 58px); line-height: 1.02; color: var(--ameixa); margin-bottom: 12px; }
+  .ficha-item p { color: var(--texto-suave); font-size: 17px; line-height: 1.45; margin-bottom: 14px; }
+  .ficha-item h4 { font-size: 12px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--rose-escuro); margin-bottom: 6px; }
+  .ficha-item ul { list-style: none; margin-bottom: 20px; }
+  .ficha-item li { display: flex; gap: 10px; padding: 6px 0; font-size: 16px; color: var(--texto); }
+  .ficha-item li::before { content: "✓"; color: var(--rose-escuro); font-weight: 600; }
+  .ficha-acoes { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .ficha-acoes .btn { background: var(--ameixa); color: var(--claro); }
+  .ficha-acoes .btn:hover { background: var(--ameixa-escuro); }
+  .ficha-acoes .link-seta { color: var(--ameixa); font-size: 15px; }
+  .bancada { grid-area: bancada; position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; padding: 18px 12px 0; border-bottom: 10px solid #c79a84; border-radius: 0 0 6px 6px; box-shadow: 0 16px 24px -14px rgba(0,0,0,.7); }
+  .frasco { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; padding-bottom: 12px; color: var(--claro-suave); transition: color .2s; }
+  .frasco svg { height: 118px; width: auto; overflow: visible; filter: drop-shadow(0 10px 8px rgba(0,0,0,.35)); transition: transform .35s cubic-bezier(.3, 1.5, .5, 1), filter .3s; }
+  .frasco span { font-family: var(--serif); font-size: 18px; line-height: 1.1; text-align: center; min-height: 2.2em; }
+  .frasco:hover svg { transform: translateY(-8px); }
+  .frasco:hover { color: var(--claro); }
+  .frasco.ativa { color: var(--rose); }
+  .frasco.ativa svg { transform: translateY(-16px) scale(1.08); filter: drop-shadow(0 0 16px rgba(255,226,196,.75)) drop-shadow(0 16px 10px rgba(0,0,0,.35)); }
+
+  /* ---------- O espaço: a página anda de lado no computador ---------- */
+  .espaco { padding: 0; height: 320vh; }
+  .espaco-palco { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+  .espaco-trilho { display: flex; align-items: center; gap: 48px; width: max-content; padding: 0 max(28px, calc((100vw - 1220px) / 2 + 28px)); will-change: transform; }
+  .espaco-abre { width: 400px; flex-shrink: 0; }
+  .espaco-abre p:not(.rotulo) { color: var(--texto-suave); font-size: 18px; margin-top: 20px; }
+  .espaco figure { flex-shrink: 0; position: relative; }
+  .espaco figure img { width: 100%; height: 100%; object-fit: cover; }
+  .espaco figure div { overflow: hidden; height: 100%; }
+  .espaco figcaption { position: absolute; left: 0; bottom: -32px; font-size: 14px; color: var(--texto-suave); white-space: nowrap; }
+  .f-a { width: 560px; height: 62vh; } .f-a div { border-radius: 8px; }
+  .f-b { width: 340px; height: 66vh; } .f-b div { border-radius: 50%; }
+  .f-c { width: 420px; height: 54vh; } .f-c div { border-radius: 210px 210px 8px 8px; }
+  .f-d { width: 520px; height: 60vh; } .f-d div { border-radius: 8px; }
+  .f-e { width: 340px; height: 66vh; } .f-e div { border-radius: 50%; }
+
+  /* ---------- Por onde começar ---------- */
+  .comecar .container { max-width: 1040px; }
+  .quiz { background: rgba(248,241,234,.05); border: 1px solid rgba(248,241,234,.14); border-radius: 12px; padding: 52px; min-height: 420px; }
+  .quiz-topo { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 28px; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--claro-suave); }
+  .quiz-barra { flex: 1; height: 2px; background: rgba(248,241,234,.14); }
+  .quiz-barra i { display: block; height: 100%; background: var(--rose); transition: width .6s var(--suave); }
+  .quiz h3 { font-family: var(--serif); font-weight: 300; font-size: clamp(32px, 3.6vw, 50px); line-height: 1.1; margin-bottom: 30px; }
+  .quiz-opcoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .quiz-opcoes button { text-align: left; padding: 20px 22px; border: 1px solid rgba(248,241,234,.2); border-radius: 8px; font-size: 17px; transition: background .25s, border-color .25s, transform .3s var(--suave); }
+  .quiz-opcoes button:hover, .quiz-opcoes button:focus-visible { background: rgba(229,185,166,.12); border-color: var(--rose); transform: translateY(-3px); }
+  .quiz-passo { animation: surgir .6s var(--suave); }
+  .quiz-res { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 36px; align-items: center; }
+  .quiz-res .oval { aspect-ratio: 5 / 7; border-radius: 50%; overflow: hidden; }
+  .quiz-res .oval img { width: 100%; height: 100%; object-fit: cover; }
+  .quiz-res p { color: var(--claro-suave); font-size: 18px; margin-bottom: 22px; }
+  .quiz-res .acoes { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+  .quiz-res small { display: block; color: var(--claro-suave); font-size: 14px; }
+  .quiz-res small button { color: var(--rose); font-weight: 500; margin-left: 6px; text-decoration: underline; }
+
+  /* ---------- Equipe ---------- */
+  .equipe-grade { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+  .membro:nth-child(2) { margin-top: 72px; }
+  .membro .foto { aspect-ratio: 4 / 5; border-radius: 50%; overflow: hidden; margin-bottom: 22px; background: var(--nude-alt); }
+  .membro img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; transition: transform 1.1s var(--suave); }
+  .membro:hover img { transform: scale(1.05); }
+  .membro h3 { font-family: var(--serif); font-weight: 400; font-size: 34px; line-height: 1.1; color: var(--ameixa); }
+  .membro .cargo { font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--rose-escuro); margin: 6px 0 10px; }
+  .membro p:last-child { color: var(--texto-suave); font-size: 16px; }
+
+  /* ---------- Depoimentos: um monte de bilhetes. O de cima é jogado para o lado e volta para o fim do monte ---------- */
+  .depo-grade { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 80px; align-items: center; }
+  .depo-nota { display: flex; align-items: center; gap: 16px; margin-top: 34px; }
+  .depo-nota strong { font-family: var(--serif); font-weight: 300; font-size: 76px; line-height: 1; color: var(--rose); }
+  .depo-nota .estrelas { display: block; color: var(--rose); letter-spacing: 3px; }
+  .depo-nota small { color: var(--claro-suave); font-size: 14px; }
+  .depo-setas { display: flex; align-items: center; gap: 10px; margin-top: 30px; }
+  .depo-setas button { width: 48px; height: 48px; border: 1px solid rgba(248,241,234,.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+  .depo-setas button:hover { background: rgba(229,185,166,.14); }
+  .depo-setas svg { width: 18px; height: 18px; fill: none; stroke: var(--claro); stroke-width: 1.8; }
+  .monte { position: relative; height: 430px; touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; }
+  .bilhete { position: absolute; inset: 0 8% 0 4%; background: var(--nude); color: var(--texto); border-radius: 10px; padding: 44px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 26px 50px -22px rgba(0,0,0,.6); transition: transform .7s var(--suave), opacity .5s; will-change: transform; }
+  .bilhete .estrelas { color: var(--rose-escuro); letter-spacing: 3px; margin-bottom: 16px; }
+  .bilhete blockquote { font-family: var(--serif); font-size: clamp(25px, 2.3vw, 33px); line-height: 1.22; color: var(--ameixa); margin-bottom: 24px; }
+  .bilhete b { display: block; font-size: 16px; font-weight: 600; }
+  .bilhete small { color: var(--texto-suave); font-size: 14px; }
+  .bilhete.arrastando { transition: none; }
+
+  /* ---------- Dicas ---------- */
+  .dicas-grade { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .dica { text-decoration: none; display: block; }
+  .dica .img { aspect-ratio: 4 / 5; border-radius: 180px 180px 8px 8px; overflow: hidden; margin-bottom: 20px; }
+  .dica img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--suave); }
+  .dica:hover img { transform: scale(1.05); }
+  .dica small { color: var(--rose-escuro); font-size: 14px; font-weight: 500; }
+  .dica h3 { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.12; color: var(--ameixa); margin-top: 6px; }
+
+  /* ---------- Agendar: a ficha que se preenche + o mapa num oval ---------- */
+  .agendar-grade { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: 72px; align-items: start; }
+  .ficha { background: var(--nude); color: var(--texto); border-radius: 10px; padding: 46px; box-shadow: 0 34px 70px -30px rgba(0,0,0,.7); }
+  .ficha header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-bottom: 18px; margin-bottom: 26px; border-bottom: 1px solid var(--linha); }
+  .ficha header b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 34px; line-height: 1; color: var(--ameixa); }
+  .ficha header span { font-size: 13px; color: var(--texto-suave); }
+  .ficha .grupo { margin-bottom: 24px; }
+  .ficha .legenda-campo { display: block; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+  .ficha .campos2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .ficha select, .ficha input[type=text], .ficha input[type=tel] { width: 100%; background: #fff; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips button { padding: 9px 14px; border: 1px solid var(--linha); border-radius: 999px; background: #fff; font-size: 15px; line-height: 1.2; transition: background .2s, border-color .2s, color .2s; }
+  .chips button small { display: block; font-size: 12px; color: var(--texto-suave); text-transform: capitalize; }
+  .chips button:hover { border-color: var(--rose-escuro); }
+  .chips button.marcado { background: var(--ameixa); border-color: var(--ameixa); color: var(--claro); }
+  .chips button.marcado small { color: var(--claro-suave); }
+  .ficha .aceite { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--texto-suave); margin-bottom: 20px; cursor: pointer; }
+  .ficha .aceite input { margin-top: 5px; accent-color: var(--ameixa); }
+  .ficha .btn { width: 100%; }
+  .ficha .btn { background: var(--ameixa); color: var(--claro); }
+  .ficha .btn:hover { background: var(--ameixa-escuro); }
+  .ficha .aviso { text-align: center; font-size: 14px; color: var(--texto-suave); margin-top: 12px; min-height: 22px; }
+  .contato-lado h3 { font-family: var(--serif); font-weight: 300; font-size: 38px; line-height: 1.1; margin-bottom: 22px; }
+  .dados { list-style: none; display: grid; gap: 18px; margin-bottom: 36px; font-size: 17px; }
+  .dados small { display: block; color: var(--claro-suave); font-size: 15px; }
+  .mapa-oval { position: relative; aspect-ratio: 5 / 6; border-radius: 50%; overflow: hidden; background: var(--ameixa-escuro); box-shadow: 0 0 0 10px rgba(229,185,166,.12); }
+  .mapa-oval iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(.4) contrast(1.02); }
+
+  /* ---------- Fio rosé (fio.js) ---------- */
+  .fio { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible; }
+  .fio path { fill: none; stroke: var(--rose-escuro); stroke-width: 1.2; stroke-linecap: round; opacity: .75; }
+
+  /* ---------- Celular e tablet: mesmos conteúdos, com o que pesa de fora ---------- */
+  @media (max-width: 920px), (pointer: coarse) {
+    .fio { display: none; }
+    .selo-giro { animation: none; }
+  }
+  @media (max-width: 920px) {
+    .hero-rosto { height: 200vh; }
+    .palavra-fundo p { top: 5%; }
+    .rosto-caixa { height: 86%; }
+    .hero-texto { left: 22px; right: 22px; top: 84px; bottom: auto; width: auto; display: block; }
+    .hero-texto h1 { font-size: clamp(46px, 13.5vw, 72px); margin-bottom: 14px; }
+    .hero-texto p { display: none; }
+    .hero-acoes { gap: 18px; }
+    .hero-texto .btn { width: auto; padding: 12px 22px; font-size: 15px; }
+    .sobre .container, .depo-grade, .agendar-grade { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+    .selo-giro { right: 0; width: 112px; height: 112px; }
+    .numeros strong { font-size: 42px; }
+    .numeros div { padding-left: 14px; }
+    /* penteadeira: espelho, frascos que correm com o dedo e a ficha embaixo */
+    .pente { grid-template-columns: minmax(0, 1fr); grid-template-areas: "espelho" "bancada" "ficha"; gap: 24px; }
+    .espelho { padding: 20px; }
+    .espelho-vidro { height: 58vw; max-height: 330px; }
+    .lampadas i { width: 9px; height: 9px; }
+    .lampadas.topo-l { top: 5px; } .lampadas.esq { left: 5px; } .lampadas.dir { right: 5px; }
+    .bancada { display: flex; overflow-x: auto; scrollbar-width: none; margin: 0 -24px; padding: 18px 24px 0; gap: 4px; border-radius: 0; }
+    .bancada::-webkit-scrollbar { display: none; }
+    .frasco { flex: 0 0 96px; }
+    .frasco svg { height: 92px; }
+    .frasco span { font-size: 16px; }
+    .ficha-trat { min-height: 610px; }
+    .ficha-item { padding: 26px 22px; transform: none; justify-content: flex-start; }
+    .ficha-item.ativa { transform: none; }
+    /* o espaço: rolagem de lado com o dedo, sem prender a página */
+    .espaco { height: auto; padding: 96px 0 72px; }
+    .espaco-palco { position: static; height: auto; overflow: visible; display: block; }
+    .espaco-abre { padding: 0 24px; width: auto; margin-bottom: 36px; }
+    .espaco-trilho { width: auto; padding: 0 24px 40px; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .espaco-trilho::-webkit-scrollbar { display: none; }
+    .espaco-trilho > .espaco-abre { display: none; }
+    .espaco figure { scroll-snap-align: center; width: 72vw !important; height: 96vw !important; }
+    .quiz { padding: 28px 20px; min-height: 0; }
+    .quiz-opcoes { grid-template-columns: minmax(0, 1fr); }
+    .quiz-res { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .quiz-res .oval { width: 130px; }
+    .equipe-grade, .dicas-grade { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+    .membro:nth-child(2) { margin-top: 0; }
+    .membro .foto { max-width: 320px; }
+    .monte { height: 460px; }
+    .bilhete { inset: 0 5% 0 1%; padding: 30px 26px; }
+    .ficha { padding: 28px 20px; }
+    .ficha .campos2 { grid-template-columns: minmax(0, 1fr); }
+    .mapa-oval { aspect-ratio: 1; border-radius: 50%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-rosto { height: auto; }
+    .js .hero-texto { opacity: 1; visibility: visible; }
+    .palavra-fundo { display: none; }
+    .espaco { height: auto; padding: 96px 0; }
+    .espaco-palco { position: static; height: auto; overflow: visible; }
+    .espaco-trilho { overflow-x: auto; width: auto; padding-bottom: 44px; }
+    .frase-acende span { opacity: 1; }
+  }
+</style>
+</head>
+<body data-pagina="inicio" class="so-rosto">
+
+<div class="abertura" aria-hidden="true">
+  <svg viewBox="0 0 44 56"><ellipse class="tracar" cx="22" cy="28" rx="20" ry="26"/><ellipse class="tracar b" cx="22" cy="28" rx="20" ry="26" transform="rotate(14 22 28)"/></svg>
+  <p>Clínica Alba</p>
+</div>
+
+<div data-topo></div>
+
+<main>
+  <section class="hero-rosto" id="inicio">
+    <div class="hero-palco" id="rosto-palco">
+      <svg class="contornos" id="contornos" aria-hidden="true" preserveAspectRatio="xMidYMid slice"></svg>
+      <div class="palavra-fundo" id="palavra-fundo" aria-hidden="true"><p class="entrada" style="--atraso:.1s">Estética</p><p class="acesa">Estética</p></div>
+      <div class="rosto-movel" id="rosto-movel">
+        <div class="rosto-caixa entrada" id="rosto-caixa" style="--atraso:.1s"><img id="rosto-a" src="rosto-depois.webp" alt="Rosto de mulher de frente, com o cabelo solto e maquiagem marcada" draggable="false"></div>
+        <canvas id="rosto-gl" aria-hidden="true"></canvas>
+      </div>
+      <div class="hero-texto" id="hero-texto">
+        <h1>Natural,<br><em>sem exagero.</em></h1>
+        <p>Cuidados para o rosto e o corpo, indicados depois de uma conversa sem pressa, em <span data-cidade></span>.</p>
+        <div class="hero-acoes">
+          <a class="btn" href="#agendar">Agendar avaliação</a>
+          <a class="link-seta" href="#tratamentos">Ver tratamentos <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="depois-exp">
+  <section class="sobre" id="sobre">
+    <div class="container">
+      <div class="sobre-foto revelar">
+        <div class="moldura"><img id="sobre-img" src="clinica.webp" alt="Corredor da Clínica Alba com prateleiras de produtos para a pele" loading="lazy"></div>
+        <svg class="selo-giro" viewBox="0 0 150 150" aria-hidden="true"><defs><path id="selo-p" d="M75 75m-60 0a60 60 0 1 1 120 0a60 60 0 1 1-120 0"/></defs><circle cx="75" cy="75" r="74" fill="#e5b9a6"/><text><textPath href="#selo-p">10 anos em Cascavel · avaliação individual ·</textPath></text></svg>
+      </div>
+      <div class="sobre-texto">
+        <p class="rotulo revelar">A clínica</p>
+        <p class="frase-acende" id="frase-acende">Antes de qualquer procedimento, a primeira pergunta é sempre a mesma: o que mais incomoda?</p>
+        <p class="revelar">Com a avaliação feita, explicamos o que faz sentido para o seu caso, quantas sessões costumam ser necessárias e quais cuidados pedir em casa. Se um tratamento não for indicado para você, dizemos isso também.</p>
+        <div class="numeros revelar">
+          <div><strong data-contar="10">0</strong><span>anos em Cascavel</span></div>
+          <div><strong data-contar="6">0</strong><span>áreas de tratamento</span></div>
+          <div><strong data-contar="3">0</strong><span>profissionais na equipe</span></div>
+        </div>
+        <div class="assinatura revelar"><img id="ass-foto" alt="" loading="lazy"><div><b id="ass-nome"></b><small id="ass-cargo"></small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ad" id="antes-depois">
+    <div class="ad-fotos">
+      <img class="ad-foto ad-antes" id="ad-antes" src="perfil-antes.webp" alt="Mulher de perfil, olhando para a direita, com a pele ao natural e o cabelo liso" loading="lazy">
+      <img class="ad-foto ad-depois" id="ad-depois" src="perfil-depois.webp" alt="A mesma mulher de perfil, olhando para a esquerda, com maquiagem marcada e o cabelo ondulado" loading="lazy">
+    </div>
+    <div class="ad-meio">
+      <div class="ad-col revelar">
+        <h2>Antes<em>da avaliação</em></h2>
+        <p>Muitas dúvidas e a sensação de não saber por onde começar.</p>
+        <a class="ad-seta" href="#comecar" aria-label="Por onde começar"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="ad-col revelar" style="--atraso:.12s">
+        <h2>Depois<em>do seu plano</em></h2>
+        <p>Cuidados indicados para você, com acompanhamento a cada retorno.</p>
+        <a class="ad-seta" href="#agendar" aria-label="Agendar avaliação"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+    <p class="ad-aviso">Imagens ilustrativas. Os resultados variam de pessoa para pessoa.</p>
+  </section>
+
+  <section class="tratamentos escuro" id="tratamentos">
+    <div class="container">
+      <div class="cabecalho">
+        <div><p class="rotulo revelar">Tratamentos</p><h2 class="revelar">Cuidados para <em>rosto e corpo.</em></h2></div>
+        <p class="revelar">Escolha um frasco da bancada para ver como cada tratamento funciona. A indicação é sempre feita na avaliação.</p>
+      </div>
+      <div class="pente" id="pente">
+        <div class="espelho revelar" id="espelho" aria-hidden="true">
+          <div class="lampadas topo-l" data-l="5"></div><div class="lampadas esq" data-l="5"></div><div class="lampadas dir" data-l="5"></div>
+          <div class="espelho-vidro" id="espelho-vidro"></div>
+        </div>
+        <div class="ficha-trat revelar" id="ficha-trat" style="--atraso:.1s" aria-live="polite"></div>
+        <div class="bancada revelar" id="bancada" style="--atraso:.15s"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="espaco" id="espaco">
+    <div class="espaco-palco" id="espaco-palco">
+      <div class="espaco-trilho" id="espaco-trilho">
+        <div class="espaco-abre">
+          <p class="rotulo">O espaço</p>
+          <h2>Um lugar para <em>desacelerar.</em></h2>
+          <p>Salas reservadas e atendimento com hora marcada, para você não precisar ter pressa.</p>
+        </div>
+        <figure class="f-a"><div><img src="https://images.unsplash.com/photo-1595871151608-bc7abd1caca3?w=1100&q=72&auto=format&fit=crop" alt="Sala de atendimento com maca e bancada" loading="lazy"></div><figcaption>Sala de atendimento</figcaption></figure>
+        <figure class="f-b"><div><img src="https://images.unsplash.com/photo-1706795033728-9232ef548a16?w=700&q=72&auto=format&fit=crop" alt="Massagem facial em ambiente tranquilo" loading="lazy"></div><figcaption>Uma pausa no dia</figcaption></figure>
+        <figure class="f-c"><div><img src="https://images.unsplash.com/photo-1786937680099-779e1da6f7f7?w=800&q=72&auto=format&fit=crop" alt="Prateleiras com produtos para a pele" loading="lazy"></div><figcaption>Produtos para cada pele</figcaption></figure>
+        <figure class="f-d"><div><img src="https://images.unsplash.com/photo-1713085085470-fba013d67e65?w=1000&q=72&auto=format&fit=crop" alt="Atendimento facial com luvas e equipamento" loading="lazy"></div><figcaption>Equipamentos e higiene</figcaption></figure>
+        <figure class="f-e"><div><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=700&q=72&auto=format&fit=crop" alt="Aplicação de máscara facial" loading="lazy"></div><figcaption>Atenção a cada detalhe</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="comecar escuro" id="comecar">
+    <div class="container">
+      <div class="cabecalho">
+        <div><p class="rotulo revelar">Por onde começar</p><h2 class="revelar">Não sabe o que <em>fazer primeiro?</em></h2></div>
+        <p class="revelar">Responda três perguntas rápidas e veja um bom assunto para levar à avaliação. Não é um diagnóstico.</p>
+      </div>
+      <div class="quiz revelar" id="quiz" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="equipe" id="equipe">
+    <div class="container">
+      <div class="cabecalho">
+        <div><p class="rotulo revelar">Equipe</p><h2 class="revelar">Quem cuida <em>da sua pele.</em></h2></div>
+        <p class="revelar">Uma equipe pequena, que conhece cada cliente pelo nome e acompanha o seu plano do primeiro dia até o último retorno.</p>
+      </div>
+      <div class="equipe-grade">
+        <article class="membro revelar"><div class="foto"><img src="https://images.unsplash.com/photo-1781888683081-3ac4b43f21db?w=700&h=875&q=75&auto=format&fit=crop&crop=faces" alt="Camila Rocha" loading="lazy"></div><h3>Camila Rocha</h3><p class="cargo">Responsável técnica · Biomédica · CRBM 0000</p><p>Faz as avaliações e os procedimentos injetáveis. Abriu a Alba em 2016.</p></article>
+        <article class="membro revelar" style="--atraso:.12s"><div class="foto"><img src="https://images.unsplash.com/photo-1706565029882-6f25f1d9af65?w=700&h=875&q=75&auto=format&fit=crop&crop=faces" alt="Renata Alves" loading="lazy"></div><h3>Renata Alves</h3><p class="cargo">Esteticista · Cuidados faciais</p><p>Cuida das limpezas de pele e dos peelings, e monta com você a rotina para casa.</p></article>
+        <article class="membro revelar" style="--atraso:.24s"><div class="foto"><img src="https://images.unsplash.com/photo-1687293233752-ec42de2050db?w=700&h=875&q=75&auto=format&fit=crop&crop=faces" alt="Júlia Mendes" loading="lazy"></div><h3>Júlia Mendes</h3><p class="cargo">Esteticista · Cuidados corporais</p><p>Responsável pela depilação a laser, pelas massagens e pela drenagem linfática.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="depoimentos escuro" id="depoimentos">
+    <div class="container depo-grade">
+      <div>
+        <p class="rotulo revelar">Depoimentos</p>
+        <h2 class="revelar">Quem já <em>passou por aqui.</em></h2>
+        <div class="depo-nota revelar"><strong>4,9</strong><div><span class="estrelas">★★★★★</span><small>Média de 212 avaliações no Google</small></div></div>
+        <div class="depo-setas revelar"><button id="monte-ant" aria-label="Avaliação anterior"><svg viewBox="0 0 24 24" style="transform:scaleX(-1)"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><button id="monte-prox" aria-label="Próxima avaliação"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+      </div>
+      <div class="monte revelar" id="monte" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="dicas" id="dicas">
+    <div class="container">
+      <div class="cabecalho">
+        <div><p class="rotulo revelar">Dicas</p><h2 class="revelar">Para entender <em>antes de decidir.</em></h2></div>
+        <p class="revelar">Conteúdo simples, escrito pela nossa equipe, para você chegar à avaliação com as perguntas certas.</p>
+      </div>
+      <div class="dicas-grade" id="dicas-grade"></div>
+    </div>
+  </section>
+
+  <section class="agendar escuro" id="agendar">
+    <div class="container">
+      <div class="cabecalho">
+        <div><p class="rotulo revelar">Agendar</p><h2 class="revelar">Sua primeira <em>conversa.</em></h2></div>
+        <p class="revelar">Preencha a ficha e ela chega pronta no nosso WhatsApp. Confirmamos o horário por lá.</p>
+      </div>
+      <div class="agendar-grade">
+        <form class="ficha revelar" id="ficha" novalidate>
+          <header><b>Ficha de avaliação</b><span id="ficha-data"></span></header>
+          <div class="grupo campo"><label for="f-trat">O que você quer conversar?</label><select id="f-trat" required></select></div>
+          <div class="grupo"><span class="legenda-campo">Qual dia?</span><div class="chips" id="chips-dia"></div></div>
+          <div class="grupo"><span class="legenda-campo">Qual horário?</span><div class="chips" id="chips-hora"></div></div>
+          <div class="campos2">
+            <div class="campo"><label for="f-nome">Nome</label><input id="f-nome" type="text" autocomplete="name" required></div>
+            <div class="campo"><label for="f-tel">WhatsApp</label><input id="f-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000" required></div>
+          </div>
+          <label class="aceite"><input type="checkbox" id="f-aceite"> Concordo em ser contatado(a) e com o uso dos meus dados apenas para este atendimento.</label>
+          <button class="btn" type="submit" data-icone="whats">Enviar pelo WhatsApp</button>
+          <p class="aviso" id="f-aviso" aria-live="polite">Não escreva dados de saúde aqui: conversamos na avaliação.</p>
+        </form>
+        <div class="contato-lado revelar" style="--atraso:.15s">
+          <h3>Ou venha nos conhecer.</h3>
+          <ul class="dados" id="dados"></ul>
+          <div class="mapa-oval" id="mapa-oval"><iframe id="mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa da clínica"></iframe></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+</main>
+
+<div data-rodape></div>
+
+<script src="dados.js"></script>
+<script>
+  // Conteúdo montado a partir de dados.js, antes de site.js ligar animações e links
+  document.querySelectorAll('[data-cidade]').forEach(e => { e.textContent = CONFIG.cidade.split('/')[0]; });
+  document.getElementById('ass-foto').src = CONFIG.fotoResponsavel;
+  document.getElementById('ass-nome').textContent = CONFIG.responsavel;
+  document.getElementById('ass-cargo').textContent = CONFIG.cargoResponsavel;
+  const fotoTrat = (t, w) => `${t.foto}?w=${w}&q=72&auto=format&fit=crop`;
+  // O frasco desenhado de cada tratamento (troque ou acrescente uma entrada para cada novo tratamento)
+  const FRASCOS = {
+    'limpeza-de-pele': '<path d="M38 8h22v8H46v10h-8z" fill="url(#g-rose)"/><rect x="33" y="26" width="14" height="10" fill="url(#g-rose)"/><rect x="18" y="36" width="44" height="106" rx="9" fill="url(#g-vidro)"/><rect x="24" y="66" width="32" height="44" rx="2" fill="#43202f" opacity=".12"/>',
+    'peeling': '<rect x="33" y="4" width="14" height="26" rx="7" fill="url(#g-escuro)"/><rect x="29" y="28" width="22" height="16" rx="2" fill="url(#g-rose)"/><path d="M29 44h22c0 8 11 10 11 22v66a10 10 0 0 1-10 10H28a10 10 0 0 1-10-10V66c0-12 11-14 11-22Z" fill="url(#g-ambar)"/><rect x="25" y="82" width="30" height="36" rx="2" fill="#f9f3ee" opacity=".88"/>',
+    'microagulhamento': '<rect x="34" y="52" width="12" height="90" rx="6" fill="url(#g-rose)"/><rect x="36" y="38" width="8" height="18" fill="url(#g-escuro)"/><rect x="14" y="10" width="52" height="30" rx="14" fill="url(#g-vidro)"/><g fill="#99604f"><circle cx="24" cy="18" r="1.6"/><circle cx="33" cy="18" r="1.6"/><circle cx="42" cy="18" r="1.6"/><circle cx="51" cy="18" r="1.6"/><circle cx="60" cy="18" r="1.6"/><circle cx="24" cy="26" r="1.6"/><circle cx="33" cy="26" r="1.6"/><circle cx="42" cy="26" r="1.6"/><circle cx="51" cy="26" r="1.6"/><circle cx="60" cy="26" r="1.6"/><circle cx="24" cy="33" r="1.6"/><circle cx="33" cy="33" r="1.6"/><circle cx="42" cy="33" r="1.6"/><circle cx="51" cy="33" r="1.6"/><circle cx="60" cy="33" r="1.6"/></g>',
+    'harmonizacao-facial': '<rect x="27" y="12" width="26" height="20" rx="3" fill="url(#g-rose)"/><rect x="31" y="32" width="18" height="10" fill="url(#g-vidro)"/><rect x="22" y="42" width="36" height="100" rx="8" fill="url(#g-vidro)"/><path d="M22 84h36v50a8 8 0 0 1-8 8H30a8 8 0 0 1-8-8Z" fill="#d98f83" opacity=".65"/><rect x="28" y="52" width="4" height="78" rx="2" fill="#fff" opacity=".7"/>',
+    'depilacao-a-laser': '<circle cx="40" cy="14" r="10" fill="#ffe9c8" opacity=".85"/><path d="M28 24h24l6 26v80a12 12 0 0 1-12 12H34a12 12 0 0 1-12-12V50Z" fill="url(#g-escuro)"/><rect x="33" y="62" width="14" height="30" rx="4" fill="url(#g-rose)"/><circle cx="40" cy="110" r="6" fill="#ffe9c8"/>',
+    'massagem-e-drenagem': '<rect x="33" y="6" width="14" height="18" rx="2" fill="#a97a55"/><rect x="31" y="22" width="18" height="22" fill="url(#g-ambar)"/><ellipse cx="40" cy="96" rx="30" ry="46" fill="url(#g-ambar)"/><rect x="22" y="80" width="36" height="34" rx="2" fill="#f9f3ee" opacity=".9"/><path d="M40 86c-7 5-7 13 0 22 7-9 7-17 0-22Z" fill="#99604f"/>'
+  };
+  const FRASCO_GRAD = '<defs><linearGradient id="g-vidro" x1="0" x2="1"><stop offset="0" stop-color="#f7e6da"/><stop offset=".45" stop-color="#fff8f2"/><stop offset="1" stop-color="#d9b5a2"/></linearGradient><linearGradient id="g-rose" x1="0" x2="1"><stop offset="0" stop-color="#b98270"/><stop offset=".45" stop-color="#f0cdbb"/><stop offset="1" stop-color="#99604f"/></linearGradient><linearGradient id="g-ambar" x1="0" x2="1"><stop offset="0" stop-color="#5e2e22"/><stop offset=".4" stop-color="#a65f3f"/><stop offset="1" stop-color="#46201a"/></linearGradient><linearGradient id="g-escuro" x1="0" x2="1"><stop offset="0" stop-color="#27111b"/><stop offset=".45" stop-color="#6a3a4c"/><stop offset="1" stop-color="#27111b"/></linearGradient></defs>';
+  document.querySelectorAll('.lampadas').forEach((l, k) => { l.innerHTML = Array.from({ length: +l.dataset.l }, (_, i) => `<i style="--n:${k * 5 + i}"></i>`).join(''); });
+  document.getElementById('espelho-vidro').innerHTML = TRATAMENTOS.map(t => `<img src="${fotoTrat(t, 1100)}" alt="" loading="lazy">`).join('');
+  document.getElementById('bancada').innerHTML = TRATAMENTOS.map((t, i) => `<button type="button" class="frasco" data-i="${i}"><svg viewBox="0 0 80 146" aria-hidden="true">${i ? '' : FRASCO_GRAD}${FRASCOS[t.id] || FRASCOS['limpeza-de-pele']}</svg><span>${t.titulo}</span></button>`).join('');
+  document.getElementById('ficha-trat').innerHTML = TRATAMENTOS.map((t, i) => `<article class="ficha-item"><header><span>Ficha de cuidado</span><b>0${i + 1}</b></header><h3>${t.titulo}</h3><p>${t.resumo}</p><h4>Costuma ser procurado por</h4><ul>${t.indicado.slice(0, 3).map(x => `<li>${x}</li>`).join('')}</ul><div class="ficha-acoes"><a class="btn" href="#agendar">Agendar avaliação</a><a class="link-seta" href="tratamento.html?a=${t.id}">Ver detalhes <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></article>`).join('');
+  document.getElementById('dicas-grade').innerHTML = ARTIGOS.map((a, i) => `<a class="dica revelar" style="--atraso:${i * .1}s" href="artigo.html?a=${a.id}"><div class="img"><img src="${a.foto}?w=700&q=72&auto=format&fit=crop" alt="" loading="lazy"></div><small>${a.leitura} de leitura</small><h3>${a.titulo}</h3></a>`).join('');
+  document.getElementById('dados').innerHTML = `<li>${CONFIG.endereco}<small>${CONFIG.bairroCidade}</small></li><li>${CONFIG.horario}<small>${CONFIG.horarioSabado}</small></li><li>${CONFIG.telefone}<small>${CONFIG.email}</small></li><li>Pix, débito e crédito<small>Em até 6x sem juros no cartão</small></li>`;
+  document.getElementById('mapa').src = `https://maps.google.com/maps?q=${encodeURIComponent(CONFIG.mapa)}&z=14&output=embed`;
+</script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="site.js"></script>
+<script src="fio.js"></script>
+<script>
+  const ate = (v, a, b) => Math.max(0, Math.min(1, (v - a) / (b - a)));
+  const leve = matchMedia('(max-width: 920px), (pointer: coarse)').matches;
+
+  // ---------- Topo: o rastro do mouse revela o outro rosto ----------
+  (function () {
+    // linhas de contorno do fundo
+    const svg = document.getElementById('contornos');
+    svg.setAttribute('viewBox', '0 0 1600 900');
+    let d = '';
+    for (let k = 0; k < 13; k++) {
+      const R = 150 + k * 92, pts = [];
+      for (let a = 0; a < 40; a++) {
+        const t = a / 40 * Math.PI * 2, r = R * (1 + .08 * Math.sin(3 * t + k * .7) + .05 * Math.sin(5 * t - k * .4));
+        pts.push(`${(800 + Math.cos(t) * r * 1.3).toFixed(0)} ${(470 + Math.sin(t) * r).toFixed(0)}`);
+      }
+      d += `<path d="M${pts.join('L')}Z" stroke-linejoin="round"/>`;
+    }
+    svg.innerHTML = d;
+
+    const secao = document.getElementById('rosto-palco'), canvas = document.getElementById('rosto-gl'), caixa = document.getElementById('rosto-caixa');
+    const toque = matchMedia('(hover: none), (pointer: coarse)').matches;
+    if (semMovimento) { document.body.classList.remove('so-rosto'); return; }
+
+    // Ao abrir, só o rosto enquadrado. Rolando, o rosto se ajeita e os textos entram; depois a página segue
+    const fora = document.getElementById('inicio'), movel = document.getElementById('rosto-movel'), texto = document.getElementById('hero-texto');
+    const palavra = document.getElementById('palavra-fundo'), luz = palavra.querySelector('.acesa');
+    // o dourado acende em volta do cursor (no celular, em volta do dedo)
+    function acender(x, y) {
+      const r = luz.getBoundingClientRect();
+      luz.style.setProperty('--cx', `${x - r.left}px`); luz.style.setProperty('--cy', `${y - r.top}px`);
+      palavra.classList.add('com-luz');
+    }
+    secao.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') acender(e.clientX, e.clientY); });
+    secao.addEventListener('pointerleave', () => palavra.classList.remove('com-luz'));
+    secao.addEventListener('touchmove', e => acender(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+    secao.addEventListener('touchend', () => palavra.classList.remove('com-luz'), { passive: true });
+    let escala = 1, lado = 0, pedidoH = false;
+    function rolar() {
+      pedidoH = false;
+      const alturaP = secao.clientHeight, p = ate(-fora.getBoundingClientRect().top, 0, fora.offsetHeight - alturaP), e = ate(p, 0, .5), o = ate(p, .12, .55);
+      // no celular o rosto começa maior e diminui para dar lugar ao título; a base continua na base da tela
+      const celular = innerWidth <= 920;
+      escala = celular ? 1 - .2 * e : 1 - .04 * e;
+      // no computador o rosto vai para a direita e abre espaço para o texto
+      lado = celular ? 0 : innerWidth * .2 * e * e * (3 - 2 * e);
+      movel.style.transform = `translate3d(${lado}px, 0, 0) scale(${escala})`;
+      palavra.style.opacity = 1 - ate(p, .03, .3);   // a palavra some quando o texto entra
+      document.body.classList.toggle('so-rosto', p < .05);
+      texto.style.opacity = o; texto.style.visibility = o > .01 ? 'visible' : 'hidden'; texto.style.setProperty('--sobe', `${(1 - o) * 26}px`);
+      // enquanto o rosto está preso, o menu continua transparente e à vista
+      if (p < 1) { topo.classList.remove('rolado', 'escondido'); }
+    }
+    addEventListener('scroll', () => { if (!pedidoH) { pedidoH = true; requestAnimationFrame(rolar); } }, { passive: true });
+    addEventListener('resize', rolar);
+    rolar();
+    const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false });
+    if (!gl) return;
+
+    const VS = 'attribute vec2 p; varying vec2 v; void main(){ v = p * .5 + .5; gl_Position = vec4(p, 0., 1.); }';
+    const FS = `precision mediump float; varying vec2 v; uniform sampler2D rastro, A, B; uniform vec4 caixa; uniform float t;
+      float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f); return mix(mix(h(i), h(i + vec2(1, 0)), f.x), mix(h(i + vec2(0, 1)), h(i + vec2(1, 1)), f.x), f.y); }
+      void main(){
+        float o = n(v * 7. + t * .25) * .6 + n(v * 17. - t * .18) * .4;
+        float m = texture2D(rastro, vec2(v.x, 1. - v.y) + (o - .5) * .035).r + (o - .5) * .16;
+        float a = smoothstep(.34, .39, m);
+        vec2 uv = (vec2(v.x, 1. - v.y) - caixa.xy) / caixa.zw;
+        bool dentro = uv.x >= 0. && uv.x <= 1. && uv.y >= 0. && uv.y <= 1.;
+        // enquanto o rastro está ativo, as duas fotos são desenhadas aqui: onde nenhuma tem cabelo, aparece o que está atrás
+        gl_FragColor = dentro ? mix(texture2D(A, uv), texture2D(B, uv), a) : vec4(0.);
+      }`;
+    const sh = (tipo, src) => { const x = gl.createShader(tipo); gl.shaderSource(x, src); gl.compileShader(x); return x; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.bindAttribLocation(prog, 0, 'p'); gl.linkProgram(prog); gl.useProgram(prog);
+    gl.enableVertexAttribArray(gl.getAttribLocation(prog, 'p')); gl.vertexAttribPointer(gl.getAttribLocation(prog, 'p'), 2, gl.FLOAT, false, 0, 0);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    function textura(un, fonte) {
+      const tx = gl.createTexture();
+      gl.activeTexture(gl.TEXTURE0 + un); gl.bindTexture(gl.TEXTURE_2D, tx);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      if (fonte) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, fonte);
+      return tx;
+    }
+    const uCaixa = gl.getUniformLocation(prog, 'caixa'), uT = gl.getUniformLocation(prog, 't');
+    ['rastro', 'A', 'B'].forEach((nome, i) => gl.uniform1i(gl.getUniformLocation(prog, nome), i));
+
+    const fotoFrente = document.getElementById('rosto-a');
+    // o rastro é desenhado num canvas pequeno, que apaga aos poucos
+    const mapa = document.createElement('canvas'), m = mapa.getContext('2d');
+    const txRastro = textura(0);
+    let W = 0, H = 0, raio = 40, pronto = 0, ativoAte = 0, rodando = false, ux = null, uy = null;
+    function medir() {
+      W = secao.clientWidth; H = secao.clientHeight;
+      const dpr = Math.min(devicePixelRatio || 1, toque ? 1.25 : 1.75);
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); gl.viewport(0, 0, canvas.width, canvas.height);
+      mapa.width = Math.round(W / 5); mapa.height = Math.round(H / 5); raio = Math.min(W, H) * (toque ? .21 : .17) / 5;
+      m.fillStyle = '#000'; m.fillRect(0, 0, mapa.width, mapa.height);
+      gl.uniform4f(uCaixa, caixa.offsetLeft / W, caixa.offsetTop / H, caixa.offsetWidth / W, caixa.offsetHeight / H);
+    }
+    function carimbo(x, y, f) {
+      const gx = x / 5, gy = y / 5, rr = raio * f, g = m.createRadialGradient(gx, gy, 0, gx, gy, rr);
+      g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(.55, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      m.fillStyle = g; m.beginPath(); m.arc(gx, gy, rr, 0, 7); m.fill();
+    }
+    function passar(xTela, yTela) {
+      if (pronto < 2) return;
+      // desconta o movimento do rosto: o rastro é desenhado na posição da foto
+      const x = W / 2 + (xTela - W / 2 - lado) / escala, y = H + (yTela - H) / escala;
+      if (ux === null) { ux = x; uy = y; }
+      const dist = Math.hypot(x - ux, y - uy), n = Math.min(14, Math.ceil(dist / (raio * 2)));
+      for (let i = 1; i <= n; i++) carimbo(ux + (x - ux) * i / n, uy + (y - uy) * i / n, 1 + Math.min(dist / 500, .5));
+      if (!n) carimbo(x, y, 1);
+      ux = x; uy = y;
+      ativoAte = performance.now() + 3200;
+      if (!rodando) { rodando = true; requestAnimationFrame(quadro); }
+    }
+    function quadro(t) {
+      m.globalCompositeOperation = 'source-over';
+      m.fillStyle = 'rgba(0,0,0,.016)'; m.fillRect(0, 0, mapa.width, mapa.height);   // apaga devagar
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, txRastro);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, mapa);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+      gl.uniform1f(uT, t / 1000);
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      fotoFrente.style.visibility = 'hidden';
+      if (t < ativoAte) requestAnimationFrame(quadro);
+      else { rodando = false; ux = uy = null; fotoFrente.style.visibility = ''; m.fillStyle = '#000'; m.fillRect(0, 0, mapa.width, mapa.height); gl.clear(gl.COLOR_BUFFER_BIT); }
+    }
+    // aberto direto do arquivo (file://) o navegador bloqueia as fotos no WebGL: fica só o primeiro rosto, sem erro
+    function carregar(src, un) {
+      return new Promise((ok, erro) => { const im = new Image(); im.onload = () => { try { textura(un, im); ok(); } catch (e) { erro(e); } }; im.onerror = erro; im.src = src; });
+    }
+    Promise.all([carregar('rosto-depois.webp', 1), carregar('rosto-antes.webp', 2)]).then(() => {
+      pronto = 2; medir();
+      secao.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; const s = secao.getBoundingClientRect(); passar(e.clientX - s.left, e.clientY - s.top); });
+      secao.addEventListener('pointerleave', () => { ux = uy = null; });
+      secao.addEventListener('touchmove', e => { const s = secao.getBoundingClientRect(), p = e.touches[0]; passar(p.clientX - s.left, p.clientY - s.top); }, { passive: true });
+      secao.addEventListener('touchend', () => { ux = uy = null; }, { passive: true });
+      addEventListener('resize', () => { if (secao.clientWidth !== W) medir(); });
+      // no celular não há mouse: o rastro passa uma vez pelo rosto, para mostrar que existe
+      if (toque) setTimeout(() => {
+        const inicio = performance.now(), L = caixa.offsetWidth, A = caixa.offsetHeight, cx = caixa.offsetLeft + L / 2, cy = caixa.offsetTop + A * .42;
+        (function anda(t) {
+          const f = (t - inicio) / 2600;
+          if (f > 1) { ux = uy = null; return; }
+          passar(W / 2 + (cx + Math.sin(f * 6.283) * L * .13 - W / 2) * escala, H + (cy + Math.sin(f * 12.566) * A * .12 - H) * escala);
+          requestAnimationFrame(anda);
+        })(inicio);
+      }, 2400);
+    }).catch(() => {});
+  })();
+
+  // ---------- Antes e depois: os rostos entram pelos lados com a rolagem ----------
+  (function () {
+    if (semMovimento) return;
+    const sec = document.getElementById('antes-depois'), a = document.getElementById('ad-antes'), d = document.getElementById('ad-depois');
+    let pedido = false;
+    function mover() {
+      pedido = false;
+      const r = sec.getBoundingClientRect(), p = ate(innerHeight - r.top, innerHeight * .1, innerHeight), q = 1 - p * p * (3 - 2 * p), x = q * innerWidth * .22;
+      a.style.transform = `translate3d(${-x}px, 0, 0)`;
+      d.style.transform = `translate3d(${x}px, 0, 0)`;
+    }
+    addEventListener('scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(mover); } }, { passive: true });
+    mover();
+  })();
+
+  // ---------- Frase que acende palavra por palavra e foto que anda devagar ----------
+  (function () {
+    const fr = document.getElementById('frase-acende'), foto = document.getElementById('sobre-img');
+    fr.innerHTML = fr.textContent.split(' ').map(p => `<span>${p}</span>`).join(' ');
+    if (semMovimento) return;
+    const pal = [...fr.children];
+    let pedido = false;
+    function atualizar() {
+      pedido = false;
+      const r = fr.getBoundingClientRect(), p = ate(innerHeight * .9 - r.top, 0, innerHeight * .55), n = Math.round(p * pal.length);
+      pal.forEach((s, i) => s.classList.toggle('aceso', i < n));
+      if (!leve) { const m = foto.parentElement.getBoundingClientRect(); foto.style.transform = `translate3d(0, ${-ate(innerHeight - m.top, 0, innerHeight + m.height) * 15}%, 0)`; }
+    }
+    addEventListener('scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(atualizar); } }, { passive: true });
+    atualizar();
+  })();
+
+  // ---------- Tratamentos: cada frasco acende o espelho e abre a ficha; sozinho, troca a cada alguns segundos ----------
+  (function () {
+    const pente = document.getElementById('pente'), espelho = document.getElementById('espelho'), banca = document.getElementById('bancada');
+    const frascos = [...banca.children], fichas = [...document.querySelectorAll('.ficha-item')], fotos = [...document.querySelectorAll('#espelho-vidro img')];
+    const N = frascos.length, TEMPO = 5000;
+    let atual = -1, camada = 1, timer = 0, naTela = false, parado = false;
+    function ir(i) {
+      if (i === atual) return;
+      const antes = fotos[atual];
+      atual = i;
+      const foto = fotos[i];
+      foto.loading = 'eager';
+      foto.classList.remove('ativa'); void foto.offsetWidth;
+      foto.style.zIndex = ++camada; foto.classList.add('ativa');
+      if (antes) setTimeout(() => { if (fotos[atual] !== antes) antes.classList.remove('ativa'); }, 600);
+      fichas.forEach((el, j) => el.classList.toggle('ativa', j === i));
+      frascos.forEach((b, j) => { b.classList.toggle('ativa', j === i); b.setAttribute('aria-current', j === i ? 'true' : 'false'); });
+      espelho.classList.remove('acende'); void espelho.offsetWidth; espelho.classList.add('acende');
+      if (innerWidth <= 920) banca.scrollTo({ left: frascos[i].offsetLeft - 24, behavior: 'smooth' });
+      agendar();
+    }
+    function agendar() {
+      clearTimeout(timer);
+      if (!parado && naTela && !semMovimento && !document.hidden) timer = setTimeout(() => ir((atual + 1) % N), TEMPO);
+    }
+    frascos.forEach((b, i) => {
+      b.addEventListener('click', () => { parado = true; ir(i); clearTimeout(timer); });
+      b.addEventListener('mouseenter', () => { parado = true; ir(i); clearTimeout(timer); });
+    });
+    pente.addEventListener('mouseleave', () => { parado = false; agendar(); });
+    new IntersectionObserver(([e]) => { naTela = e.isIntersecting; agendar(); }, { threshold: .3 }).observe(pente);
+    document.addEventListener('visibilitychange', agendar);
+    ir(0);
+  })();
+
+  // ---------- O espaço anda de lado com a rolagem (computador) ----------
+  (function () {
+    if (semMovimento || innerWidth <= 920) return;
+    const sec = document.getElementById('espaco'), tri = document.getElementById('espaco-trilho');
+    let pedido = false;
+    function mover() {
+      pedido = false;
+      const p = ate(-sec.getBoundingClientRect().top, 0, sec.offsetHeight - innerHeight);
+      tri.style.transform = `translate3d(${-p * Math.max(0, tri.scrollWidth - innerWidth)}px, 0, 0)`;
+    }
+    addEventListener('scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(mover); } }, { passive: true });
+    addEventListener('resize', mover);
+    mover();
+  })();
+
+  // ---------- Por onde começar ----------
+  (function () {
+    const quiz = document.getElementById('quiz');
+    const PERGUNTAS = [
+      { q: 'O que mais chama a sua atenção hoje?', o: [['Cravos e oleosidade', 'limpeza-de-pele'], ['Manchas e tom irregular', 'peeling'], ['Marcas e textura', 'microagulhamento'], ['Linhas de expressão', 'harmonizacao-facial'], ['Pelos e foliculite', 'depilacao-a-laser'], ['Pernas pesadas, cansaço', 'massagem-e-drenagem']] },
+      { q: 'Você já fez algum procedimento estético?', o: [['Nunca, seria a primeira vez', 'primeira'], ['Só cuidados simples', 'simples'], ['Sim, alguns', 'experiente']] },
+      { q: 'O que você prefere neste momento?', o: [['Algo simples, para começar', 'simples'], ['Um plano com várias sessões', 'plano'], ['Primeiro quero tirar dúvidas', 'duvidas']] }
+    ];
+    let passo = 0, resp = [];
+    function desenhar() {
+      if (passo >= PERGUNTAS.length) return resultado();
+      const P = PERGUNTAS[passo];
+      quiz.innerHTML = `<div class="quiz-passo"><div class="quiz-topo"><span>${passo + 1} de ${PERGUNTAS.length}</span><div class="quiz-barra"><i style="width:${(passo + 1) / PERGUNTAS.length * 100}%"></i></div></div><h3>${P.q}</h3><div class="quiz-opcoes">${P.o.map(([t, v]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</div></div>`;
+    }
+    function resultado() {
+      const t = TRATAMENTOS.find(x => x.id === resp[0]);
+      const extra = resp[2] === 'duvidas' ? 'Traga as suas dúvidas: a avaliação serve exatamente para isso.' : resp[1] === 'primeira' ? 'Como seria a sua primeira vez, começamos explicando cada etapa com calma.' : 'Na avaliação, vemos como isso se encaixa no que você já fez.';
+      quiz.innerHTML = `<div class="quiz-passo quiz-res"><div class="oval"><img src="${t.foto}?w=400&q=72&auto=format&fit=crop" alt=""></div><div>
+        <p class="rotulo" style="color:var(--rose)">Um bom assunto para a avaliação</p><h3>${t.titulo}</h3><p>${t.resumo} ${extra}</p>
+        <div class="acoes"><a class="btn" href="#agendar" data-res="${t.titulo}">Agendar avaliação</a><a class="btn btn-claro" href="tratamento.html?a=${t.id}">Conhecer o tratamento</a></div>
+        <small>Sugestão orientativa, não é um diagnóstico. A indicação é feita na avaliação.<button type="button" id="quiz-refazer">Refazer</button></small></div></div>`;
+    }
+    quiz.addEventListener('click', e => {
+      const b = e.target.closest('.quiz-opcoes button');
+      if (b) { resp[passo++] = b.dataset.v; desenhar(); return; }
+      if (e.target.id === 'quiz-refazer') { passo = 0; resp = []; desenhar(); return; }
+      const a = e.target.closest('[data-res]');
+      if (a) document.getElementById('f-trat').value = a.dataset.res;
+    });
+    desenhar();
+  })();
+
+  // ---------- Depoimentos: o monte de bilhetes ----------
+  (function () {
+    const DEPO = [
+      ['Márcia T.', 'Limpeza de pele', 'Fui com medo de sair com o rosto marcado. A Renata explicou cada etapa e foi cuidadosa do começo ao fim.'],
+      ['Gustavo P.', 'Depilação a laser', 'Era a primeira vez que eu entrava numa clínica de estética. Fui muito bem recebido e tiraram todas as minhas dúvidas.'],
+      ['Aline R.', 'Harmonização facial', 'Na avaliação, a Camila me mostrou o que fazia sentido e o que não fazia. Gostei de não sentir pressão para fechar nada.'],
+      ['Roberta C.', 'Drenagem linfática', 'Virou a minha pausa da semana. O espaço é tranquilo e a Júlia lembra de tudo o que conversamos na sessão anterior.'],
+      ['Larissa M.', 'Peeling', 'Recebi as orientações por escrito e me responderam no WhatsApp quando surgiu uma dúvida em casa. Me senti acompanhada.']
+    ];
+    const monte = document.getElementById('monte');
+    monte.innerHTML = DEPO.map(([n, p, t]) => `<article class="bilhete"><span class="estrelas">★★★★★</span><blockquote>${t}</blockquote><b>${n}</b><small>${p} · Google</small></article>`).join('');
+    let ordem = [...monte.children], timer = 0, naTela = false, mouse = false, ocupado = false;
+    const POS = [[0, 0, 0], [12, 12, 2.2], [-10, 22, -2.6], [16, 32, 3.4], [-6, 40, -1.4]];
+    function arrumar() {
+      ordem.forEach((b, i) => {
+        const [x, y, r] = POS[i] || POS[POS.length - 1];
+        b.style.zIndex = ordem.length - i; b.style.opacity = 1;
+        b.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${r}deg)`;
+        b.setAttribute('aria-hidden', i ? 'true' : 'false');
+      });
+    }
+    function jogar(dir) {
+      if (ocupado) return; ocupado = true;
+      const b = ordem[0];
+      b.style.transform = `translate3d(${dir * 115}%, -30px, 0) rotate(${dir * 14}deg)`; b.style.opacity = 0;
+      setTimeout(() => {
+        ordem.push(ordem.shift());
+        b.style.transition = 'none'; arrumar(); void b.offsetWidth; b.style.transition = '';
+        ocupado = false; agendar();
+      }, semMovimento ? 0 : 520);
+    }
+    function voltar() {
+      if (ocupado) return;
+      ordem.unshift(ordem.pop()); arrumar(); agendar();
+    }
+    function agendar() { clearTimeout(timer); if (!semMovimento && naTela && !mouse && !document.hidden) timer = setTimeout(() => jogar(1), 5500); }
+    document.getElementById('monte-prox').addEventListener('click', () => jogar(1));
+    document.getElementById('monte-ant').addEventListener('click', voltar);
+    monte.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { mouse = true; clearTimeout(timer); } });
+    monte.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { mouse = false; agendar(); } });
+    let drag = null;
+    monte.addEventListener('pointerdown', e => { if (ocupado || e.button) return; const b = ordem[0]; drag = { x: e.clientX, b, dx: 0 }; b.classList.add('arrastando'); monte.setPointerCapture(e.pointerId); clearTimeout(timer); });
+    monte.addEventListener('pointermove', e => { if (!drag) return; drag.dx = e.clientX - drag.x; drag.b.style.transform = `translate3d(${drag.dx}px, 0, 0) rotate(${drag.dx * .03}deg)`; });
+    const soltar = () => { if (!drag) return; const { b, dx } = drag; drag = null; b.classList.remove('arrastando'); if (Math.abs(dx) > 90) jogar(Math.sign(dx)); else { arrumar(); agendar(); } };
+    monte.addEventListener('pointerup', soltar); monte.addEventListener('pointercancel', soltar);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) clearTimeout(timer); else agendar(); });
+    new IntersectionObserver(([e]) => { naTela = e.isIntersecting; if (naTela) agendar(); else clearTimeout(timer); }, { threshold: .4 }).observe(monte);
+    arrumar();
+  })();
+
+  // ---------- Ficha de avaliação: monta a mensagem e abre o WhatsApp ----------
+  (function () {
+    const semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'], meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+    const sel = document.getElementById('f-trat'), chipsDia = document.getElementById('chips-dia'), chipsHora = document.getElementById('chips-hora');
+    const dias = [], d = new Date();
+    while (dias.length < 8) { d.setDate(d.getDate() + 1); if (d.getDay()) dias.push(new Date(d)); }
+    const hoje = new Date();
+    document.getElementById('ficha-data').textContent = `${hoje.getDate()} de ${meses[hoje.getMonth()]}, ${hoje.getFullYear()}`;
+    sel.innerHTML = '<option value="">Selecione</option>' + TRATAMENTOS.map(t => `<option>${t.titulo}</option>`).join('') + '<option>Ainda não sei</option>';
+    chipsDia.innerHTML = dias.map((x, i) => `<button type="button" data-i="${i}">${x.getDate()} ${meses[x.getMonth()]}<small>${semana[x.getDay()]}</small></button>`).join('');
+    const escolha = { dia: null, hora: '' };
+    function horas() {
+      const sab = escolha.dia && escolha.dia.getDay() === 6;
+      const lista = sab ? ['09:00', '10:00', '11:00', '12:00'] : ['09:00', '10:30', '12:00', '14:00', '15:30', '17:00', '18:00'];
+      if (!lista.includes(escolha.hora)) escolha.hora = '';
+      chipsHora.innerHTML = lista.map(h => `<button type="button" class="${h === escolha.hora ? 'marcado' : ''}">${h}</button>`).join('');
+    }
+    chipsDia.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...chipsDia.children].forEach(c => c.classList.toggle('marcado', c === b)); escolha.dia = dias[+b.dataset.i]; horas(); });
+    chipsHora.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...chipsHora.children].forEach(c => c.classList.toggle('marcado', c === b)); escolha.hora = b.textContent; });
+    horas();
+    const tel = document.getElementById('f-tel');
+    tel.addEventListener('input', () => {
+      const n = tel.value.replace(/\D/g, '').slice(0, 11);
+      tel.value = n.length > 6 ? `(${n.slice(0, 2)}) ${n.slice(2, n.length - 4)}-${n.slice(-4)}` : n.length > 2 ? `(${n.slice(0, 2)}) ${n.slice(2)}` : n;
+    });
+    document.getElementById('ficha').addEventListener('submit', e => {
+      e.preventDefault();
+      const nome = document.getElementById('f-nome'), aviso = document.getElementById('f-aviso');
+      const erro = m => { aviso.textContent = m; aviso.style.color = '#b0392b'; };
+      [[sel, sel.value], [nome, nome.value.trim().length > 1], [tel, tel.value.replace(/\D/g, '').length >= 10]].forEach(([el, ok]) => el.parentElement.classList.toggle('erro', !ok));
+      if (!sel.value) return erro('Escolha o que você quer conversar.');
+      if (!escolha.dia) return erro('Escolha um dia.');
+      if (!escolha.hora) return erro('Escolha um horário.');
+      if (nome.value.trim().length < 2 || tel.value.replace(/\D/g, '').length < 10) return erro('Preencha nome e WhatsApp.');
+      if (!document.getElementById('f-aceite').checked) return erro('Marque a autorização de contato para continuar.');
+      const dia = `${escolha.dia.getDate()} de ${meses[escolha.dia.getMonth()]} (${semana[escolha.dia.getDay()]})`;
+      window.open(linkWhats(`Olá! Vim pelo site e gostaria de agendar uma avaliação.\n\n*Nome:* ${nome.value.trim()}\n*WhatsApp:* ${tel.value}\n*Assunto:* ${sel.value}\n*Preferência:* ${dia}, às ${escolha.hora}`), '_blank', 'noopener');
+      aviso.style.color = ''; aviso.textContent = 'Abrimos o WhatsApp com a sua ficha. É só enviar!';
+    });
+  })();
+</script>
+</body>
+</html>

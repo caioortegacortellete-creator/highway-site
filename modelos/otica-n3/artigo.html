@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dicas | Ótica Mirante</title>
+<meta name="description" content="Dicas sobre óculos, lentes e cuidados com a visão.">
+<meta name="theme-color" content="#0b0909">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='31' fill='%230b0909'/%3E%3Cg fill='none' stroke='%23e0313f' stroke-width='3.2'%3E%3Ccircle cx='21' cy='34' r='9'/%3E%3Ccircle cx='43' cy='34' r='9'/%3E%3Cpath d='M30 33c1-2 3-2 4 0'/%3E%3C/g%3E%3C/svg%3E">
+<!-- Página de artigo. O conteúdo vem de dados.js: artigo.html?a=<id do artigo> -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('transicao')==='1')document.documentElement.classList.add('em-transicao')}catch(e){}</script>
+<link rel="stylesheet" href="estilo.css">
+<style>
+  .capa-artigo { background: var(--grafite); color: var(--claro); padding: 190px 0 0; overflow: hidden; }
+  .capa-artigo .container { max-width: 980px; }
+  .trilha { font-size: 13px; color: var(--claro-suave); margin-bottom: 26px; }
+  .trilha a { text-decoration: none; } .trilha a:hover { color: var(--claro); }
+  .capa-artigo h1 { font-family: var(--serif); font-weight: 300; font-size: clamp(38px, 5.4vw, 68px); line-height: 1.06; letter-spacing: -.02em; margin-bottom: 26px; }
+  .meta-artigo { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; color: var(--claro-suave); font-size: 14px; margin-bottom: 56px; }
+  .meta-artigo img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--preto); }
+  .meta-artigo b { color: var(--claro); font-weight: 600; }
+  .capa-artigo .imagem { aspect-ratio: 16 / 7; border-radius: 10px 10px 0 0; overflow: hidden; }
+  .capa-artigo .imagem img { width: 100%; height: 100%; object-fit: cover; }
+  .corpo { padding: 96px 0 120px; }
+  .corpo .container { max-width: 760px; }
+  .corpo p { font-size: 19px; line-height: 1.8; color: var(--texto); margin-bottom: 24px; }
+  .corpo p:first-child::first-letter { float: left; font-family: var(--nome); font-weight: 300; font-size: 92px; line-height: .8; padding: 8px 12px 0 0; color: var(--rubi-escuro); }
+  .corpo h2 { font-size: clamp(28px, 3vw, 36px); margin: 52px 0 18px; color: var(--grafite); }
+  .aviso-artigo { margin-top: 48px; padding: 28px 30px; border-left: 3px solid var(--rubi); background: var(--creme-alt); border-radius: 0 8px 8px 0; }
+  .aviso-artigo p { font-size: 16px; color: var(--texto-suave); margin-bottom: 16px; }
+  .aviso-artigo p::first-letter { all: unset; }
+  .compartilhar { display: flex; align-items: center; gap: 12px; margin-top: 40px; font-size: 14px; color: var(--texto-suave); }
+  .compartilhar a, .compartilhar button { padding: 9px 16px; border: 1px solid var(--linha); border-radius: 999px; text-decoration: none; font-size: 13px; transition: border-color .2s; }
+  .compartilhar a:hover, .compartilhar button:hover { border-color: var(--rubi-escuro); }
+  .mais { background: var(--creme-alt); }
+  .mais .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .mais a { display: grid; grid-template-columns: 160px 1fr; gap: 24px; align-items: center; text-decoration: none; }
+  .mais a .img { aspect-ratio: 1; border-radius: 8px; overflow: hidden; }
+  .mais a img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--suave); }
+  .mais a:hover img { transform: scale(1.06); }
+  .mais small { color: var(--rubi-escuro); font-weight: 700; font-size: 13px; }
+  .mais h3 { font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.25; color: var(--grafite); margin-top: 6px; }
+  @media (max-width: 920px) {
+    .capa-artigo { padding-top: 130px; }
+    .capa-artigo .imagem { aspect-ratio: 4 / 3; }
+    .corpo { padding: 64px 0 88px; }
+    .corpo p { font-size: 17px; }
+    .mais .grade { grid-template-columns: 1fr; }
+    .mais a { grid-template-columns: 100px 1fr; gap: 16px; }
+  }
+</style>
+</head>
+<body data-pagina="artigo">
+
+<div data-topo></div>
+
+<main id="pagina"></main>
+
+<div data-rodape></div>
+
+<script src="dados.js"></script>
+<script>
+  const id = new URLSearchParams(location.search).get('a');
+  const art = ARTIGOS.find(a => a.id === id) || ARTIGOS[0];
+  const prod = PRODUTOS.find(a => a.id === art.produto);
+  document.title = `${art.titulo} | ${CONFIG.escritorio}`;
+  document.querySelector('meta[name="description"]').content = art.resumo;
+  document.head.insertAdjacentHTML('beforeend', `<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'Article', headline: art.titulo, description: art.resumo,
+    image: art.foto, author: { '@type': 'Person', name: CONFIG.responsavel }, publisher: { '@type': 'Organization', name: CONFIG.escritorio }
+  })}<\/script>`);
+
+  document.getElementById('pagina').innerHTML = `
+  <section class="capa-artigo granulado" style="padding-bottom:0">
+    <div class="container">
+      <p class="trilha entrada"><a href="index.html">Início</a> / <a href="index.html#artigos">Dicas</a> / ${prod.titulo}</p>
+      <h1><span class="linha-mascara"><span style="--atraso:.1s">${art.titulo}</span></span></h1>
+      <div class="meta-artigo entrada" style="--atraso:.35s">
+        <img src="${CONFIG.fotoResponsavel}" alt=""><span>Por <b>${CONFIG.responsavel}</b></span><span>·</span><span>${art.data}</span><span>·</span><span>${art.leitura} de leitura</span>
+      </div>
+      <div class="imagem revelar-img"><img src="${art.foto}?w=1600&q=70&auto=format&fit=crop" alt=""></div>
+    </div>
+  </section>
+  <article class="corpo">
+    <div class="container">
+      ${art.corpo.map(([tag, txt]) => `<${tag} class="revelar">${txt}</${tag}>`).join('')}
+      <div class="aviso-artigo revelar">
+        <p>Dicas gerais, para orientar a sua escolha. Na loja, olhamos a sua receita, o seu rosto e a sua rotina para indicar o melhor para você.</p>
+        <a class="btn" data-whats="Olá, li a dica &quot;${art.titulo}&quot; no site e gostaria de uma orientação." data-icone="whats">Pedir uma orientação</a>
+      </div>
+      <div class="compartilhar"><span>Compartilhar:</span>
+        <a href="https://wa.me/?text=${encodeURIComponent(art.titulo + ' ' + location.href)}" target="_blank" rel="noopener">WhatsApp</a>
+        <button type="button" id="copiar">Copiar link</button>
+      </div>
+    </div>
+  </article>
+  <section class="mais">
+    <div class="container">
+      <div class="cabecalho"><div><p class="rotulo revelar">Continue lendo</p><h2 class="revelar">Outras <em>dicas.</em></h2></div></div>
+      <div class="grade">${ARTIGOS.filter(a => a.id !== art.id).map(a => `
+        <a class="revelar" href="artigo.html?a=${a.id}"><div class="img"><img src="${a.foto}?w=400&q=70&auto=format&fit=crop" alt="" loading="lazy"></div>
+        <div><small>${PRODUTOS.find(x => x.id === a.produto).titulo}</small><h3>${a.titulo}</h3></div></a>`).join('')}</div>
+    </div>
+  </section>`;
+  document.getElementById('copiar').addEventListener('click', e => {
+    const fim = () => { e.target.textContent = 'Link copiado!'; setTimeout(() => e.target.textContent = 'Copiar link', 2000); };
+    if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(fim, fim); else fim();
+  });
+</script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ótica Mirante | Óculos de grau e de sol em Maringá</title>
+<meta name="description" content="Óculos de grau, óculos de sol, lentes multifocais e lentes de contato em Maringá/PR. Envie a foto da sua receita e receba o orçamento pelo WhatsApp.">
+<!--
+  SITE MODELO — HIGHWAY AGÊNCIA — ÓTICA NÍVEL 1 (ESSENCIAL)
+  Para adaptar a um cliente, troque:
+  - Nome da ótica (Mirante), ano de fundação, cidade, textos, serviços e responsável
+  - Número do WhatsApp (procure por 5544999999999)
+  - Endereço e mapa (procure por "Maringá")
+  - Fotos: hero.webp (pessoa usando óculos, vertical) e loja.webp (a loja ou a vitrine)
+  Dados fictícios — apenas para demonstração. Fotos: Unsplash (licença livre).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vermelho: #6e1520;
+    --vermelho-escuro: #3a0a10;
+    --creme: #faf6ef;
+    --creme-alt: #f4e9e2;
+    --linha: #ead8cf;
+    --texto: #2a1416;
+    --texto-suave: #6d5755;
+    --claro: #f6f1e8;
+    --claro-suave: #e2c3bd;
+    --ambar: #e9b46a;
+    --ambar-hover: #f2c78a;
+    --ambar-escuro: #a3611f;
+    --whats: #1f8a4c;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Manrope", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--creme); color: var(--texto); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* Botões */
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--ambar); color: var(--vermelho-escuro); text-decoration: none; font-weight: 700; font-size: 15px; padding: 15px 28px; border-radius: 999px; transition: background .2s; }
+  .btn:hover { background: var(--ambar-hover); }
+  .btn svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+  .btn-linha { display: inline-flex; align-items: center; gap: 8px; color: var(--claro); text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 18px; border: 1px solid rgba(246,241,232,.3); border-radius: 999px; transition: border-color .2s, background .2s; }
+  .btn-linha:hover { border-color: var(--ambar); background: rgba(233,180,106,.12); }
+  .btn-linha svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* Topo */
+  .topo { position: absolute; top: 0; left: 0; right: 0; z-index: 3; color: var(--claro); }
+  .topo .container { display: flex; justify-content: space-between; align-items: center; height: 84px; }
+  .marca { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .marca svg { width: 44px; height: 22px; fill: none; stroke: var(--ambar); stroke-width: 1.6; }
+  .marca span { font-family: var(--serif); font-size: 24px; font-weight: 400; line-height: 1; letter-spacing: -.01em; }
+  .marca small { display: block; font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--claro-suave); margin-bottom: 4px; }
+
+  /* Hero */
+  .hero {
+    color: var(--claro); position: relative; overflow: hidden; background-color: var(--vermelho);
+    background-image:
+      radial-gradient(45% 70% at 76% 60%, rgba(233,180,106,.16), transparent 70%),
+      radial-gradient(120% 120% at 60% 40%, transparent 50%, rgba(30,4,8,.6) 100%);
+  }
+  /* o hero ocupa exatamente a altura da tela ao abrir o site */
+  .hero .container { display: grid; grid-template-columns: 1.08fr .92fr; gap: 64px; height: 100vh; height: 100svh; min-height: 640px; padding-top: 84px; }
+  .hero-texto { align-self: center; position: relative; z-index: 2; }
+  .sobretitulo { font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--ambar); margin-bottom: 24px; }
+  .hero h1 { font-family: var(--serif); font-weight: 300; font-size: min(7vw, 6.4rem, 12.5vh); line-height: .98; letter-spacing: -.025em; margin-bottom: 28px; }
+  .hero h1 em { font-style: italic; font-weight: 300; color: var(--ambar); }
+  .hero .apoio { color: var(--claro-suave); font-size: 17px; max-width: 30rem; margin-bottom: 34px; }
+  .hero .apoio strong { color: var(--claro); font-weight: 600; }
+  .destaques { display: flex; margin-top: 48px; list-style: none; }
+  .destaques li { padding: 0 26px; border-left: 1px solid rgba(246,241,232,.18); }
+  .destaques li:first-child { padding-left: 0; border-left: 0; }
+  .destaques strong { display: block; font-family: var(--serif); font-size: 27px; font-weight: 400; line-height: 1.15; color: var(--claro); }
+  .destaques span { font-size: 13px; color: var(--claro-suave); }
+  /* foto em arco, como o aro de uma lente, encostada na base da tela */
+  .vitrine { position: relative; align-self: end; height: calc(100% - 36px); }
+  .vitrine .arco { position: absolute; inset: 0; border-radius: 999px 999px 0 0; overflow: hidden; background: var(--vermelho-escuro); }
+  .vitrine .arco img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .vitrine::before { content: ""; position: absolute; inset: -18px -18px 0 18px; border: 1px solid rgba(233,180,106,.55); border-bottom: 0; border-radius: 999px 999px 0 0; }
+  .vitrine .carimbo { position: absolute; left: -54px; bottom: 64px; z-index: 2; width: 132px; height: 132px; border-radius: 50%; background: var(--ambar); color: var(--vermelho-escuro); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 18px 40px rgba(30,4,8,.35); }
+  .vitrine .carimbo b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 26px; line-height: 1; }
+  .vitrine .carimbo span { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.35; margin-top: 6px; }
+
+  /* Seções — alternam vermelho / creme: hero, sobre, serviços, como funciona, contato */
+  section { padding: 120px 0; }
+  .rotulo { font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ambar-escuro); margin-bottom: 18px; }
+  h2 { font-family: var(--serif); font-weight: 300; font-size: clamp(38px, 5vw, 60px); line-height: 1.06; letter-spacing: -.02em; }
+  h2 em { font-style: italic; font-weight: 300; color: var(--ambar-escuro); }
+  .escuro { background-color: var(--vermelho); color: var(--claro); background-image: radial-gradient(70% 90% at 85% 0%, rgba(233,180,106,.1), transparent 60%); }
+  .escuro .rotulo, .escuro h2 em { color: var(--ambar); }
+
+  /* Sobre (creme) */
+  .sobre .container { display: grid; grid-template-columns: 1fr 1.05fr; gap: 88px; align-items: center; }
+  .sobre-foto { position: relative; padding: 0 28px 28px 0; }
+  .sobre-foto::before { content: ""; position: absolute; right: 0; bottom: 0; width: 82%; height: 82%; border: 1px solid var(--ambar-escuro); border-radius: 6px; }
+  .sobre-foto .moldura { position: relative; aspect-ratio: 4 / 4.6; border-radius: 6px; overflow: hidden; }
+  .sobre-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 40% 50%; }
+  .sobre-foto .selo-anos { position: absolute; left: -28px; bottom: 56px; background: var(--vermelho); color: var(--claro); padding: 22px 26px; border-radius: 6px; box-shadow: 0 20px 40px rgba(58,10,16,.22); }
+  .sobre-foto .selo-anos strong { display: block; font-family: var(--serif); font-size: 52px; font-weight: 300; line-height: .95; color: var(--ambar); }
+  .sobre-foto .selo-anos span { font-size: 13px; color: var(--claro-suave); line-height: 1.4; display: block; max-width: 140px; margin-top: 4px; }
+  .sobre-texto h2 { margin-bottom: 28px; }
+  .sobre-texto .lead { font-family: var(--serif); font-size: 21px; font-weight: 400; line-height: 1.55; color: var(--vermelho); margin-bottom: 20px; }
+  .sobre-texto p { color: var(--texto-suave); font-size: 17px; margin-bottom: 16px; }
+  .assinatura-sobre { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 36px; padding-top: 32px; border-top: 1px solid var(--linha); }
+  .assinatura-sobre .nome-ass { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 30px; line-height: 1; color: var(--vermelho); }
+  .assinatura-sobre .nome-ass small { display: block; font-family: var(--sans); font-style: normal; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--texto-suave); margin-top: 8px; }
+
+  /* Serviços (vermelho) */
+  .servicos-topo { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; margin-bottom: 64px; }
+  .servicos-topo p:not(.rotulo) { color: var(--claro-suave); font-size: 18px; }
+  .lista-servicos { display: grid; grid-template-columns: 1fr 1fr; column-gap: 64px; list-style: none; border-bottom: 1px solid rgba(246,241,232,.14); }
+  .lista-servicos a { display: grid; grid-template-columns: 64px 1fr 44px; gap: 20px; align-items: start; padding: 34px 0; border-top: 1px solid rgba(246,241,232,.14); text-decoration: none; transition: padding .25s; }
+  .lista-servicos a:hover { padding-left: 10px; }
+  .lista-servicos .num { font-family: var(--serif); font-style: italic; font-size: 38px; font-weight: 300; line-height: 1; color: var(--ambar); }
+  .lista-servicos h3 { font-family: var(--serif); font-weight: 400; font-size: 27px; line-height: 1.2; margin-bottom: 8px; }
+  .lista-servicos p { color: var(--claro-suave); font-size: 16px; }
+  .lista-servicos .seta { width: 44px; height: 44px; border: 1px solid rgba(246,241,232,.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background .2s, border-color .2s; }
+  .lista-servicos .seta svg { width: 16px; height: 16px; fill: none; stroke: var(--claro); stroke-width: 1.8; }
+  .lista-servicos a:hover .seta { background: var(--ambar); border-color: var(--ambar); }
+  .lista-servicos a:hover .seta svg { stroke: var(--vermelho-escuro); }
+
+  /* Como funciona (creme) */
+  .passos .container { display: grid; grid-template-columns: .85fr 1.15fr; gap: 96px; align-items: start; }
+  .passos-intro h2 { margin-bottom: 24px; }
+  .passos-intro p { color: var(--texto-suave); font-size: 18px; margin-bottom: 36px; }
+  .lista-passos { list-style: none; }
+  .passo { display: grid; grid-template-columns: 110px 1fr; gap: 24px; padding: 36px 0; border-top: 1px solid var(--linha); }
+  .passo:last-child { border-bottom: 1px solid var(--linha); }
+  .passo .num { font-family: var(--serif); font-style: italic; font-size: 72px; font-weight: 300; line-height: .8; color: var(--ambar-escuro); }
+  .passo h3 { font-family: var(--serif); font-weight: 400; font-size: 27px; color: var(--vermelho); margin-bottom: 8px; }
+  .passo p { color: var(--texto-suave); font-size: 17px; }
+
+  /* Contato (vermelho) — informações à esquerda, mapa ocupando a metade direita até a borda */
+  .contato { padding: 0; }
+  .contato-grade { display: grid; grid-template-columns: 1fr 1fr; }
+  .contato-info { padding: 120px 72px 120px max(24px, calc((100vw - 1180px) / 2 + 24px)); }
+  .contato-info h2 { margin-bottom: 20px; }
+  .contato .chamada { color: var(--claro-suave); font-size: 18px; margin-bottom: 36px; max-width: 30rem; }
+  .dados { list-style: none; margin: 48px 0 36px; display: grid; gap: 22px; }
+  .dados li { display: flex; gap: 16px; font-size: 17px; }
+  .dados svg { width: 22px; height: 22px; fill: none; stroke: var(--ambar); stroke-width: 1.6; flex-shrink: 0; margin-top: 3px; }
+  .dados small { display: block; color: var(--claro-suave); font-size: 14px; }
+  .redes { display: flex; gap: 12px; }
+  .redes a { width: 46px; height: 46px; border: 1px solid rgba(246,241,232,.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: border-color .2s, background .2s; }
+  .redes a:hover { border-color: var(--ambar); background: rgba(233,180,106,.1); }
+  .redes svg { width: 18px; height: 18px; fill: var(--claro); }
+  .mapa { position: relative; min-height: 520px; }
+  .mapa iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; filter: grayscale(.35) contrast(1.02); }
+
+  .rodape { background: var(--vermelho-escuro); color: var(--claro-suave); font-size: 13px; padding: 30px 0; border-top: 1px solid rgba(233,180,106,.22); }
+  .rodape .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .rodape strong { font-family: var(--serif); font-weight: 400; color: var(--claro); font-size: 20px; margin-right: 10px; }
+
+  /* WhatsApp flutuante */
+  .whats-flutuante { position: fixed; right: 20px; bottom: 20px; z-index: 10; width: 58px; height: 58px; border-radius: 50%; background: var(--whats); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,.25); transition: transform .2s; }
+  .whats-flutuante:hover { transform: scale(1.06); }
+  .whats-flutuante svg { width: 30px; height: 30px; fill: #fff; }
+
+  /* Celular */
+  @media (max-width: 860px) {
+    .topo .container { height: 72px; }
+    .topo .btn-linha { display: none; }
+    .hero .container { grid-template-columns: 1fr; grid-template-rows: auto 1fr; min-height: 640px; padding-top: 84px; gap: 28px; }
+    .sobretitulo { margin-bottom: 14px; font-size: 11px; }
+    .hero h1 { font-size: clamp(44px, 12.5vw, 64px); margin-bottom: 16px; }
+    .hero .apoio { font-size: 16px; margin-bottom: 22px; }
+    .destaques { display: none; }
+    .vitrine { height: 100%; min-height: 220px; margin: 0 18px 0 0; }
+    .vitrine::before { inset: -12px -12px 0 12px; }
+    .vitrine .carimbo { width: 96px; height: 96px; left: -12px; bottom: 24px; }
+    .vitrine .carimbo b { font-size: 19px; }
+    .vitrine .carimbo span { font-size: 9px; }
+    section { padding: 88px 0; }
+    .sobre .container, .servicos-topo, .passos .container, .contato-grade { grid-template-columns: 1fr; }
+    .sobre .container { gap: 56px; }
+    .sobre-foto { padding: 0 20px 20px 0; margin-left: 12px; }
+    .sobre-foto .selo-anos { left: -12px; bottom: 40px; padding: 16px 18px; }
+    .sobre-foto .selo-anos strong { font-size: 40px; }
+    .sobre-texto .lead { font-size: 19px; }
+    .servicos-topo { gap: 20px; margin-bottom: 40px; }
+    .lista-servicos { grid-template-columns: 1fr; }
+    .lista-servicos a { grid-template-columns: 48px 1fr 40px; gap: 14px; padding: 28px 0; }
+    .lista-servicos .num { font-size: 30px; }
+    .lista-servicos h3 { font-size: 23px; }
+    .lista-servicos .seta { width: 40px; height: 40px; }
+    .passos .container { gap: 40px; }
+    .passo { grid-template-columns: 72px 1fr; gap: 16px; padding: 28px 0; }
+    .passo .num { font-size: 54px; }
+    .passo h3 { font-size: 23px; }
+    .btn { width: 100%; justify-content: center; }
+    .contato-info { padding: 88px 24px 56px; }
+    .mapa { min-height: 340px; }
+  }
+  @media (min-width: 861px) and (max-width: 1060px) {
+    .destaques li { padding: 0 16px; }
+    .destaques strong { font-size: 23px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-whats" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm5.8 14.06c-.24.68-1.43 1.33-1.97 1.38-.5.05-.97.24-3.27-.68-2.77-1.09-4.52-3.92-4.66-4.1-.13-.18-1.11-1.48-1.11-2.82 0-1.34.7-2 .95-2.27.25-.27.54-.34.72-.34h.52c.17 0 .39-.06.61.47.24.56.79 1.92.86 2.06.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.14-.28.29-.12.56.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.14.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.59.75 1.86.89.27.14.45.2.52.32.07.11.07.66-.17 1.34Z"/></symbol>
+</svg>
+
+<header class="topo">
+  <div class="container">
+    <a class="marca" href="#">
+      <svg viewBox="0 0 44 22" aria-hidden="true"><circle cx="10" cy="12" r="8.5"/><circle cx="34" cy="12" r="8.5"/><path d="M18.5 11c1.2-1.6 5.8-1.6 7 0M1.5 10 0 7M42.5 10 44 7"/></svg>
+      <span><small>Ótica</small>Mirante</span>
+    </a>
+    <a class="btn-linha" href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20enviar%20a%20minha%20receita%20para%20or%C3%A7amento." target="_blank" rel="noopener">
+      <svg><use href="#i-whats"/></svg> Enviar receita
+    </a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" style="padding:0">
+    <div class="container">
+      <div class="hero-texto">
+        <p class="sobretitulo">Ótica em Maringá · desde 2012</p>
+        <h1>Enxergar bem,<br> <em>do seu jeito.</em></h1>
+        <p class="apoio">Armações escolhidas a dedo, lentes de laboratório e atendimento sem pressa. <strong>Mande a foto da sua receita</strong> e receba o orçamento pelo WhatsApp.</p>
+        <a class="btn" href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20enviar%20a%20minha%20receita%20para%20or%C3%A7amento." target="_blank" rel="noopener">
+          <svg><use href="#i-whats"/></svg> Enviar minha receita
+        </a>
+        <ul class="destaques">
+          <li><strong>12 anos</strong><span>em Maringá</span></li>
+          <li><strong>Ajustes</strong><span>sem custo, sempre</span></li>
+          <li><strong>Até 10x</strong><span>sem juros no cartão</span></li>
+        </ul>
+      </div>
+      <div class="vitrine">
+        <div class="arco"><img src="hero.webp" alt="Cliente usando óculos de armação tartaruga"></div>
+        <p class="carimbo"><b>Receita</b><span>orçada pelo<br>WhatsApp</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sobre" id="sobre">
+    <div class="container">
+      <div class="sobre-foto">
+        <div class="moldura"><img src="loja.webp" alt="Armações expostas na Ótica Mirante"></div>
+        <div class="selo-anos"><strong>12</strong><span>anos cuidando da visão de Maringá</span></div>
+      </div>
+      <div class="sobre-texto">
+        <p class="rotulo">A ótica</p>
+        <h2>Óculos certos começam com <em>uma boa conversa.</em></h2>
+        <p class="lead">Antes de mostrar armações, a gente pergunta como é o seu dia: tela, volante, leitura, sol.</p>
+        <p>Com a receita em mãos, indicamos a lente que faz sentido para a sua rotina e ajudamos a encontrar o formato que combina com o seu rosto. As medidas são tiradas aqui na loja, e o ajuste final é feito na entrega.</p>
+        <p>Depois disso, é só voltar quando precisar: aperto de parafuso, troca de plaqueta e limpeza ficam por nossa conta.</p>
+        <div class="assinatura-sobre">
+          <p class="nome-ass">Fernanda Lima<small>Fundadora · Óptica responsável</small></p>
+          <a class="btn" href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener">
+            <svg><use href="#i-whats"/></svg> Falar com a loja
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="servicos escuro" id="servicos">
+    <div class="container">
+      <div class="servicos-topo">
+        <div>
+          <p class="rotulo">Produtos e serviços</p>
+          <h2>O que você <em>encontra aqui.</em></h2>
+        </div>
+        <p>Da primeira armação da criança à multifocal de quem já lê com o braço esticado. Escolha o assunto e fale direto com a gente pelo WhatsApp.</p>
+      </div>
+      <ul class="lista-servicos">
+        <li><a href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20%C3%B3culos%20de%20grau." target="_blank" rel="noopener"><span class="num">01</span><div><h3>Óculos de grau</h3><p>Armações de acetato, metal e titânio, com lentes antirreflexo e filtro de luz azul.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20%C3%B3culos%20de%20sol." target="_blank" rel="noopener"><span class="num">02</span><div><h3>Óculos de sol</h3><p>Proteção UV de verdade, com ou sem grau, inclusive com lentes polarizadas.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20lentes%20multifocais." target="_blank" rel="noopener"><span class="num">03</span><div><h3>Lentes multifocais</h3><p>Longe, meia distância e perto em uma lente só, com medição feita na loja.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20lentes%20de%20contato." target="_blank" rel="noopener"><span class="num">04</span><div><h3>Lentes de contato</h3><p>Descartáveis, tóricas e coloridas, com orientação de uso e cuidados.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20%C3%B3culos%20infantis." target="_blank" rel="noopener"><span class="num">05</span><div><h3>Óculos infantis</h3><p>Armações flexíveis e resistentes, no tamanho certo para não escorregar.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20ajustes%20e%20consertos." target="_blank" rel="noopener"><span class="num">06</span><div><h3>Ajustes e consertos</h3><p>Troca de plaquetas, hastes e parafusos, solda e alinhamento da armação.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="passos">
+    <div class="container">
+      <div class="passos-intro">
+        <p class="rotulo">Como funciona</p>
+        <h2>Da receita ao óculos <em>no rosto.</em></h2>
+        <p>Você não precisa entender de lentes. Basta mandar a receita: a gente explica as opções em linguagem simples.</p>
+        <a class="btn" href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20enviar%20a%20minha%20receita%20para%20or%C3%A7amento." target="_blank" rel="noopener">
+          <svg><use href="#i-whats"/></svg> Começar agora
+        </a>
+      </div>
+      <ol class="lista-passos">
+        <li class="passo"><p class="num">01</p><div><h3>Envie a receita</h3><p>Tire uma foto da receita e mande pelo WhatsApp. Respondemos com as opções de lente e os valores.</p></div></li>
+        <li class="passo"><p class="num">02</p><div><h3>Escolha a armação</h3><p>Venha à loja experimentar os modelos. Tiramos as medidas do rosto para a lente ficar no lugar certo.</p></div></li>
+        <li class="passo"><p class="num">03</p><div><h3>Retire ajustado</h3><p>Avisamos quando o óculos estiver pronto e fazemos o ajuste final na hora, para não apertar nem escorregar.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="contato escuro" id="contato">
+    <div class="contato-grade">
+      <div class="contato-info">
+        <p class="rotulo">Visite a loja</p>
+        <h2>Venha <em>experimentar.</em></h2>
+        <p class="chamada">Atendimento por ordem de chegada. Se preferir, mande uma mensagem e separamos alguns modelos para você.</p>
+        <a class="btn" href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener">
+          <svg><use href="#i-whats"/></svg> Falar pelo WhatsApp
+        </a>
+        <ul class="dados">
+          <li>
+            <svg viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span>Av. Brasil, 0000 · Loja 00<br><small>Zona 01, Maringá/PR</small></span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span>Segunda a sexta, das 9h às 18h<br><small>Sábado, das 9h às 13h</small></span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            <span>(44) 99999-9999<br><small>contato@oticamirante.com.br</small></span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg>
+            <span>Pix, débito e crédito<br><small>Em até 10x sem juros no cartão</small></span>
+          </li>
+        </ul>
+        <div class="redes">
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 7.3a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4Zm0 7.7a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm4.9-8.9a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0ZM12 3.6c2.7 0 3 0 4.1.1 2.7.1 4 1.4 4.1 4.1.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 2.7-1.4 4-4.1 4.1-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-2.7-.1-4-1.4-4.1-4.1-.1-1.1-.1-1.4-.1-4.1s0-3 .1-4.1c.1-2.7 1.4-4 4.1-4.1 1.1-.1 1.4-.1 4.1-.1ZM12 2c-2.7 0-3.1 0-4.2.1C4.2 2.2 2.2 4.2 2.1 7.8 2 8.9 2 9.3 2 12s0 3.1.1 4.2c.1 3.6 2.1 5.6 5.7 5.7 1.1.1 1.5.1 4.2.1s3.1 0 4.2-.1c3.6-.1 5.6-2.1 5.7-5.7.1-1.1.1-1.5.1-4.2s0-3.1-.1-4.2c-.1-3.6-2.1-5.6-5.7-5.7C15.1 2 14.7 2 12 2Z"/></svg></a>
+            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8.5V6.6c0-.8.2-1.3 1.4-1.3H17V2.2c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.3H8v3.3h2.6V22H14v-10.2h2.6l.4-3.3H14Z"/></svg></a>
+        </div>
+      </div>
+      <div class="mapa">
+        <iframe src="https://maps.google.com/maps?q=Maring%C3%A1%2C%20PR&z=14&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa da loja"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="rodape">
+  <div class="container">
+    <span><strong>Ótica Mirante</strong>Óculos de grau, sol e lentes de contato</span>
+    <span>Maringá/PR · CNPJ 00.000.000/0001-00 · © 2026</span>
+  </div>
+</footer>
+
+<a class="whats-flutuante" href="https://wa.me/5544999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener" aria-label="Falar pelo WhatsApp">
+  <svg><use href="#i-whats"/></svg>
+</a>
+
+</body>
+</html>

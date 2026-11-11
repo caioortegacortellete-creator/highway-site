@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Produtos | Ótica Mirante</title>
+<meta name="description" content="Óculos de grau, óculos de sol e lentes de contato em Maringá/PR.">
+<meta name="theme-color" content="#0b0909">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='31' fill='%230b0909'/%3E%3Cg fill='none' stroke='%23e0313f' stroke-width='3.2'%3E%3Ccircle cx='21' cy='34' r='9'/%3E%3Ccircle cx='43' cy='34' r='9'/%3E%3Cpath d='M30 33c1-2 3-2 4 0'/%3E%3C/g%3E%3C/svg%3E">
+<!-- Página de produto (landing page para anúncios e Google). O conteúdo vem de dados.js: produto.html?a=oculos-de-grau, ?a=multifocais etc. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('transicao')==='1')document.documentElement.classList.add('em-transicao')}catch(e){}</script>
+<link rel="stylesheet" href="estilo.css">
+<style>
+  .capa { position: relative; min-height: 78vh; display: flex; align-items: flex-end; color: var(--claro); padding: 180px 0 90px; overflow: hidden; background: var(--preto); }
+  .capa .foto { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.08); animation: aproximar 2.4s var(--suave) forwards; }
+  .capa .foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,9,9,.72) 0%, rgba(11,9,9,.8) 50%, rgba(11,9,9,.97) 100%); }
+  @keyframes aproximar { to { transform: scale(1); } }
+  .capa .container { position: relative; z-index: 2; }
+  .trilha { font-size: 13px; color: var(--claro-suave); margin-bottom: 26px; }
+  .trilha a { text-decoration: none; } .trilha a:hover { color: var(--claro); }
+  .capa h1 { font-family: var(--nome); font-weight: 300; font-size: clamp(56px, 8.4vw, 124px); line-height: .95; letter-spacing: -.03em; margin-bottom: 26px; }
+  .capa h1 em { color: var(--rubi); font-weight: 300; }
+  .capa p.resumo { font-size: 20px; color: var(--claro-suave); max-width: 40rem; margin-bottom: 34px; }
+  .capa .acoes { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .conteudo .container { display: grid; grid-template-columns: 1.3fr .7fr; gap: 88px; align-items: start; }
+  .texto .lead { font-family: var(--serif); font-size: 26px; line-height: 1.5; color: var(--grafite); margin-bottom: 22px; }
+  .texto p { color: var(--texto-suave); font-size: 18px; margin-bottom: 18px; }
+  .texto h2 { font-size: clamp(32px, 3.6vw, 44px); margin: 64px 0 26px; }
+  .lista-check { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .lista-check li { display: flex; gap: 14px; padding: 20px; background: var(--creme-alt); border-radius: 8px; color: var(--texto); }
+  .lista-check li::before { content: "✓"; color: var(--rubi-escuro); font-weight: 700; }
+  .passos-area { list-style: none; counter-reset: p; display: grid; gap: 0; }
+  .passos-area li { counter-increment: p; display: grid; grid-template-columns: 80px 1fr; padding: 26px 0; border-top: 1px solid var(--linha); }
+  .passos-area li:last-child { border-bottom: 1px solid var(--linha); }
+  .passos-area li::before { content: "0" counter(p); font-family: var(--nome); font-style: italic; font-weight: 300; font-size: 48px; line-height: 1; color: var(--rubi-escuro); }
+  .passos-area b { display: block; font-family: var(--serif); font-weight: 400; font-size: 24px; color: var(--grafite); margin-bottom: 4px; }
+  .passos-area span { color: var(--texto-suave); }
+  .faq-area details { border-bottom: 1px solid var(--linha); }
+  .faq-area details:first-child { border-top: 1px solid var(--linha); }
+  .faq-area summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 24px; padding: 24px 0; font-family: var(--serif); font-size: 21px; color: var(--grafite); }
+  .faq-area summary::-webkit-details-marker { display: none; }
+  .faq-area summary::after { content: "+"; font-family: var(--sans); font-size: 24px; color: var(--rubi-escuro); transition: transform .3s; }
+  .faq-area details[open] summary::after { transform: rotate(45deg); }
+  .faq-area details p { color: var(--texto-suave); font-size: 17px; padding-bottom: 24px; }
+
+  .lateral { position: sticky; top: 110px; display: grid; gap: 20px; }
+  .cartao { background: var(--grafite); color: var(--claro); border-radius: 10px; padding: 34px; position: relative; overflow: hidden; }
+  .cartao h3 { font-family: var(--serif); font-weight: 400; font-size: 26px; margin-bottom: 10px; }
+  .cartao p { color: var(--claro-suave); font-size: 15px; margin-bottom: 22px; }
+  .cartao .btn { width: 100%; }
+  .cartao.claro { background: var(--creme-alt); color: var(--texto); }
+  .cartao.claro h4 { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--rubi-escuro); margin-bottom: 14px; }
+  .cartao.claro ul { list-style: none; display: grid; gap: 10px; font-size: 15px; color: var(--texto-suave); }
+  .cartao.claro li { display: flex; gap: 10px; }
+  .cartao.claro li::before { content: ""; width: 6px; height: 6px; margin-top: 9px; border-radius: 50%; background: var(--rubi-escuro); flex-shrink: 0; }
+
+  .outras .grade { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .outras a { display: block; padding: 26px 22px; border: 1px solid rgba(246,241,232,.16); border-radius: 8px; text-decoration: none; transition: background .3s, border-color .3s; }
+  .outras a:hover { background: rgba(224,49,63,.1); border-color: var(--rubi); }
+  .outras a svg { width: 26px; height: 26px; fill: none; stroke: var(--rubi); stroke-width: 1.5; margin-bottom: 18px; }
+  .outras a b { display: block; font-family: var(--serif); font-weight: 400; font-size: 20px; }
+
+  @media (max-width: 920px) {
+    .capa { min-height: 88svh; padding: 130px 0 64px; }
+    .capa p.resumo { font-size: 18px; }
+    .conteudo .container { grid-template-columns: 1fr; gap: 56px; }
+    .lista-check { grid-template-columns: 1fr; }
+    .lateral { position: static; }
+    .outras .grade { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body data-pagina="produto">
+
+<div data-topo></div>
+
+<main id="pagina"></main>
+
+<div data-rodape></div>
+
+<script src="dados.js"></script>
+<script>
+  // Monta a página do produto escolhido em ?a=
+  const id = new URLSearchParams(location.search).get('a');
+  const prod = PRODUTOS.find(a => a.id === id) || PRODUTOS[0];
+  const [primeira, ...resto] = prod.titulo.split(' ');
+  const msg = `Olá, gostaria de saber sobre ${prod.titulo.toLowerCase()}.`;
+  document.title = `${prod.titulo} em ${CONFIG.cidade} | ${CONFIG.escritorio}`;
+  document.querySelector('meta[name="description"]').content = `${prod.titulo}: ${prod.resumo} ${CONFIG.escritorio}, ${CONFIG.cidade}.`;
+  document.head.insertAdjacentHTML('beforeend', `<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: prod.faq.map(([q, r]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: r } }))
+  })}<\/script>`);
+
+  document.getElementById('pagina').innerHTML = `
+  <section class="capa granulado">
+    <div class="foto" style="background-image:url('${prod.foto}?w=1800&q=70&auto=format&fit=crop')"></div>
+    <div class="container">
+      <p class="trilha entrada"><a href="index.html">Início</a> / <a href="index.html#produtos">Produtos</a> / ${prod.titulo}</p>
+      <h1><span class="linha-mascara"><span style="--atraso:.1s">${primeira}</span></span>${resto.length ? `<span class="linha-mascara"><span style="--atraso:.25s"><em>${resto.join(' ')}</em></span></span>` : ''}</h1>
+      <p class="resumo entrada" style="--atraso:.45s">${prod.resumo}</p>
+      <div class="acoes entrada" style="--atraso:.6s">
+        <a class="btn" data-whats="${msg}" data-icone="whats">Falar sobre ${prod.titulo.toLowerCase()}</a>
+        <a class="btn btn-claro" href="index.html#agendar">Agendar visita</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="conteudo">
+    <div class="container">
+      <div class="texto">
+        <p class="lead revelar">${prod.intro[0]}</p>
+        ${prod.intro.slice(1).map(p => `<p class="revelar">${p}</p>`).join('')}
+        <h2 class="revelar">Para quem é <em>indicado</em></h2>
+        <ul class="lista-check">${prod.indicado.map((q, i) => `<li class="revelar" style="--atraso:${(i % 2) * .1}s">${q}</li>`).join('')}</ul>
+        <h2 class="revelar">Como funciona o <em>atendimento</em></h2>
+        <ol class="passos-area">
+          <li class="revelar"><div><b>Envie a receita</b><span>Mande uma foto da receita pelo WhatsApp. Respondemos com as opções e os valores.</span></div></li>
+          <li class="revelar"><div><b>Experimente na loja</b><span>Escolha a armação com calma e com ajuda. Tiramos as medidas do rosto para a lente ficar no lugar certo.</span></div></li>
+          <li class="revelar"><div><b>Retire ajustado</b><span>Avisamos quando estiver pronto e fazemos o ajuste final na hora. Depois, é só voltar quando precisar.</span></div></li>
+        </ol>
+        <h2 class="revelar">Dúvidas <em>frequentes</em></h2>
+        <div class="faq-area revelar">${prod.faq.map(([q, r], i) => `<details${i === 0 ? ' open' : ''}><summary>${q}</summary><p>${r}</p></details>`).join('')}</div>
+      </div>
+      <aside class="lateral revelar" style="--atraso:.15s">
+        <div class="cartao granulado">
+          <h3>Quer ver de perto?</h3>
+          <p>Mande a sua receita ou agende uma visita para experimentar com calma, em ${CONFIG.cidade}.</p>
+          <a class="btn" data-whats="${msg}" data-icone="whats">Falar pelo WhatsApp</a>
+        </div>
+        <div class="cartao claro">
+          <h4>O que trazer</h4>
+          <ul>${prod.trazer.map(d => `<li>${d}</li>`).join('')}</ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="outras escuro granulado">
+    <div class="container">
+      <div class="cabecalho"><div><p class="rotulo revelar">Outros produtos</p><h2 class="revelar">Veja <em>também.</em></h2></div></div>
+      <div class="grade">${PRODUTOS.filter(a => a.id !== prod.id).map((a, i) => `<a class="revelar" style="--atraso:${i * .06}s" href="produto.html?a=${a.id}"><svg viewBox="0 0 24 24"><path d="${a.icone}"/></svg><b>${a.titulo}</b></a>`).join('')}</div>
+    </div>
+  </section>`;
+</script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clínica Alba | Estética facial e corporal em Cascavel</title>
+<meta name="description" content="Limpeza de pele, peeling, microagulhamento, harmonização facial, depilação a laser e massagem em Cascavel/PR. Agende sua avaliação pelo WhatsApp.">
+<!--
+  SITE MODELO — HIGHWAY AGÊNCIA — CLÍNICA DE ESTÉTICA NÍVEL 1 (ESSENCIAL)
+  Para adaptar a um cliente, troque:
+  - Nome da clínica (Alba), ano de fundação, cidade, textos, tratamentos e responsável técnica (com o registro profissional)
+  - Número do WhatsApp (procure por 5545999999999)
+  - Endereço e mapa (procure por "Cascavel")
+  - Fotos: hero.webp (rosto, vertical, com o rosto no meio) e clinica.webp (o espaço da clínica)
+  Dados fictícios — apenas para demonstração. Fotos: Unsplash (licença livre).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ameixa: #43202f;
+    --ameixa-escuro: #27111b;
+    --nude: #f9f3ee;
+    --nude-alt: #f1e5dc;
+    --linha: #e6d6cb;
+    --texto: #2c1a20;
+    --texto-suave: #715e60;
+    --claro: #f8f1ea;
+    --claro-suave: #dcc5c0;
+    --rose: #e5b9a6;
+    --rose-hover: #efcdbe;
+    --rose-escuro: #a4614f;
+    --whats: #1f8a4c;
+    --serif: "Cormorant Garamond", Georgia, serif;
+    --sans: "Jost", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--nude); color: var(--texto); line-height: 1.65; font-variant-numeric: lining-nums; -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* Botões */
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--rose); color: var(--ameixa-escuro); text-decoration: none; font-weight: 600; font-size: 16px; padding: 15px 28px; border-radius: 999px; transition: background .2s; }
+  .btn:hover { background: var(--rose-hover); }
+  .btn svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+  .btn-linha { display: inline-flex; align-items: center; gap: 8px; color: var(--claro); text-decoration: none; font-size: 14px; font-weight: 500; padding: 9px 18px; border: 1px solid rgba(248,241,234,.3); border-radius: 999px; transition: border-color .2s, background .2s; }
+  .btn-linha:hover { border-color: var(--rose); background: rgba(229,185,166,.12); }
+  .btn-linha svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* Topo */
+  .topo { position: absolute; top: 0; left: 0; right: 0; z-index: 3; color: var(--claro); }
+  .topo .container { display: flex; justify-content: space-between; align-items: center; height: 84px; }
+  .marca { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .marca svg { width: 34px; height: 44px; fill: none; stroke: var(--rose); stroke-width: 1.3; }
+  .marca span { font-family: var(--serif); font-size: 30px; font-weight: 400; line-height: 1; }
+  .marca small { display: block; font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; color: var(--claro-suave); margin-bottom: 3px; }
+
+  /* Hero */
+  .hero {
+    color: var(--claro); position: relative; overflow: hidden; background-color: var(--ameixa);
+    background-image:
+      radial-gradient(45% 70% at 76% 50%, rgba(229,185,166,.17), transparent 70%),
+      radial-gradient(120% 120% at 60% 40%, transparent 50%, rgba(20,6,12,.6) 100%);
+  }
+  /* o hero ocupa exatamente a altura da tela ao abrir o site */
+  .hero .container { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; height: 100vh; height: 100svh; min-height: 640px; padding-top: 84px; }
+  .hero-texto { align-self: center; position: relative; z-index: 2; }
+  .sobretitulo { font-size: 13px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--rose); margin-bottom: 22px; }
+  .hero h1 { font-family: var(--serif); font-weight: 300; font-size: min(8.2vw, 7.4rem, 15vh); line-height: .94; letter-spacing: -.015em; margin-bottom: 28px; }
+  .hero h1 em { font-style: italic; font-weight: 300; color: var(--rose); }
+  .hero .apoio { color: var(--claro-suave); font-size: 18px; max-width: 30rem; margin-bottom: 34px; }
+  .hero .apoio strong { color: var(--claro); font-weight: 500; }
+  .destaques { display: flex; margin-top: 48px; list-style: none; }
+  .destaques li { padding: 0 26px; border-left: 1px solid rgba(248,241,234,.18); }
+  .destaques li:first-child { padding-left: 0; border-left: 0; }
+  .destaques strong { display: block; font-family: var(--serif); font-size: 31px; font-weight: 400; line-height: 1.15; color: var(--claro); }
+  .destaques span { font-size: 14px; color: var(--claro-suave); }
+  /* foto em oval, como um espelho, com um segundo contorno levemente girado */
+  .espelho { position: relative; align-self: center; justify-self: center; height: min(calc(100svh - 132px), 720px); aspect-ratio: 5 / 7; max-width: 100%; }
+  .espelho .oval { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; background: var(--ameixa-escuro); }
+  .espelho .oval img { width: 100%; height: 100%; object-fit: cover; object-position: 42% 35%; }
+  .espelho::before { content: ""; position: absolute; inset: -14px; border: 1px solid rgba(229,185,166,.6); border-radius: 50%; transform: rotate(7deg); }
+  .espelho .carimbo { position: absolute; left: -26px; bottom: 9%; z-index: 2; width: 132px; height: 132px; border-radius: 50%; background: var(--rose); color: var(--ameixa-escuro); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 18px 40px rgba(20,6,12,.35); }
+  .espelho .carimbo b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 28px; line-height: 1; }
+  .espelho .carimbo span { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; line-height: 1.35; margin-top: 6px; }
+
+  /* Seções — alternam ameixa / nude: hero, sobre, tratamentos, como funciona, contato */
+  section { padding: 120px 0; }
+  .rotulo { font-size: 14px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--rose-escuro); margin-bottom: 18px; }
+  h2 { font-family: var(--serif); font-weight: 300; font-size: clamp(44px, 5.6vw, 70px); line-height: 1.02; letter-spacing: -.01em; }
+  h2 em { font-style: italic; font-weight: 300; color: var(--rose-escuro); }
+  .escuro { background-color: var(--ameixa); color: var(--claro); background-image: radial-gradient(70% 90% at 85% 0%, rgba(229,185,166,.1), transparent 60%); }
+  .escuro .rotulo, .escuro h2 em { color: var(--rose); }
+
+  /* Sobre (nude) */
+  .sobre .container { display: grid; grid-template-columns: 1fr 1.05fr; gap: 88px; align-items: center; }
+  .sobre-foto { position: relative; padding: 0 28px 28px 0; }
+  .sobre-foto::before { content: ""; position: absolute; right: 0; bottom: 0; width: 82%; height: 82%; border: 1px solid var(--rose-escuro); border-radius: 220px 220px 6px 6px; }
+  .sobre-foto .moldura { position: relative; aspect-ratio: 4 / 4.8; border-radius: 220px 220px 6px 6px; overflow: hidden; }
+  .sobre-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; }
+  .sobre-foto .selo-anos { position: absolute; left: -28px; bottom: 56px; background: var(--ameixa); color: var(--claro); padding: 22px 26px; border-radius: 6px; box-shadow: 0 20px 40px rgba(39,17,27,.22); }
+  .sobre-foto .selo-anos strong { display: block; font-family: var(--serif); font-size: 60px; font-weight: 300; line-height: .95; color: var(--rose); }
+  .sobre-foto .selo-anos span { font-size: 14px; color: var(--claro-suave); line-height: 1.4; display: block; max-width: 140px; margin-top: 4px; }
+  .sobre-texto h2 { margin-bottom: 28px; }
+  .sobre-texto p:not(.rotulo) { color: var(--texto-suave); font-size: 18px; margin-bottom: 16px; }
+  .sobre-texto p.lead { font-family: var(--serif); font-size: 25px; font-weight: 400; line-height: 1.4; color: var(--ameixa); margin-bottom: 20px; }
+  .assinatura-sobre { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 36px; padding-top: 32px; border-top: 1px solid var(--linha); }
+  .sobre-texto p.nome-ass { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 34px; line-height: 1; color: var(--ameixa); margin: 0; }
+  .sobre-texto p.nome-ass small { display: block; font-family: var(--sans); font-style: normal; font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--texto-suave); margin-top: 8px; }
+
+  /* Tratamentos (ameixa) */
+  .servicos-topo { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; margin-bottom: 64px; }
+  .servicos-topo p:not(.rotulo) { color: var(--claro-suave); font-size: 19px; }
+  .lista-servicos { display: grid; grid-template-columns: 1fr 1fr; column-gap: 64px; list-style: none; border-bottom: 1px solid rgba(248,241,234,.14); }
+  .lista-servicos a { display: grid; grid-template-columns: 64px 1fr 44px; gap: 20px; align-items: start; padding: 34px 0; height: 100%; border-top: 1px solid rgba(248,241,234,.14); text-decoration: none; transition: padding .25s; }
+  .lista-servicos a:hover { padding-left: 10px; }
+  .lista-servicos .num { font-family: var(--serif); font-style: italic; font-size: 44px; font-weight: 300; line-height: 1; color: var(--rose); }
+  .lista-servicos h3 { font-family: var(--serif); font-weight: 400; font-size: 32px; line-height: 1.15; margin-bottom: 8px; }
+  .lista-servicos p { color: var(--claro-suave); font-size: 17px; }
+  .lista-servicos .seta { width: 44px; height: 44px; border: 1px solid rgba(248,241,234,.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background .2s, border-color .2s; }
+  .lista-servicos .seta svg { width: 16px; height: 16px; fill: none; stroke: var(--claro); stroke-width: 1.8; }
+  .lista-servicos a:hover .seta { background: var(--rose); border-color: var(--rose); }
+  .lista-servicos a:hover .seta svg { stroke: var(--ameixa-escuro); }
+
+  /* Como funciona (nude) */
+  .passos .container { display: grid; grid-template-columns: .85fr 1.15fr; gap: 96px; align-items: start; }
+  .passos-intro h2 { margin-bottom: 24px; }
+  .passos-intro p:not(.rotulo) { color: var(--texto-suave); font-size: 19px; margin-bottom: 36px; }
+  .lista-passos { list-style: none; }
+  .passo { display: grid; grid-template-columns: 110px 1fr; gap: 24px; padding: 36px 0; border-top: 1px solid var(--linha); }
+  .passo:last-child { border-bottom: 1px solid var(--linha); }
+  .passo .num { font-family: var(--serif); font-style: italic; font-size: 84px; font-weight: 300; line-height: .8; color: var(--rose-escuro); }
+  .passo h3 { font-family: var(--serif); font-weight: 400; font-size: 32px; line-height: 1.2; color: var(--ameixa); margin-bottom: 8px; }
+  .passo p { color: var(--texto-suave); font-size: 18px; }
+
+  /* Contato (ameixa) — informações à esquerda, mapa ocupando a metade direita até a borda */
+  .contato { padding: 0; }
+  .contato-grade { display: grid; grid-template-columns: 1fr 1fr; }
+  .contato-info { padding: 120px 72px 120px max(24px, calc((100vw - 1180px) / 2 + 24px)); }
+  .contato-info h2 { margin-bottom: 20px; }
+  .contato .chamada { color: var(--claro-suave); font-size: 19px; margin-bottom: 36px; max-width: 30rem; }
+  .dados { list-style: none; margin: 48px 0 36px; display: grid; gap: 22px; }
+  .dados li { display: flex; gap: 16px; font-size: 18px; }
+  .dados svg { width: 22px; height: 22px; fill: none; stroke: var(--rose); stroke-width: 1.6; flex-shrink: 0; margin-top: 3px; }
+  .dados small { display: block; color: var(--claro-suave); font-size: 15px; }
+  .redes { display: flex; gap: 12px; }
+  .redes a { width: 46px; height: 46px; border: 1px solid rgba(248,241,234,.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: border-color .2s, background .2s; }
+  .redes a:hover { border-color: var(--rose); background: rgba(229,185,166,.1); }
+  .redes svg { width: 18px; height: 18px; fill: var(--claro); }
+  .mapa { position: relative; min-height: 520px; }
+  .mapa iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; filter: grayscale(.35) contrast(1.02); }
+
+  .rodape { background: var(--ameixa-escuro); color: var(--claro-suave); font-size: 14px; padding: 30px 0; border-top: 1px solid rgba(229,185,166,.22); }
+  .rodape .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .rodape strong { font-family: var(--serif); font-weight: 400; color: var(--claro); font-size: 24px; margin-right: 10px; }
+
+  /* WhatsApp flutuante */
+  .whats-flutuante { position: fixed; right: 20px; bottom: 20px; z-index: 10; width: 58px; height: 58px; border-radius: 50%; background: var(--whats); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,.25); transition: transform .2s; }
+  .whats-flutuante:hover { transform: scale(1.06); }
+  .whats-flutuante svg { width: 30px; height: 30px; fill: #fff; }
+
+  /* Celular */
+  @media (max-width: 860px) {
+    .topo .container { height: 72px; }
+    .topo .btn-linha { display: none; }
+    .hero .container { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); min-height: 660px; padding-top: 84px; padding-bottom: 28px; gap: 22px; }
+    .sobretitulo { margin-bottom: 12px; font-size: 12px; letter-spacing: .16em; }
+    .hero h1 { font-size: clamp(54px, 16vw, 78px); margin-bottom: 14px; }
+    .hero .apoio { font-size: 17px; line-height: 1.5; margin-bottom: 20px; }
+    .destaques { display: none; }
+    .espelho { height: 100%; min-height: 200px; }
+    .espelho::before { inset: -9px; }
+    .espelho .carimbo { width: 92px; height: 92px; left: -30px; bottom: 6%; }
+    .espelho .carimbo b { font-size: 20px; }
+    .espelho .carimbo span { font-size: 9px; }
+    section { padding: 88px 0; }
+    .sobre .container, .servicos-topo, .passos .container, .contato-grade { grid-template-columns: minmax(0, 1fr); }
+    .sobre .container { gap: 56px; }
+    .sobre-foto { padding: 0 20px 20px 0; margin-left: 12px; }
+    .sobre-foto::before, .sobre-foto .moldura { border-radius: 160px 160px 6px 6px; }
+    .sobre-foto .selo-anos { left: -12px; bottom: 40px; padding: 16px 18px; }
+    .sobre-foto .selo-anos strong { font-size: 46px; }
+    .sobre-texto p.lead { font-size: 23px; }
+    .servicos-topo { gap: 20px; margin-bottom: 40px; }
+    .lista-servicos { grid-template-columns: minmax(0, 1fr); }
+    .lista-servicos a { grid-template-columns: 48px 1fr 40px; gap: 14px; padding: 28px 0; }
+    .lista-servicos .num { font-size: 36px; }
+    .lista-servicos h3 { font-size: 28px; }
+    .lista-servicos .seta { width: 40px; height: 40px; }
+    .passos .container { gap: 40px; }
+    .passo { grid-template-columns: 72px 1fr; gap: 16px; padding: 28px 0; }
+    .passo .num { font-size: 62px; }
+    .passo h3 { font-size: 28px; }
+    .btn { width: 100%; justify-content: center; }
+    .contato-info { padding: 88px 24px 56px; }
+    .mapa { min-height: 340px; }
+  }
+  @media (min-width: 861px) and (max-width: 1060px) {
+    .destaques li { padding: 0 16px; }
+    .destaques strong { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-whats" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm5.8 14.06c-.24.68-1.43 1.33-1.97 1.38-.5.05-.97.24-3.27-.68-2.77-1.09-4.52-3.92-4.66-4.1-.13-.18-1.11-1.48-1.11-2.82 0-1.34.7-2 .95-2.27.25-.27.54-.34.72-.34h.52c.17 0 .39-.06.61.47.24.56.79 1.92.86 2.06.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.14-.28.29-.12.56.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.14.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.59.75 1.86.89.27.14.45.2.52.32.07.11.07.66-.17 1.34Z"/></symbol>
+</svg>
+
+<header class="topo">
+  <div class="container">
+    <a class="marca" href="#">
+      <svg viewBox="0 0 34 44" aria-hidden="true"><ellipse cx="17" cy="22" rx="15.5" ry="20.5"/><ellipse cx="17" cy="22" rx="15.5" ry="20.5" transform="rotate(14 17 22)" opacity=".55"/></svg>
+      <span><small>Clínica de estética</small>Alba</span>
+    </a>
+    <a class="btn-linha" href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener">
+      <svg><use href="#i-whats"/></svg> Agendar avaliação
+    </a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" style="padding:0">
+    <div class="container">
+      <div class="hero-texto">
+        <p class="sobretitulo">Estética em Cascavel · desde 2016</p>
+        <h1>Natural,<br> <em>sem exagero.</em></h1>
+        <p class="apoio">Cuidados para o rosto e o corpo, indicados depois de uma conversa sem pressa. <strong>Agende sua avaliação</strong> e tire suas dúvidas pelo WhatsApp.</p>
+        <a class="btn" href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener">
+          <svg><use href="#i-whats"/></svg> Agendar minha avaliação
+        </a>
+        <ul class="destaques">
+          <li><strong>10 anos</strong><span>em Cascavel</span></li>
+          <li><strong>Avaliação</strong><span>antes de cada plano</span></li>
+          <li><strong>Até 6x</strong><span>sem juros no cartão</span></li>
+        </ul>
+      </div>
+      <div class="espelho">
+        <div class="oval"><img src="hero.webp" alt="Mulher de perfil tocando o rosto, com a pele ao natural"></div>
+        <p class="carimbo"><b>Avaliação</b><span>individual,<br>sem pressa</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sobre" id="sobre">
+    <div class="container">
+      <div class="sobre-foto">
+        <div class="moldura"><img src="clinica.webp" alt="Corredor da Clínica Alba com prateleiras de produtos para a pele"></div>
+        <div class="selo-anos"><strong>10</strong><span>anos cuidando da pele em Cascavel</span></div>
+      </div>
+      <div class="sobre-texto">
+        <p class="rotulo">A clínica</p>
+        <h2>Primeiro a conversa, <em>depois o tratamento.</em></h2>
+        <p class="lead">Antes de indicar qualquer procedimento, a gente quer saber da sua rotina, da sua pele e do que incomoda você.</p>
+        <p>Com a avaliação feita, explicamos o que faz sentido para o seu caso, quantas sessões costumam ser necessárias e quais cuidados pedir em casa. Se um tratamento não for indicado para você, dizemos isso também.</p>
+        <p>Cada pessoa responde de um jeito. Por isso o plano é individual e vai sendo acompanhado a cada retorno.</p>
+        <div class="assinatura-sobre">
+          <p class="nome-ass">Camila Rocha<small>Responsável técnica · Biomédica · CRBM 0000</small></p>
+          <a class="btn" href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener">
+            <svg><use href="#i-whats"/></svg> Falar com a clínica
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="servicos escuro" id="tratamentos">
+    <div class="container">
+      <div class="servicos-topo">
+        <div>
+          <p class="rotulo">Tratamentos</p>
+          <h2>Cuidados para <em>rosto e corpo.</em></h2>
+        </div>
+        <p>Escolha o assunto e fale direto com a gente pelo WhatsApp. A indicação de cada tratamento é feita na avaliação.</p>
+      </div>
+      <ul class="lista-servicos">
+        <li><a href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20limpeza%20de%20pele." target="_blank" rel="noopener"><span class="num">01</span><div><h3>Limpeza de pele</h3><p>Higienização profunda e extração cuidadosa, com produtos escolhidos para o seu tipo de pele.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20peeling." target="_blank" rel="noopener"><span class="num">02</span><div><h3>Peeling</h3><p>Renovação da camada superficial da pele, com o ácido e a concentração definidos na avaliação.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20microagulhamento." target="_blank" rel="noopener"><span class="num">03</span><div><h3>Microagulhamento</h3><p>Estímulo da produção de colágeno, indicado para textura da pele e marcas de acne.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20harmoniza%C3%A7%C3%A3o%20facial." target="_blank" rel="noopener"><span class="num">04</span><div><h3>Harmonização facial</h3><p>Toxina botulínica e preenchedores aplicados por profissional habilitada, respeitando os seus traços.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20depila%C3%A7%C3%A3o%20a%20laser." target="_blank" rel="noopener"><span class="num">05</span><div><h3>Depilação a laser</h3><p>Sessões por área do corpo, com os parâmetros ajustados ao seu tom de pele e tipo de pelo.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+        <li><a href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20sobre%20massagem%20e%20drenagem." target="_blank" rel="noopener"><span class="num">06</span><div><h3>Massagem e drenagem</h3><p>Drenagem linfática e massagem modeladora, para a sensação de leveza e o bem-estar do dia a dia.</p></div><span class="seta"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="passos" id="como-funciona">
+    <div class="container">
+      <div class="passos-intro">
+        <p class="rotulo">Como funciona</p>
+        <h2>Da primeira mensagem <em>ao seu plano.</em></h2>
+        <p>Você não precisa chegar sabendo o que fazer. Conte o que incomoda: a gente explica as opções em linguagem simples.</p>
+        <a class="btn" href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener">
+          <svg><use href="#i-whats"/></svg> Começar agora
+        </a>
+      </div>
+      <ol class="lista-passos">
+        <li class="passo"><p class="num">01</p><div><h3>Agende a avaliação</h3><p>Mande uma mensagem pelo WhatsApp e escolha o melhor dia e horário para vir à clínica.</p></div></li>
+        <li class="passo"><p class="num">02</p><div><h3>Converse com a gente</h3><p>Avaliamos a sua pele e o seu histórico, ouvimos o que você espera e explicamos o que é indicado, com os valores.</p></div></li>
+        <li class="passo"><p class="num">03</p><div><h3>Siga o seu plano</h3><p>Você recebe as orientações de antes e depois de cada sessão, e acompanhamos a evolução a cada retorno.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="contato escuro" id="contato">
+    <div class="contato-grade">
+      <div class="contato-info">
+        <p class="rotulo">Visite a clínica</p>
+        <h2>Venha <em>nos conhecer.</em></h2>
+        <p class="chamada">Atendimento com hora marcada. Mande uma mensagem e reservamos um horário para você.</p>
+        <a class="btn" href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener">
+          <svg><use href="#i-whats"/></svg> Falar pelo WhatsApp
+        </a>
+        <ul class="dados">
+          <li>
+            <svg viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span>Av. Brasil, 0000 · Sala 00<br><small>Centro, Cascavel/PR</small></span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span>Segunda a sexta, das 9h às 19h<br><small>Sábado, das 9h às 13h</small></span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            <span>(45) 99999-9999<br><small>contato@clinicaalba.com.br</small></span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg>
+            <span>Pix, débito e crédito<br><small>Em até 6x sem juros no cartão</small></span>
+          </li>
+        </ul>
+        <div class="redes">
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 7.3a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4Zm0 7.7a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm4.9-8.9a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0ZM12 3.6c2.7 0 3 0 4.1.1 2.7.1 4 1.4 4.1 4.1.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 2.7-1.4 4-4.1 4.1-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-2.7-.1-4-1.4-4.1-4.1-.1-1.1-.1-1.4-.1-4.1s0-3 .1-4.1c.1-2.7 1.4-4 4.1-4.1 1.1-.1 1.4-.1 4.1-.1ZM12 2c-2.7 0-3.1 0-4.2.1C4.2 2.2 2.2 4.2 2.1 7.8 2 8.9 2 9.3 2 12s0 3.1.1 4.2c.1 3.6 2.1 5.6 5.7 5.7 1.1.1 1.5.1 4.2.1s3.1 0 4.2-.1c3.6-.1 5.6-2.1 5.7-5.7.1-1.1.1-1.5.1-4.2s0-3.1-.1-4.2c-.1-3.6-2.1-5.6-5.7-5.7C15.1 2 14.7 2 12 2Z"/></svg></a>
+            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8.5V6.6c0-.8.2-1.3 1.4-1.3H17V2.2c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.3H8v3.3h2.6V22H14v-10.2h2.6l.4-3.3H14Z"/></svg></a>
+        </div>
+      </div>
+      <div class="mapa">
+        <iframe src="https://maps.google.com/maps?q=Cascavel%2C%20PR&z=14&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa da clínica"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="rodape">
+  <div class="container">
+    <span><strong>Clínica Alba</strong>Responsável técnica: Camila Rocha · CRBM 0000</span>
+    <span>Cascavel/PR · CNPJ 00.000.000/0001-00 · © 2026</span>
+  </div>
+</footer>
+
+<a class="whats-flutuante" href="https://wa.me/5545999999999?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener" aria-label="Falar pelo WhatsApp">
+  <svg><use href="#i-whats"/></svg>
+</a>
+
+</body>
+</html>
