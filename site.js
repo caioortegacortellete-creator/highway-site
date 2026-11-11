@@ -129,8 +129,8 @@
     const tl = gsap.timeline();
     tl.from(".pal-in", { yPercent: 115, duration: 1, stagger: 0.055, ease: "power4.out" })
       .from(".hero .km, .hero-sub, .hero .ctas, .selos", { y: 24, opacity: 0, duration: 0.8, stagger: 0.08 }, "-=0.7")
-      .from(".vitrine", { x: 60, opacity: 0, rotationY: -30, duration: 1.3, ease: "power4.out" }, "-=1.1")
-      .from(".topo-fixo", { y: -30, opacity: 0, duration: 0.7 }, "-=1")
+      .from(".historia", { x: 60, opacity: 0, duration: 1.3, ease: "power4.out" }, "-=1.1")
+      .from(".topo-barra", { y: -30, opacity: 0, duration: 0.7, clearProps: "transform,opacity" }, "-=1")
       .add(() => { $$(".pal").forEach((p) => { p.style.overflow = "visible"; }); });
   }
 
@@ -371,47 +371,163 @@
     if ("IntersectionObserver" in window) new IntersectionObserver((e) => { visivel = e[0].isIntersecting; }).observe(hero);
   }
 
-  /* ---------- vitrine do topo: troca de sites e inclinação ---------- */
-  const navegador = $("#navegador"), celular = $("#celular");
-  const imgsNav = $$(".navegador .tela img"), imgsCel = $$(".celular .tela img");
-  const urlVit = $("#vitrineUrl");
-  if (animar && imgsNav.length) {
-    let i = 0;
-    const tela = $(".navegador .tela");
-    const rodar = () => {
-      const img = imgsNav[i];
-      const desce = Math.max(0, img.offsetHeight - tela.clientHeight);
-      gsap.fromTo(img, { y: 0 }, { y: -Math.min(desce, tela.clientHeight * 2.2), duration: 5.5, ease: "power1.inOut", delay: 0.6 });
-      gsap.delayedCall(6.6, () => {
-        imgsNav[i].classList.remove("ativa"); imgsCel[i] && imgsCel[i].classList.remove("ativa");
-        i = (i + 1) % imgsNav.length;
-        imgsNav[i].classList.add("ativa"); imgsCel[i] && imgsCel[i].classList.add("ativa");
-        urlVit.textContent = imgsNav[i].dataset.url;
-        gsap.set(imgsNav[i], { y: 0 });
-        rodar();
+  /* ---------- história animada do topo (busca → site → topo do Google → WhatsApp → projetos → marca) ---------- */
+  const hist = $("#historia");
+  if (hist) {
+    const leg = $("#histLegenda");
+    const cena = (n) => $(".hc-" + n, hist);
+    const marcos = $$(".hist-rota b", hist);
+    const carroRota = $(".hist-carro", hist);
+    const escrever = (simples, destaque) => {
+      leg.textContent = "";
+      const add = (txt, em) => txt.split(" ").filter(Boolean).forEach((p) => {
+        const s = document.createElement(em ? "em" : "span");
+        s.className = "w"; s.textContent = p; leg.appendChild(s);
       });
+      add(simples, false); add(destaque, true);
+      return $$(".w", leg);
     };
-    const comecar = () => (imgsNav[0].complete ? rodar() : imgsNav[0].addEventListener("load", rodar, { once: true }));
-    comecar();
+    const legenda = (tl, pos, simples, destaque) => {
+      tl.call(() => {
+        const ws = escrever(simples, destaque);
+        gsap.fromTo(ws, { opacity: 0, y: 10, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, stagger: 0.07, ease: "power2.out" });
+      }, null, pos);
+    };
+    const tirarLegenda = (tl, pos) => tl.call(() => gsap.to($$(".w", leg), { opacity: 0, filter: "blur(8px)", y: -6, duration: 0.4, stagger: 0.02 }), null, pos);
+    const marcar = (tl, pos, k) => tl.call(() => {
+      marcos.forEach((m, i) => m.classList.toggle("on", i <= k));
+      gsap.to(carroRota, { left: (k / (marcos.length - 1)) * 100 + "%", duration: 0.9, ease: "power2.inOut" });
+    }, null, pos);
+    const entra = (tl, el, pos) => tl.fromTo(el, { autoAlpha: 0, filter: "blur(10px)", scale: 0.97 }, { autoAlpha: 1, filter: "blur(0px)", scale: 1, duration: 0.6, ease: "power2.out" }, pos);
+    const sai = (tl, el, pos) => tl.to(el, { autoAlpha: 0, filter: "blur(10px)", scale: 1.02, duration: 0.5, ease: "power2.in" }, pos);
+    const digitar = (tl, el, texto, pos, dur) => {
+      const o = { n: 0 };
+      tl.fromTo(o, { n: 0 }, { n: texto.length, duration: dur, ease: "none", onUpdate: () => { el.textContent = texto.slice(0, Math.round(o.n)); } }, pos);
+    };
+    const contar = (tl, el, de, ate, pos, dur) => {
+      const o = { v: de };
+      tl.fromTo(o, { v: de }, { v: ate, duration: dur, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(o.v); } }, pos);
+    };
+
+    if (!animar) {
+      hist.classList.add("sem-hist");
+      escrever("Projetos conceito,", "cada um único.");
+      marcos.forEach((m, i) => m.classList.toggle("on", i <= 4));
+      carroRota.style.left = "80%";
+    } else {
+      const tl = gsap.timeline({ repeat: -1, paused: true, defaults: { ease: "power2.out" } });
+      /* 1 · busca */
+      const cb = cena("busca"), num = $(".hc-num", cb), met = $(".hc-metrica", cb), rot = $(".hc-rotulo", cb), mil = $(".hc-mil", cb);
+      tl.addLabel("busca");
+      marcar(tl, "busca", 0);
+      tl.call(() => { $(".hc-digita", cb).textContent = ""; num.textContent = "0"; rot.textContent = "Buscas por mês"; met.classList.remove("zero"); mil.style.opacity = 1; });
+      entra(tl, cb, "busca");
+      tl.fromTo($$(".hc-linha", cb), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, stagger: 0.12, duration: 0.4 }, "busca+=0.3");
+      digitar(tl, $(".hc-digita", cb), "clínica de estética perto de mim", "busca+=0.4", 1.5);
+      tl.fromTo(met, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.5 }, "busca+=0.6");
+      contar(tl, num, 0, 18, "busca+=0.8", 1.4);
+      tl.call(() => { rot.textContent = "Chegam até você"; met.classList.add("zero"); mil.style.opacity = 0; }, null, "busca+=2.6");
+      contar(tl, num, 18, 0, "busca+=2.6", 0.8);
+      legenda(tl, "busca+=2.8", "Seu cliente busca.", "Não te acha.");
+      tirarLegenda(tl, "busca+=5");
+      sai(tl, cb, "busca+=5");
+
+      /* 2 · o site */
+      const cs = cena("site");
+      tl.addLabel("site", "busca+=5.5");
+      marcar(tl, "site", 1);
+      legenda(tl, "site", "Primeiro,", "um site que convence.");
+      tl.set(cs, { autoAlpha: 1, filter: "blur(0px)", scale: 1 }, "site");
+      tl.fromTo([$(".hs-barra", cs), $(".hs-titulo", cs), $(".hs-foto", cs), $(".hs-texto", cs), $(".hs-wpp", cs), ...$$(".hs-cards i", cs)],
+        { autoAlpha: 0, y: 16, filter: "blur(8px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.16, duration: 0.5 }, "site+=0.2");
+      tl.fromTo($$(".hs-titulo i", cs), { scaleX: 0, transformOrigin: "left" }, { scaleX: 1, stagger: 0.12, duration: 0.5 }, "site+=0.5");
+      tl.to($(".hs-wpp", cs), { scale: 1.08, duration: 0.25, yoyo: true, repeat: 3, ease: "power1.inOut" }, "site+=2.2");
+      tirarLegenda(tl, "site+=4");
+      sai(tl, cs, "site+=4");
+
+      /* 3 · topo da busca */
+      const ct = cena("topo"), voce = $(".hc-voce", ct);
+      tl.addLabel("topo", "site+=4.5");
+      marcar(tl, "topo", 2);
+      entra(tl, ct, "topo");
+      tl.fromTo($$(".hc-resultados .hc-linha", ct), { y: -52 }, { y: 0, duration: 0.6, ease: "power3.out" }, "topo+=0.5");
+      tl.fromTo(voce, { autoAlpha: 0, y: -16, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, "topo+=0.5");
+      tl.fromTo($(".hc-mapa", ct), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.5 }, "topo+=0.9");
+      tl.fromTo($(".hc-mapa svg", ct), { y: -40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8, ease: "bounce.out" }, "topo+=1.1");
+      legenda(tl, "topo+=0.6", "Depois,", "o topo da busca.");
+      tirarLegenda(tl, "topo+=4");
+      sai(tl, ct, "topo+=4");
+
+      /* 4 · WhatsApp */
+      const cc = cena("chat"), msgs = $$(".hc-msg", cc);
+      tl.addLabel("chat", "topo+=4.5");
+      marcar(tl, "chat", 3);
+      tl.set(cc, { autoAlpha: 1, filter: "blur(0px)", scale: 1 }, "chat");
+      tl.fromTo(msgs, { autoAlpha: 0, y: 26, scale: 0.96, filter: "blur(0px)" }, { autoAlpha: 1, y: 0, scale: 1, filter: "blur(0px)", stagger: 0.55, duration: 0.5, ease: "back.out(1.5)" }, "chat+=0.1");
+      legenda(tl, "chat+=0.8", "Aí", "ele chama no WhatsApp.");
+      tl.to(msgs.slice(0, 2), { autoAlpha: 0.35, filter: "blur(2px)", stagger: 0.2, duration: 0.4 }, "chat+=3");
+      tirarLegenda(tl, "chat+=4");
+      sai(tl, cc, "chat+=4");
+
+      /* 5 · projetos */
+      const cp = cena("proj"), imgs = $$("img", cp);
+      tl.addLabel("proj", "chat+=4.5");
+      marcar(tl, "proj", 4);
+      tl.set(cp, { autoAlpha: 1, filter: "blur(0px)", scale: 1 }, "proj");
+      tl.fromTo(imgs, { autoAlpha: 0, scale: 0.85, filter: "blur(10px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", stagger: 0.14, duration: 0.6 }, "proj+=0.1");
+      legenda(tl, "proj+=0.4", "Projetos conceito,", "cada um único.");
+      tirarLegenda(tl, "proj+=4");
+      sai(tl, cp, "proj+=4");
+
+      /* 6 · marca */
+      const cm = cena("marca");
+      tl.addLabel("marca", "proj+=4.5");
+      marcar(tl, "marca", 5);
+      tl.set(cm, { autoAlpha: 1, filter: "blur(0px)", scale: 1 }, "marca");
+      tl.fromTo($("img", cm), { autoAlpha: 0, scale: 0.6, rotation: -10 }, { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(1.7)" }, "marca+=0.1");
+      tl.fromTo($("strong", cm), { autoAlpha: 0, letterSpacing: "0.7em" }, { autoAlpha: 1, letterSpacing: "0.24em", duration: 0.9 }, "marca+=0.3");
+      tl.fromTo($("small", cm), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.5 }, "marca+=0.8");
+      sai(tl, cm, "marca+=3.2");
+      tl.to({}, { duration: 0.3 });
+
+      let rodando = false;
+      const ligar = (sim) => { if (sim && !rodando) { tl.play(); rodando = true; } else if (!sim && rodando) { tl.pause(); rodando = false; } };
+      if ("IntersectionObserver" in window) new IntersectionObserver((e) => ligar(e[0].isIntersecting), { threshold: 0.15 }).observe(hist);
+      else ligar(true);
+    }
   }
-  if (animar && fino && navegador) {
-    const nx = gsap.quickTo(navegador, "rotationY", { duration: 0.8 }), ny = gsap.quickTo(navegador, "rotationX", { duration: 0.8 });
-    const cx = gsap.quickTo(celular, "rotationY", { duration: 0.8 }), cy = gsap.quickTo(celular, "rotationX", { duration: 0.8 });
-    gsap.set(navegador, { rotationY: -14, rotationX: 5 });
-    gsap.set(celular, { rotationY: -14, z: 70 });
+
+  /* inclinação suave da história e a avenida seguindo o mouse */
+  if (animar && fino && hero) {
+    const moldura = $(".hist-moldura");
+    const rx = moldura && gsap.quickTo(moldura, "rotationX", { duration: 0.9 }), ry = moldura && gsap.quickTo(moldura, "rotationY", { duration: 0.9 });
     hero.addEventListener("pointermove", (e) => {
       const r = hero.getBoundingClientRect();
       alvoX = (e.clientX - r.left) / r.width - 0.5;
       alvoY = (e.clientY - r.top) / r.height - 0.5;
-      nx(-14 + alvoX * 18); ny(5 - alvoY * 10);
-      cx(-14 + alvoX * 26); cy(-alvoY * 14);
+      if (moldura) { ry(alvoX * 8); rx(-alvoY * 6); }
     });
-    hero.addEventListener("pointerleave", () => { alvoX = alvoY = 0; nx(-14); ny(5); cx(-14); cy(0); });
+    hero.addEventListener("pointerleave", () => { alvoX = alvoY = 0; if (moldura) { ry(0); rx(0); } });
   }
   if (animar) {
     gsap.to(".hero-txt", { y: -80, opacity: 0.2, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
-    gsap.to(".vitrine", { y: 60, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
+    gsap.to(".historia", { y: 60, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
     ScrollTrigger.create({ trigger: hero, start: "top top", end: "bottom top", onUpdate: (s) => { velExtra = Math.min(3, Math.abs(s.getVelocity()) / 900); } });
+  }
+
+  /* ---------- luz do menu que desliza até o link ---------- */
+  const menuEl = $("#menu"), menuLuz = $("#menuLuz");
+  const moverLuz = (a) => {
+    if (!menuLuz || window.innerWidth <= 900) return;
+    $$(".menu a").forEach((x) => x.classList.toggle("luz-aqui", x === a));
+    if (!a) { menuLuz.style.opacity = 0; return; }
+    menuLuz.style.left = a.offsetLeft + "px";
+    menuLuz.style.width = a.offsetWidth + "px";
+    menuLuz.style.opacity = 1;
+  };
+  if (menuEl) {
+    $$(".menu a:not(.menu-wpp)").forEach((a) => a.addEventListener("pointerenter", () => moverLuz(a)));
+    menuEl.addEventListener("pointerleave", () => moverLuz($(".menu a.atual")));
   }
 
   /* ---------- KM 02 · caminho do cliente ---------- */
@@ -846,14 +962,8 @@
     cidadeRodape.innerHTML = svg + "</svg>";
   }
 
-  /* ---------- cursor, botões magnéticos e cards que inclinam ---------- */
+  /* ---------- botões magnéticos e cards que inclinam ---------- */
   if (animar && fino) {
-    const cur = $("#cursor");
-    const qx = gsap.quickTo(cur, "x", { duration: 0.25, ease: "power3" }), qy = gsap.quickTo(cur, "y", { duration: 0.25, ease: "power3" });
-    window.addEventListener("pointermove", (e) => { qx(e.clientX); qy(e.clientY); cur.classList.add("ligado"); });
-    document.addEventListener("pointerleave", () => cur.classList.remove("ligado"));
-    document.addEventListener("pointerover", (e) => { cur.classList.toggle("grande", !!e.target.closest("a, button, summary, .projeto-print, label")); });
-
     $$(".mag").forEach((b) => {
       b.addEventListener("pointermove", (e) => {
         const r = b.getBoundingClientRect();
@@ -877,7 +987,7 @@
     ["portfolio", "planos", "como-funciona", "duvidas"].forEach((id) => {
       const link = $(`.menu a[href="#${id}"]`), sec = $("#" + id);
       if (!link || !sec) return;
-      ScrollTrigger.create({ trigger: sec, start: "top 50%", end: "bottom 50%", onToggle: (s) => link.classList.toggle("atual", s.isActive) });
+      ScrollTrigger.create({ trigger: sec, start: "top 50%", end: "bottom 50%", onToggle: (s) => { link.classList.toggle("atual", s.isActive); if (menuEl && !menuEl.matches(":hover")) moverLuz($(".menu a.atual")); } });
     });
   }
 

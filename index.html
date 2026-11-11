@@ -53,7 +53,6 @@
   <div class="abertura-cortina c1"></div><div class="abertura-cortina c2"></div>
 </div>
 
-<div class="cursor" id="cursor" aria-hidden="true"></div>
 
 <!-- Avenida que acompanha a página (bordas neon, faixas, guard-rail e postes) -->
 <div class="avenida" id="avenida" aria-hidden="true">
@@ -67,12 +66,13 @@
 </div>
 
 <header class="topo-fixo" id="topoFixo">
-  <div class="faixa-int">
+  <div class="topo-barra">
     <a class="marca" href="#inicio" aria-label="Highway Agência, voltar ao início">
       <img src="imagens/logo-h.webp" alt="" width="34" height="34">
-      <span>HIGHWAY</span>
+      <span>HIGHWAY<small>agência</small></span>
     </a>
     <nav class="menu" id="menu" aria-label="Seções do site">
+      <span class="menu-luz" id="menuLuz" aria-hidden="true"></span>
       <a href="#portfolio">Portfólio</a>
       <a href="#planos">Planos</a>
       <a href="#como-funciona">Como funciona</a>
@@ -80,8 +80,7 @@
       <a class="menu-wpp" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener">Falar no WhatsApp</a>
     </nav>
     <div class="topo-dir">
-      <span class="status"><i></i>Agenda aberta para dezembro</span>
-      <a class="btn s mag so-desk" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <a class="btn-topo mag so-desk" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener"><i class="ponto-on" aria-hidden="true"></i>Falar no WhatsApp</a>
       <button class="hamburguer" id="hamburguer" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
     </div>
   </div>
@@ -107,24 +106,69 @@
           <li>Sem fidelidade</li>
           <li>A partir de R$ 597</li>
         </ul>
+        <span class="status"><i></i>Agenda aberta para dezembro</span>
       </div>
-      <div class="vitrine" id="vitrine" aria-hidden="true">
-        <div class="navegador" id="navegador">
-          <div class="barra"><i></i><i></i><i></i><span id="vitrineUrl">clinica-alba.com.br</span></div>
-          <div class="tela">
-            <img class="ativa" src="imagens/prints/estetica-n3-inteiro.webp" alt="" data-url="clinica-alba.com.br">
-            <img src="imagens/prints/advocacia-n2-inteiro.webp" alt="" data-url="rafaelduarte.adv.br" loading="lazy">
-            <img src="imagens/prints/otica-n2-inteiro.webp" alt="" data-url="oticamirante.com.br" loading="lazy">
+      <div class="historia" id="historia" aria-hidden="true">
+        <div class="hist-moldura">
+          <div class="hist-grade"></div>
+          <div class="hist-palco">
+
+            <div class="hc hc-busca">
+              <div class="hc-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg><span class="hc-digita"></span><i class="caret"></i></div>
+              <div class="hc-linhas">
+                <div class="hc-linha"><i></i><b></b></div>
+                <div class="hc-linha"><i></i><b></b></div>
+                <div class="hc-linha"><i></i><b></b></div>
+              </div>
+              <div class="hc-metrica"><small class="hc-rotulo">Buscas por mês</small><strong><span class="hc-num">0</span><em class="hc-mil">mil</em></strong><small>“clínica de estética perto de mim”</small></div>
+            </div>
+
+            <div class="hc hc-site">
+              <div class="hs-barra"><i></i><span></span><span></span><span></span></div>
+              <div class="hs-corpo">
+                <div class="hs-titulo"><i></i><i></i><i></i></div>
+                <div class="hs-texto"><i></i><i></i><i></i><i></i></div>
+                <div class="hs-foto"><span></span></div>
+                <div class="hs-wpp"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.6-1.2A9 9 0 1 0 12 3z"/></svg>WhatsApp</div>
+              </div>
+              <div class="hs-cards"><i></i><i></i><i></i></div>
+            </div>
+
+            <div class="hc hc-topo">
+              <div class="hc-search cheio"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg><span>clínica de estética perto de mim</span></div>
+              <div class="hc-resultados">
+                <div class="hc-voce"><span class="tag">1º lugar</span><b>Seu negócio</b><small>Clínica de estética · Cascavel</small></div>
+                <div class="hc-linha"><i></i><b></b></div>
+                <div class="hc-linha"><i></i><b></b></div>
+              </div>
+              <div class="hc-mapa"><i></i><i></i><i></i><i></i><svg viewBox="0 0 40 52"><path d="M20 2C10 2 3 9 3 19c0 12 17 31 17 31s17-19 17-31C37 9 30 2 20 2z"/><circle cx="20" cy="19" r="6"/></svg><span>Seu negócio</span></div>
+            </div>
+
+            <div class="hc hc-chat">
+              <div class="hc-msg"><b>M</b><div><strong>Mariana</strong><span>Oi! Vi o site, tem horário no sábado?</span></div><time>agora</time></div>
+              <div class="hc-msg"><b>C</b><div><strong>Carlos</strong><span>Quanto fica a limpeza de pele?</span></div><time>agora</time></div>
+              <div class="hc-msg"><b>J</b><div><strong>Juliana</strong><span>Consigo uma avaliação essa semana?</span></div><time>agora</time></div>
+            </div>
+
+            <div class="hc hc-proj">
+              <img src="imagens/prints/estetica-n3-topo.webp" alt="" width="1200" height="750">
+              <img src="imagens/prints/advocacia-n2-topo.webp" alt="" width="1200" height="750">
+              <img src="imagens/prints/otica-n3-topo.webp" alt="" width="1200" height="750">
+              <img src="imagens/prints/estetica-n2-topo.webp" alt="" width="1200" height="750" loading="lazy">
+              <img src="imagens/prints/advocacia-n3-topo.webp" alt="" width="1200" height="750" loading="lazy">
+              <img src="imagens/prints/otica-n2-topo.webp" alt="" width="1200" height="750" loading="lazy">
+            </div>
+
+            <div class="hc hc-marca">
+              <img src="imagens/logo-h.webp" alt="" width="84" height="84">
+              <strong>HIGHWAY</strong>
+              <small>Sites sob medida · domínio e hospedagem inclusos</small>
+            </div>
+
           </div>
+          <p class="hist-legenda" id="histLegenda"></p>
         </div>
-        <div class="celular" id="celular">
-          <div class="tela">
-            <img class="ativa" src="imagens/prints/estetica-n3-celular.webp" alt="">
-            <img src="imagens/prints/advocacia-n2-celular.webp" alt="" loading="lazy">
-            <img src="imagens/prints/otica-n2-celular.webp" alt="" loading="lazy">
-          </div>
-        </div>
-        <span class="etiqueta">Projetos conceito da Highway</span>
+        <div class="hist-rota"><i class="hist-carro"></i><b></b><b></b><b></b><b></b><b></b><b></b></div>
       </div>
     </div>
     <a class="rolar" href="#caminho" aria-label="Rolar para a próxima seção"><span></span></a>
