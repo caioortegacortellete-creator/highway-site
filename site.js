@@ -89,7 +89,6 @@
   function aoRolar() {
     const y = window.scrollY;
     hamb && hamb.classList.toggle("rolou", y > 60);
-    atualizarAvenida();
     acordarWpp();
   }
   window.addEventListener("scroll", aoRolar, { passive: true });
@@ -154,225 +153,9 @@
       .add(fim, 1.45);
   }
 
-  /* ---------- avenida do topo (canvas): pista, postes neon, cidade e carros ---------- */
-  const cv = $("#heroEstrada");
+  /* ---------- topo: referências usadas pelas animações ---------- */
   const hero = $("#hero");
   let alvoX = 0, alvoY = 0, velExtra = 0;
-  if (cv && cv.getContext) {
-    const ctx = cv.getContext("2d");
-    const C = "41,236,255", M = "255,61,242", R = "179,80,255", B = "238,241,255", A = "255,184,77";
-    const LARG = 3.6, CAM = 1.75, LONGE = 120, VAO = 13, TRACO = 9;
-    let W = 0, H = 0, vx = 0, hy = 0, f = 1, perto = 1, mx = 0, my = 0, camX = 0.9, dist = 0, tempo = 0, visivel = true;
-    let cidade = null, cidadeH = 0, antenas = [];
-    const novoCarro = (k, inicio) => {
-      const vem = k % 2 === 0;
-      const faixa = vem ? (k % 4 === 0 ? -2.7 : -0.9) : (k % 3 === 0 ? 2.7 : 0.9);
-      return { vem, x: faixa, z: inicio ? 4 + Math.random() * LONGE : LONGE + Math.random() * 40, v: vem ? 0.9 + Math.random() * 0.5 : 0.18 + Math.random() * 0.3 };
-    };
-    const carros = Array.from({ length: 14 }, (_, k) => novoCarro(k, true));
-    const proj = (x, y, z) => [vx + (x - camX) * f / z, hy + (CAM - y) * f / z];
-    const neblina = (z) => Math.pow(clamp(1 - z / LONGE, 0, 1), 0.9);
-
-    const montarCidade = () => {
-      cidade = document.createElement("canvas");
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      cidadeH = hy + 2;
-      cidade.width = Math.round((W + 40) * dpr); cidade.height = Math.round(cidadeH * dpr);
-      const c = cidade.getContext("2d");
-      c.setTransform(dpr, 0, 0, dpr, 20, 0);
-      for (let i = 0; i < 70; i++) {
-        c.fillStyle = `rgba(${B},${0.15 + Math.random() * 0.5})`;
-        c.fillRect(Math.random() * W, Math.random() * hy * 0.7, 1.2, 1.2);
-      }
-      antenas = [];
-      const camadas = [{ alt: 0.2, cor: ["#0c0e2c", "#090a22"], luz: 0.12 }, { alt: 0.13, cor: ["#121540", "#0b0d2a"], luz: 0.22 }];
-      camadas.forEach((cam, ci) => {
-        let x = -20;
-        while (x < W + 20) {
-          const perto_vp = 1 - Math.min(1, Math.abs(x - vx) / (W * 0.55));
-          const w = 22 + Math.random() * 60;
-          const h = H * (0.025 + Math.random() * cam.alt * (0.45 + perto_vp * 0.8));
-          const g = c.createLinearGradient(0, hy - h, 0, hy);
-          g.addColorStop(0, cam.cor[0]); g.addColorStop(1, cam.cor[1]);
-          c.fillStyle = g; c.fillRect(x, hy - h, w, h + 2);
-          if (Math.random() < 0.35) {
-            c.fillStyle = `rgba(${Math.random() < 0.5 ? C : M},${ci ? 0.55 : 0.3})`;
-            c.fillRect(x, hy - h, w, 1.5);
-          }
-          for (let yy = hy - h + 6; yy < hy - 4; yy += 7) {
-            for (let xx = x + 4; xx < x + w - 4; xx += 6) {
-              if (Math.random() < cam.luz) {
-                const r = Math.random();
-                c.fillStyle = r < 0.55 ? `rgba(${A},${0.35 + Math.random() * 0.4})` : r < 0.8 ? `rgba(${C},.55)` : `rgba(${M},.5)`;
-                c.fillRect(xx, yy, 2, 3);
-              }
-            }
-          }
-          if (ci === 1 && h > H * 0.11 && Math.random() < 0.5) antenas.push([x + w / 2, hy - h - 6]);
-          x += w + (ci ? 3 : 8) + Math.random() * 6;
-        }
-      });
-    };
-
-    const medir = () => {
-      const r = hero.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      W = r.width; H = r.height;
-      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const estreito = W < 900;
-      vx = estreito ? W * 0.5 : W * 0.66;
-      hy = estreito ? H * 0.5 : H * 0.42;
-      f = estreito ? H * 0.75 : H * 1.05;
-      perto = CAM * f / (H + 30 - hy);
-      montarCidade();
-    };
-
-    const quad = (x1, x2, z1, z2) => {
-      const a = proj(x1, 0, z1), b = proj(x2, 0, z1), c = proj(x2, 0, z2), d = proj(x1, 0, z2);
-      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath();
-    };
-    const linhaLonga = (x, larg, rgb, forca) => {
-      const g = ctx.createLinearGradient(0, hy, 0, H);
-      g.addColorStop(0, `rgba(${rgb},0)`); g.addColorStop(0.25, `rgba(${rgb},${forca * 0.5})`); g.addColorStop(1, `rgba(${rgb},${forca})`);
-      ctx.fillStyle = g;
-      quad(x - larg / 2, x + larg / 2, perto * 0.6, LONGE); ctx.fill();
-    };
-    const brilho = (x, y, raio, rgb, a) => {
-      if (raio < 0.5) return;
-      const g = ctx.createRadialGradient(x, y, 0, x, y, raio);
-      g.addColorStop(0, `rgba(255,255,255,${a})`); g.addColorStop(0.18, `rgba(${rgb},${a * 0.8})`); g.addColorStop(1, `rgba(${rgb},0)`);
-      ctx.fillStyle = g; ctx.fillRect(x - raio, y - raio, raio * 2, raio * 2);
-    };
-
-    const desenha = (dt) => {
-      const vel = 15 * (1 + velExtra);
-      tempo += dt;
-      dist += dt * vel;
-      velExtra *= 0.94;
-      mx += (alvoX - mx) * 0.05; my += (alvoY - my) * 0.05;
-      const estreito = W < 900;
-      vx = (estreito ? W * 0.5 : W * 0.66) + mx * 70;
-      hy = (estreito ? H * 0.5 : H * 0.42) + my * 18;
-      camX = 0.9 + mx * 1.4;
-      ctx.clearRect(0, 0, W, H);
-
-      /* céu e brilho da cidade no horizonte */
-      const ceu = ctx.createRadialGradient(vx, hy, 0, vx, hy, Math.max(W, H) * 0.75);
-      ceu.addColorStop(0, `rgba(${M},.42)`); ceu.addColorStop(0.18, `rgba(${R},.28)`); ceu.addColorStop(0.5, "rgba(47,91,255,.08)"); ceu.addColorStop(1, "rgba(6,8,22,0)");
-      ctx.fillStyle = ceu; ctx.fillRect(0, 0, W, H);
-      const cy0 = hy - cidadeH + 2, cx0 = -20 - mx * 18;
-      if (cidade) ctx.drawImage(cidade, cx0, cy0, W + 40, cidadeH);
-      ctx.globalCompositeOperation = "lighter";
-      antenas.forEach(([ax, ay], i) => { if (Math.sin(tempo * 2.4 + i * 1.7) > 0.4) brilho(ax + 20 + cx0, ay + cy0, 5, "255,60,90", 0.9); });
-      ctx.globalCompositeOperation = "source-over";
-
-      /* chão, calçadas e asfalto */
-      const chao = ctx.createLinearGradient(0, hy, 0, H);
-      chao.addColorStop(0, "#120f33"); chao.addColorStop(1, "#05060f");
-      ctx.fillStyle = chao; ctx.fillRect(0, hy, W, H - hy);
-      ctx.fillStyle = "rgba(255,61,242,.55)"; ctx.fillRect(0, hy - 1, W, 1.5);
-      ctx.fillStyle = "#0f1230"; quad(-LARG - 2.2, LARG + 2.2, perto * 0.6, LONGE); ctx.fill();
-      const asf = ctx.createLinearGradient(0, hy, 0, H);
-      asf.addColorStop(0, "#1a1745"); asf.addColorStop(1, "#0b0d24");
-      ctx.fillStyle = asf; quad(-LARG, LARG, perto * 0.6, LONGE); ctx.fill();
-
-      ctx.globalCompositeOperation = "lighter";
-      /* poças de luz dos postes (desenhadas antes das faixas) */
-      const postes = [];
-      [-1, 1].forEach((lado) => {
-        const off = lado < 0 ? 0 : VAO / 2;
-        for (let k = 0; k < LONGE / VAO + 2; k++) {
-          const z = k * VAO + off - (dist % VAO);
-          if (z < perto * 0.45 || z > LONGE) continue;
-          postes.push({ z, lado });
-        }
-      });
-      postes.forEach(({ z, lado }) => {
-        const nev = neblina(z), rgb = lado < 0 ? C : M;
-        const xl = lado * (LARG - 0.6);
-        const [px, py] = proj(xl, 0, z);
-        const rx = Math.min(2.6 * f / z, W);
-        const ry = Math.max(1, (proj(xl, 0, z - 1.4)[1] - proj(xl, 0, z + 1.4)[1]) / 2);
-        ctx.save(); ctx.translate(px, py); ctx.scale(1, ry / rx);
-        const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
-        g.addColorStop(0, `rgba(${rgb},${0.34 * nev})`); g.addColorStop(0.5, `rgba(${rgb},${0.1 * nev})`); g.addColorStop(1, `rgba(${rgb},0)`);
-        ctx.fillStyle = g; ctx.fillRect(-rx, -rx, rx * 2, rx * 2);
-        ctx.restore();
-        /* reflexo no asfalto molhado */
-        const rl = Math.min(ry * 7, H - py + 10), rw = Math.max(1, rx * 0.12);
-        const gr = ctx.createLinearGradient(0, py, 0, py + rl);
-        gr.addColorStop(0, `rgba(${rgb},${0.28 * nev})`); gr.addColorStop(1, `rgba(${rgb},0)`);
-        ctx.fillStyle = gr; ctx.fillRect(px - rw / 2, py, rw, rl);
-      });
-
-      /* faixas: bordas neon, faixa dupla central e tracejados */
-      linhaLonga(-LARG, 0.16, C, 1); linhaLonga(-LARG, 0.9, C, 0.16);
-      linhaLonga(LARG, 0.16, M, 1); linhaLonga(LARG, 0.9, M, 0.16);
-      linhaLonga(-0.11, 0.07, R, 0.95); linhaLonga(0.11, 0.07, R, 0.95); linhaLonga(0, 0.6, R, 0.12);
-      [-1.8, 1.8].forEach((x) => {
-        for (let k = 0; k < LONGE / TRACO + 1; k++) {
-          const z1 = k * TRACO - (dist % TRACO) + perto * 0.6;
-          const z2 = z1 + 3.2;
-          if (z2 < perto * 0.6 || z1 > LONGE) continue;
-          ctx.fillStyle = `rgba(${B},${0.7 * neblina(z1)})`;
-          quad(x - 0.06, x + 0.06, Math.max(z1, perto * 0.6), z2); ctx.fill();
-        }
-      });
-
-      /* carros: faróis vindo, lanternas indo, com rastro de luz */
-      carros.forEach((c, k) => {
-        if (!reduz) c.z -= vel * c.v * dt;
-        if (c.z < perto * 0.5) carros[k] = novoCarro(k, false);
-        if (c.z > LONGE) return;
-        const nev = neblina(c.z);
-        const rgb = c.vem ? B : "255,40,90", alt = c.vem ? 0.55 : 0.65;
-        const rastroZ = c.z + (c.vem ? 9 : 5) * (1 + velExtra);
-        [-0.42, 0.42].forEach((dx) => {
-          const a = proj(c.x + dx, alt, c.z), b = proj(c.x + dx, alt, rastroZ);
-          const lg = ctx.createLinearGradient(b[0], b[1], a[0], a[1]);
-          lg.addColorStop(0, `rgba(${c.vem ? C : M},0)`); lg.addColorStop(1, `rgba(${rgb},${0.85 * nev})`);
-          ctx.strokeStyle = lg; ctx.lineWidth = clamp(0.16 * f / c.z, 0.6, 9); ctx.lineCap = "round";
-          ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(a[0], a[1]); ctx.stroke();
-          brilho(a[0], a[1], clamp(0.5 * f / c.z, 1, 60), c.vem ? C : M, 0.85 * nev);
-        });
-      });
-
-      /* postes: do mais longe para o mais perto */
-      postes.sort((a, b) => b.z - a.z).forEach(({ z, lado }) => {
-        const nev = neblina(z), rgb = lado < 0 ? C : M;
-        const xp = lado * (LARG + 1.3), xl = lado * (LARG - 0.6);
-        const base = proj(xp, 0, z), topo = proj(xp, 6.2, z), curva = proj(xp, 6.9, z), lamp = proj(xl, 6.25, z);
-        const esp = clamp(0.2 * f / z, 1, 16);
-        ctx.globalCompositeOperation = "source-over";
-        ctx.strokeStyle = `rgba(14,16,44,${0.4 + 0.6 * nev})`; ctx.lineWidth = esp; ctx.lineCap = "butt";
-        ctx.beginPath(); ctx.moveTo(base[0], base[1]); ctx.lineTo(topo[0], topo[1]); ctx.quadraticCurveTo(curva[0], curva[1], lamp[0], lamp[1]); ctx.stroke();
-        ctx.globalCompositeOperation = "lighter";
-        ctx.strokeStyle = `rgba(${rgb},${0.55 * nev})`; ctx.lineWidth = Math.max(0.6, esp * 0.22);
-        ctx.beginPath(); ctx.moveTo(base[0], base[1]); ctx.lineTo(topo[0], topo[1]); ctx.quadraticCurveTo(curva[0], curva[1], lamp[0], lamp[1]); ctx.stroke();
-        /* cone de luz */
-        const c1 = proj(xl - 1.9, 0, z), c2 = proj(xl + 1.9, 0, z);
-        const gc = ctx.createLinearGradient(0, lamp[1], 0, c1[1]);
-        gc.addColorStop(0, `rgba(${rgb},${0.2 * nev})`); gc.addColorStop(1, `rgba(${rgb},0)`);
-        ctx.fillStyle = gc;
-        ctx.beginPath(); ctx.moveTo(lamp[0] - esp * 0.6, lamp[1]); ctx.lineTo(lamp[0] + esp * 0.6, lamp[1]); ctx.lineTo(c2[0], c2[1]); ctx.lineTo(c1[0], c1[1]); ctx.closePath(); ctx.fill();
-        brilho(lamp[0], lamp[1], clamp(1.3 * f / z, 3, 130), rgb, 0.95 * nev);
-      });
-      ctx.globalCompositeOperation = "source-over";
-      ctx.lineCap = "butt";
-    };
-    let ult = performance.now();
-    const loop = (agora) => {
-      const dt = Math.min((agora - ult) / 1000, 0.05); ult = agora;
-      if (visivel) desenha(dt);
-      requestAnimationFrame(loop);
-    };
-    medir(); desenha(0);
-    if (!reduz) requestAnimationFrame(loop);
-    let tRes = null;
-    window.addEventListener("resize", () => { clearTimeout(tRes); tRes = setTimeout(() => { medir(); desenha(0); }, 120); });
-    if ("IntersectionObserver" in window) new IntersectionObserver((e) => { visivel = e[0].isIntersecting; }).observe(hero);
-  }
 
   /* ---------- história animada do topo (busca → site → topo do Google → WhatsApp → projetos → marca) ---------- */
   const hist = $("#historia");
@@ -517,8 +300,6 @@
   if (animar) {
     gsap.to(".hero-txt", { y: -80, opacity: 0.2, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
     gsap.to(".historia", { y: 60, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
-    /* ao sair do topo em tela cheia, ele recua como um cartão de cantos arredondados */
-    gsap.fromTo(hero, { scale: 1, borderRadius: 0, "--hero-escurece": 0 }, { scale: 0.9, borderRadius: 36, "--hero-escurece": 0.55, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
     ScrollTrigger.create({ trigger: hero, start: "top top", end: "bottom top", onUpdate: (s) => { velExtra = Math.min(3, Math.abs(s.getVelocity()) / 900); } });
   }
 
@@ -1008,61 +789,6 @@
   acordarWpp();
   if (animar) gsap.from(wpp, { scale: 0, duration: 0.6, ease: "back.out(2)", delay: usarAbertura ? 2.4 : 1 });
 
-  /* ---------- avenida que acompanha a página: bordas neon, postes que acendem e o carro ---------- */
-  const avenida = $("#avenida"), avPostes = $("#avPostes"), carro = $("#carro");
-  let avIni = 0, avFim = 0, obsPostes = null, ultYAv = window.scrollY, velCarro = 0, velMostrada = -1, carroDir = 1;
-  const topoDoc = (el) => el.getBoundingClientRect().top + window.scrollY;
-  function montarAvenida() {
-    if (!avenida) return;
-    raiz.classList.add("tem-avenida");
-    avIni = topoDoc(hero) + hero.offsetHeight;
-    const chegada = $("#chegada");
-    avFim = chegada ? topoDoc(chegada) + chegada.offsetHeight / 2 : document.documentElement.scrollHeight;
-    avenida.style.top = avIni + "px";
-    avenida.style.height = Math.max(0, avFim - avIni) + "px";
-    const passo = window.innerWidth < 760 ? 480 : 560;
-    const total = 2 * Math.max(0, Math.floor((avFim - avIni - 300) / passo) + 1);
-    const atuais = $$(".poste", avPostes);
-    for (let i = atuais.length; i < total; i++) {
-      const p = document.createElement("div");
-      p.className = "poste " + (i % 2 ? "dir" : "esq");
-      p.innerHTML = '<i class="poste-luz"></i><i class="poste-base"></i><i class="poste-braco"></i><i class="poste-cabeca"></i>';
-      avPostes.appendChild(p);
-      if (reduz || !("IntersectionObserver" in window)) p.classList.add("aceso");
-      else {
-        if (!obsPostes) obsPostes = new IntersectionObserver((es) => es.forEach((e) => {
-          if (e.isIntersecting) { e.target.classList.add("aceso"); obsPostes.unobserve(e.target); }
-        }), { rootMargin: "0px 0px -15% 0px" });
-        obsPostes.observe(p);
-      }
-    }
-    $$(".poste", avPostes).forEach((p, i) => {
-      if (i >= total) { p.remove(); return; }
-      p.style.top = 200 + Math.floor(i / 2) * passo + (i % 2 ? passo / 2 : 0) + "px";
-    });
-    atualizarAvenida();
-  }
-  function atualizarAvenida() {
-    if (!avenida || !avFim) return;
-    const y = window.scrollY, ref = y + window.innerHeight * 0.62;
-    avenida.style.setProperty("--av-prog", clamp(ref - avIni, 0, avFim - avIni).toFixed(0) + "px");
-    if (!carro) return;
-    const dy = y - ultYAv; ultYAv = y;
-    carro.classList.toggle("na-pista", ref > avIni + 80 && ref < avFim - 40);
-    velCarro = Math.max(velCarro, Math.min(Math.abs(dy) / 35, 1.5));
-    if (animar) {
-      if (dy > 2 && carroDir < 0) { carroDir = 1; gsap.to(carro, { rotation: 0, duration: 0.6, ease: "power2.inOut" }); }
-      else if (dy < -2 && carroDir > 0) { carroDir = -1; gsap.to(carro, { rotation: 180, duration: 0.6, ease: "power2.inOut" }); }
-    }
-  }
-  if (carro && animar) {
-    gsap.ticker.add(() => {
-      velCarro *= 0.93;
-      const v = Math.round(velCarro * 100) / 100;
-      if (v !== velMostrada) { velMostrada = v; carro.style.setProperty("--vel", v); }
-    });
-  }
-
   /* ---------- cidade neon do rodapé ---------- */
   const cidadeRodape = $("#cidade");
   if (cidadeRodape) {
@@ -1103,6 +829,23 @@
     });
   }
 
+
+  /* ---------- placas de KM descem como sinalização e o véu sobre a estrada 3D ---------- */
+  if (animar) {
+    $$("section:not(.hero) .km").forEach((k) => {
+      gsap.fromTo(k, { rotationX: -100, opacity: 0, transformPerspective: 700, transformOrigin: "50% 0%" },
+        { rotationX: 0, opacity: 1, duration: 1.1, ease: "back.out(1.7)", scrollTrigger: { trigger: k, start: "top 88%" } });
+    });
+    $$("section:not(.hero) .cab h2, .titulo-grande, .niveis-txt h2").forEach((t) => {
+      gsap.fromTo(t, { rotationX: 38, z: -120, opacity: 0, transformPerspective: 900, transformOrigin: "50% 100%" },
+        { rotationX: 0, z: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: t, start: "top 90%" } });
+    });
+  }
+  const veu = $(".estrada-veu");
+  if (veu && temGSAP) {
+    ScrollTrigger.create({ trigger: "#hero", start: "top top", end: "bottom 40%", scrub: true, onUpdate: (s) => veu.style.setProperty("--veu", (0.12 + s.progress * 0.46).toFixed(3)) });
+  }
+
   /* ---------- menu marca a seção atual ---------- */
   if (temGSAP) {
     ["portfolio", "planos", "como-funciona", "duvidas"].forEach((id) => {
@@ -1115,12 +858,10 @@
   /* ---------- começar ---------- */
   const iniciar = () => rodarAbertura(introHero);
   if (temGSAP) {
-    ScrollTrigger.addEventListener("refresh", montarAvenida);
     window.addEventListener("load", () => { ScrollTrigger.refresh(); });
   } else {
-    window.addEventListener("load", montarAvenida);
+    window.addEventListener("load", () => {});
   }
-  window.addEventListener("resize", () => { if (!temGSAP) montarAvenida(); });
   if (temGSAP) iniciar(); else { const ab = $("#abertura"); ab && ab.remove(); }
   aoRolar();
 })();

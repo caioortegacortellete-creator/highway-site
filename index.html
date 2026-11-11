@@ -54,20 +54,13 @@
 </div>
 
 
-<!-- Avenida que acompanha a página (bordas neon, faixas, guard-rail e postes) -->
-<div class="avenida" id="avenida" aria-hidden="true">
-  <i class="av-guarda esq"></i><i class="av-guarda dir"></i>
-  <i class="av-borda esq"></i><i class="av-borda dir"></i>
-  <i class="av-faixa esq"></i><i class="av-faixa dir"></i>
-  <div class="av-postes" id="avPostes"></div>
-</div>
-<div class="carro" id="carro" aria-hidden="true">
-  <svg viewBox="0 0 30 56"><rect class="lataria" x="3" y="3" width="24" height="50" rx="9"/><path class="vidro" d="M7 34h16l-2 7H9z"/><path class="vidro" d="M8 15h14l-1.5-5h-11z"/><rect class="farois" x="6" y="49" width="6" height="3" rx="1.5"/><rect class="farois" x="18" y="49" width="6" height="3" rx="1.5"/><rect class="lanternas" x="6" y="4" width="6" height="2.5" rx="1.2"/><rect class="lanternas" x="18" y="4" width="6" height="2.5" rx="1.2"/></svg>
-</div>
+<!-- Rodovia 3D que atravessa o site (estrada3d.js) -->
+<canvas class="estrada3d" id="estrada3d" aria-hidden="true"></canvas>
+<div class="estrada-veu" aria-hidden="true"></div>
 
 <header class="topo" id="topoFixo">
   <div class="topo-int">
-    <a class="topo-insta" href="https://www.instagram.com/highwayagencia/" target="_blank" rel="noopener"><i aria-hidden="true"></i>@highwayagencia</a>
+    <a class="topo-insta" href="https://www.instagram.com/highwayagencia/" target="_blank" rel="noopener" aria-label="Instagram da Highway (@highwayagencia)"><span class="insta-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="ponto"/></svg></span><span class="insta-txt">@highwayagencia</span></a>
     <a class="marca marca-centro" href="#inicio" aria-label="Highway Agência, voltar ao início">
       <img src="imagens/logo-h.webp" alt="" width="40" height="40">
       <span>HIGHWAY<small>agência</small></span>
@@ -102,7 +95,6 @@
 
   <!-- KM 01 · TOPO -->
   <section class="hero" id="hero" aria-labelledby="hero-titulo">
-    <canvas class="hero-estrada" id="heroEstrada" aria-hidden="true"></canvas>
     <div class="faixa-int hero-grade">
       <div class="hero-txt">
         <span class="km"><b>KM 01</b> Sites sob medida para negócios locais</span>
@@ -185,7 +177,6 @@
     <a class="rolar" href="#caminho" aria-label="Rolar para a próxima seção"><span></span></a>
   </section>
 
-  <div class="travessia" aria-hidden="true"></div>
 
   <!-- KM 02 · CAMINHO DO CLIENTE -->
   <section class="caminho" id="caminho" aria-labelledby="caminho-titulo">
@@ -362,7 +353,6 @@
     </div>
   </section>
 
-  <div class="travessia" aria-hidden="true"><span class="pintura">PLANOS</span></div>
 
   <!-- KM 07 · PLANOS -->
   <section class="planos" id="planos" aria-labelledby="planos-titulo">
@@ -598,7 +588,6 @@
     </div>
   </section>
 
-  <div class="travessia" aria-hidden="true"></div>
 
   <!-- KM 13 · DESTINO -->
   <section class="destino" id="contato" aria-labelledby="destino-titulo">
@@ -634,7 +623,6 @@
       </form>
     </div>
   </section>
-  <div class="chegada" id="chegada" aria-hidden="true"></div>
 </main>
 
 <footer class="rodape">
@@ -710,6 +698,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="site.js"></script>
+<script src="estrada3d.js"></script>
 </body>
 </html>
