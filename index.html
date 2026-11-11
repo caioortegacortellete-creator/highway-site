@@ -65,26 +65,37 @@
   <svg viewBox="0 0 30 56"><rect class="lataria" x="3" y="3" width="24" height="50" rx="9"/><path class="vidro" d="M7 34h16l-2 7H9z"/><path class="vidro" d="M8 15h14l-1.5-5h-11z"/><rect class="farois" x="6" y="49" width="6" height="3" rx="1.5"/><rect class="farois" x="18" y="49" width="6" height="3" rx="1.5"/><rect class="lanternas" x="6" y="4" width="6" height="2.5" rx="1.2"/><rect class="lanternas" x="18" y="4" width="6" height="2.5" rx="1.2"/></svg>
 </div>
 
-<header class="topo-fixo" id="topoFixo">
-  <div class="topo-barra">
+<header class="topo" id="topoFixo">
+  <div class="topo-int">
     <a class="marca" href="#inicio" aria-label="Highway Agência, voltar ao início">
       <img src="imagens/logo-h.webp" alt="" width="34" height="34">
       <span>HIGHWAY<small>agência</small></span>
     </a>
-    <nav class="menu" id="menu" aria-label="Seções do site">
-      <span class="menu-luz" id="menuLuz" aria-hidden="true"></span>
-      <a href="#portfolio">Portfólio</a>
-      <a href="#planos">Planos</a>
-      <a href="#como-funciona">Como funciona</a>
-      <a href="#duvidas">Dúvidas</a>
-      <a class="menu-wpp" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener">Falar no WhatsApp</a>
-    </nav>
-    <div class="topo-dir">
-      <a class="btn-topo mag so-desk" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener"><i class="ponto-on" aria-hidden="true"></i>Falar no WhatsApp</a>
-      <button class="hamburguer" id="hamburguer" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
-    </div>
+    <a class="btn-conversar mag" href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener">Vamos conversar?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
   </div>
 </header>
+
+<button class="botao-menu" id="hamburguer" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="painelMenu"><span></span><span></span></button>
+
+<div class="painel-menu" id="painelMenu" inert>
+  <div class="pm-fundo" data-fechar></div>
+  <nav class="pm-caixa" aria-label="Menu do site">
+    <div class="pm-topo"><span>Menu</span><button type="button" class="pm-fechar" data-fechar aria-label="Fechar menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <ol class="pm-lista">
+        <li style="--i: 0"><a href="#inicio"><span class="pm-txt">Início</span><span class="pm-num"><i>/</i>01</span></a></li>
+        <li style="--i: 1"><a href="#portfolio"><span class="pm-txt">Portfólio</span><span class="pm-num"><i>/</i>02</span></a></li>
+        <li style="--i: 2"><a href="#planos"><span class="pm-txt">Planos</span><span class="pm-num"><i>/</i>03</span></a></li>
+        <li style="--i: 3"><a href="#como-funciona"><span class="pm-txt">Como funciona</span><span class="pm-num"><i>/</i>04</span></a></li>
+        <li style="--i: 4"><a href="#duvidas"><span class="pm-txt">Dúvidas</span><span class="pm-num"><i>/</i>05</span></a></li>
+        <li style="--i: 5"><a href="#contato"><span class="pm-txt">Contato</span><span class="pm-num"><i>/</i>06</span></a></li>
+    </ol>
+    <div class="pm-rodape">
+      <div class="pm-bloco"><small>WhatsApp</small><a href="https://wa.me/5543984124448?text=Oi!%20Vim%20pelo%20site%20da%20Highway%20e%20quero%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener">(43) 98412-4448 <i>↗</i></a></div>
+      <div class="pm-bloco"><small>Telefones</small><a href="tel:+5543991263792">Carlos · (43) 99126-3792</a><a href="tel:+5543988630906">Caio · (43) 98863-0906</a></div>
+      <div class="pm-bloco"><small>Redes</small><a href="https://www.instagram.com/highwayagencia/" target="_blank" rel="noopener">Instagram <i>↗</i></a></div>
+    </div>
+  </nav>
+</div>
 
 <main id="inicio">
 

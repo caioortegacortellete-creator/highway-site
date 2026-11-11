@@ -62,30 +62,33 @@
     irPara(alvo);
   });
 
-  /* ---------- menu do celular e topo fixo ---------- */
+  /* ---------- botão de menu e painel lateral (estilo Firsight) ---------- */
   const topoFixo = $("#topoFixo");
   const hamb = $("#hamburguer");
+  const painel = $("#painelMenu");
+  function abrirMenu() {
+    raiz.classList.add("menu-aberto");
+    painel.inert = false;
+    hamb.setAttribute("aria-expanded", "true");
+    hamb.setAttribute("aria-label", "Fechar menu");
+    if (lenis) lenis.stop();
+    setTimeout(() => { const f = $(".pm-fechar", painel); f && f.focus({ preventScroll: true }); }, 80);
+  }
   function fecharMenu() {
+    if (!raiz.classList.contains("menu-aberto")) return;
     raiz.classList.remove("menu-aberto");
-    hamb && hamb.setAttribute("aria-expanded", "false");
+    painel.inert = true;
+    hamb.setAttribute("aria-expanded", "false");
+    hamb.setAttribute("aria-label", "Abrir menu");
     if (lenis) lenis.start();
   }
-  hamb && hamb.addEventListener("click", () => {
-    const abre = !raiz.classList.contains("menu-aberto");
-    raiz.classList.toggle("menu-aberto", abre);
-    hamb.setAttribute("aria-expanded", String(abre));
-    hamb.setAttribute("aria-label", abre ? "Fechar menu" : "Abrir menu");
-    if (lenis) abre ? lenis.stop() : lenis.start();
-  });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") fecharMenu(); });
+  hamb && hamb.addEventListener("click", () => (raiz.classList.contains("menu-aberto") ? fecharMenu() : abrirMenu()));
+  $$("[data-fechar]", painel).forEach((el) => el.addEventListener("click", fecharMenu));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && raiz.classList.contains("menu-aberto")) { fecharMenu(); hamb.focus(); } });
 
-  let ultY = window.scrollY;
   function aoRolar() {
     const y = window.scrollY;
-    topoFixo.classList.toggle("rolou", y > 20);
-    if (!raiz.classList.contains("menu-aberto")) topoFixo.classList.toggle("escondido", y > 500 && y > ultY + 2);
-    if (y < ultY - 2) topoFixo.classList.remove("escondido");
-    ultY = y;
+    hamb && hamb.classList.toggle("rolou", y > 60);
     atualizarAvenida();
     acordarWpp();
   }
@@ -130,7 +133,7 @@
     tl.from(".pal-in", { yPercent: 115, duration: 1, stagger: 0.055, ease: "power4.out" })
       .from(".hero .km, .hero-sub, .hero .ctas, .selos", { y: 24, opacity: 0, duration: 0.8, stagger: 0.08 }, "-=0.7")
       .from(".historia", { x: 60, opacity: 0, duration: 1.3, ease: "power4.out" }, "-=1.1")
-      .from(".topo-barra", { y: -30, opacity: 0, duration: 0.7, clearProps: "transform,opacity" }, "-=1")
+      .from(".topo-int > *, .botao-menu", { y: -24, opacity: 0, duration: 0.7, stagger: 0.08, clearProps: "transform,opacity" }, "-=1")
       .add(() => { $$(".pal").forEach((p) => { p.style.overflow = "visible"; }); });
   }
 
@@ -515,21 +518,6 @@
     ScrollTrigger.create({ trigger: hero, start: "top top", end: "bottom top", onUpdate: (s) => { velExtra = Math.min(3, Math.abs(s.getVelocity()) / 900); } });
   }
 
-  /* ---------- luz do menu que desliza até o link ---------- */
-  const menuEl = $("#menu"), menuLuz = $("#menuLuz");
-  const moverLuz = (a) => {
-    if (!menuLuz || window.innerWidth <= 900) return;
-    $$(".menu a").forEach((x) => x.classList.toggle("luz-aqui", x === a));
-    if (!a) { menuLuz.style.opacity = 0; return; }
-    menuLuz.style.left = a.offsetLeft + "px";
-    menuLuz.style.width = a.offsetWidth + "px";
-    menuLuz.style.opacity = 1;
-  };
-  if (menuEl) {
-    $$(".menu a:not(.menu-wpp)").forEach((a) => a.addEventListener("pointerenter", () => moverLuz(a)));
-    menuEl.addEventListener("pointerleave", () => moverLuz($(".menu a.atual")));
-  }
-
   /* ---------- KM 02 · caminho do cliente ---------- */
   const termos = ["clínica de estética perto de mim", "advogado de família em Londrina", "ótica perto de mim", "dentista aberto sábado", "psicóloga em Maringá", "contador para MEI"];
   const termoEl = $("#termoBusca");
@@ -729,7 +717,7 @@
 
     /* visor */
     const visor = $("#visor"), frame = $("#visorFrame"), janela = $("#visorJanela"), carreg = $("#visorCarregando");
-    const fora = [$("main"), $("#topoFixo"), $(".rodape"), $("#wppFlutuante")].filter(Boolean);
+    const fora = [$("main"), $("#topoFixo"), $("#hamburguer"), $(".rodape"), $("#wppFlutuante")].filter(Boolean);
     let vIdx = 0, focoAntes = null;
     const dois = (n) => String(n).padStart(2, "0");
     const mostrar = (i) => {
@@ -1114,9 +1102,9 @@
   /* ---------- menu marca a seção atual ---------- */
   if (temGSAP) {
     ["portfolio", "planos", "como-funciona", "duvidas"].forEach((id) => {
-      const link = $(`.menu a[href="#${id}"]`), sec = $("#" + id);
+      const link = $(`.pm-lista a[href="#${id}"]`), sec = $("#" + id);
       if (!link || !sec) return;
-      ScrollTrigger.create({ trigger: sec, start: "top 50%", end: "bottom 50%", onToggle: (s) => { link.classList.toggle("atual", s.isActive); if (menuEl && !menuEl.matches(":hover")) moverLuz($(".menu a.atual")); } });
+      ScrollTrigger.create({ trigger: sec, start: "top 50%", end: "bottom 50%", onToggle: (s) => link.classList.toggle("atual", s.isActive) });
     });
   }
 
