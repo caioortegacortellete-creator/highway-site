@@ -620,54 +620,179 @@
     } else acender(1);
   }
 
-  /* ---------- KM 05 · portfólio ---------- */
-  const trilho = $("#trilho");
-  const prepararPrints = () => {
-    $$(".projeto-print").forEach((a) => {
-      const img = $("img", a);
-      const calc = () => {
-        const d = Math.max(0, img.offsetHeight - a.clientHeight);
-        a.style.setProperty("--desloca", `-${d}px`);
-        a.style.setProperty("--dur", `${clamp(d / 420, 1.5, 9).toFixed(1)}s`);
-      };
-      a.addEventListener("pointerenter", calc);
-      a.addEventListener("focus", calc);
-    });
+  /* ---------- KM 04 · portfólio em carrossel 3D por nível + visor com o site de verdade ---------- */
+  const NIVEIS = {
+    1: { nome: "Nível 1 · Essencial", txt: "Uma página direta, rápida no celular, com botão de WhatsApp e mapa. A partir de R$ 597." },
+    2: { nome: "Nível 2 · Profissional", txt: "Mais seções para passar confiança: equipe, galeria, avaliações, perguntas e formulário. A partir de R$ 997." },
+    3: { nome: "Nível 3 · Premium", txt: "Topo interativo, teste que indica o serviço, agendamento e páginas por serviço. A partir de R$ 1.297." }
   };
-  prepararPrints();
-  let stPortfolio = null;
-  if (animar) {
-    const mm = gsap.matchMedia();
-    mm.add("(min-width: 901px)", () => {
-      const dist = () => Math.max(0, trilho.scrollWidth - window.innerWidth);
-      const tw = gsap.to(trilho, {
-        x: () => -dist(), ease: "none",
-        scrollTrigger: { trigger: ".portfolio", start: "top top", end: () => "+=" + dist(), pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1 }
+  const cf = $("#coverflow");
+  let visorAberto = false, fecharVisor = () => {};
+  if (cf) {
+    const cards = $$(".cf-card", cf), N = cards.length;
+    const secao = $("#portfolio");
+    const infoNv = $("#cfInfoNv"), infoNome = $("#cfInfoNome"), infoDesc = $("#cfInfoDesc"), nivelTxt = $("#cfNivelTxt"), carroCf = $("#cfCarro");
+    const botoesNv = $$(".cf-nv");
+    let pos = 0, alvo = 0, atualIdx = -1, nivelAtual = 0, stCf = null;
+
+    const atualizarInfo = (k) => {
+      const c = cards[k], nv = +c.dataset.nivel;
+      const trocar = () => { infoNv.textContent = NIVEIS[nv].nome; infoNome.textContent = c.dataset.nome; infoDesc.textContent = c.dataset.local; };
+      if (animar) gsap.fromTo([infoNv, infoNome, infoDesc], { opacity: 0, y: 8, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, stagger: 0.05, overwrite: true, onStart: trocar });
+      else trocar();
+      if (nv !== nivelAtual) {
+        nivelAtual = nv;
+        secao.style.setProperty("--nv-atual", `var(--n${nv})`);
+        nivelTxt.textContent = NIVEIS[nv].txt;
+        if (animar) gsap.fromTo(nivelTxt, { opacity: 0, x: 12 }, { opacity: 1, x: 0, duration: 0.5 });
+        botoesNv.forEach((b) => b.classList.toggle("ativo", +b.dataset.ir === nv));
+      }
+    };
+    const desenhar = () => {
+      const estreito = window.innerWidth < 760;
+      const passo = cards[0].offsetWidth * (estreito ? 0.66 : 0.52);
+      cards.forEach((c, i) => {
+        const d = i - pos, ad = Math.abs(d);
+        const x = Math.sign(d) * (Math.min(ad, 1) * passo + Math.max(0, ad - 1) * passo * 0.4);
+        const rot = -Math.sign(d) * Math.min(ad, 1.4) * (estreito ? 26 : 34);
+        const z = -Math.min(ad, 4) * (estreito ? 110 : 170);
+        c.style.transform = `translate3d(${x.toFixed(1)}px,0,${z.toFixed(1)}px) rotateY(${rot.toFixed(2)}deg)`;
+        c.style.zIndex = String(100 - Math.round(ad * 10));
+        c.style.opacity = clamp(3.6 - ad, 0, 1).toFixed(3);
+        c.style.setProperty("--esc", clamp(ad * 0.34, 0, 0.72).toFixed(3));
+        c.style.visibility = ad > 3.7 ? "hidden" : "visible";
+        c.classList.toggle("centro", ad < 0.5);
+        c.tabIndex = ad < 0.5 ? 0 : -1;
       });
-      stPortfolio = tw.scrollTrigger;
-      return () => { stPortfolio = null; };
+      carroCf.style.left = ((pos + 0.5) / N) * 100 + "%";
+      const k = clamp(Math.round(pos), 0, N - 1);
+      if (k !== atualIdx) { atualIdx = k; atualizarInfo(k); }
+    };
+    desenhar();
+    if (temGSAP && !reduz) {
+      gsap.ticker.add(() => {
+        if (Math.abs(alvo - pos) < 0.0005) return;
+        pos += (alvo - pos) * 0.12;
+        if (Math.abs(alvo - pos) < 0.0005) pos = alvo;
+        desenhar();
+      });
+    }
+    const mover = (i) => { alvo = clamp(i, 0, N - 1); if (!temGSAP || reduz) { pos = alvo; desenhar(); } };
+    const irCard = (i) => {
+      i = clamp(i, 0, N - 1);
+      if (stCf) {
+        const y = stCf.start + (stCf.end - stCf.start) * (i / (N - 1));
+        if (lenis) lenis.scrollTo(y, { duration: 1.1 }); else window.scrollTo({ top: y, behavior: "smooth" });
+      } else mover(i);
+    };
+    window.addEventListener("resize", desenhar);
+
+    if (animar) {
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 901px)", () => {
+        stCf = ScrollTrigger.create({
+          trigger: ".portfolio", start: "top top", end: () => "+=" + (N - 1) * 330, pin: true, anticipatePin: 1,
+          snap: { snapTo: 1 / (N - 1), duration: { min: 0.25, max: 0.7 }, delay: 0.12, ease: "power2.inOut" },
+          onUpdate: (s) => { alvo = s.progress * (N - 1); }
+        });
+        return () => { stCf = null; };
+      });
+      entrar(".portfolio .cab > *, .cf-niveis", { y: 30, opacity: 0, stagger: 0.08, duration: 0.8, scrollTrigger: { trigger: ".portfolio", start: "top 75%" } });
+      entrar(".cf, .cf-rodape", { y: 60, opacity: 0, stagger: 0.12, duration: 1, scrollTrigger: { trigger: ".portfolio", start: "top 70%" } });
+    }
+
+    $("#cfAnt").addEventListener("click", () => irCard(Math.round(alvo) - 1));
+    $("#cfProx").addEventListener("click", () => irCard(Math.round(alvo) + 1));
+    botoesNv.forEach((b) => b.addEventListener("click", () => irCard((+b.dataset.ir - 1) * 3)));
+
+    /* arrastar para os lados (celular e quando não está preso à rolagem) */
+    let arrastando = false, arrastou = false, x0 = 0, y0 = 0, alvo0 = 0;
+    cf.addEventListener("pointerdown", (e) => {
+      if (stCf || e.button !== 0 || e.target.closest(".cf-seta")) return;
+      arrastando = true; arrastou = false; x0 = e.clientX; y0 = e.clientY; alvo0 = alvo;
     });
-    entrar(".portfolio .cab > *, .filtros", { y: 30, opacity: 0, stagger: 0.08, duration: 0.8, scrollTrigger: { trigger: ".portfolio", start: "top 75%" } });
-    entrar(".projeto", { y: 70, opacity: 0, stagger: 0.08, duration: 0.9, scrollTrigger: { trigger: ".trilho-wrap", start: "top 85%" } });
-  }
-  $$(".filtros .chip").forEach((b) => {
-    b.addEventListener("click", () => {
-      const f = b.dataset.filtro;
-      $$(".filtros .chip").forEach((x) => { x.classList.toggle("ativo", x === b); x.setAttribute("aria-pressed", String(x === b)); });
-      const cards = $$(".projeto");
-      const aplicar = () => {
-        cards.forEach((c) => c.classList.toggle("some", f !== "todos" && c.dataset.nivel !== f));
-        if (temGSAP) {
-          ScrollTrigger.refresh();
-          if (animar) gsap.fromTo(cards.filter((c) => !c.classList.contains("some")), { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.06, duration: 0.6 });
-        }
-        if (stPortfolio && window.scrollY > stPortfolio.start) irPara($("#portfolio"));
-        const wrap = $(".trilho-wrap"); if (wrap.scrollLeft) wrap.scrollLeft = 0;
+    window.addEventListener("pointermove", (e) => {
+      if (!arrastando) return;
+      const dx = e.clientX - x0;
+      if (!arrastou && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(e.clientY - y0)) arrastou = true;
+      if (arrastou) mover(alvo0 - dx / (cards[0].offsetWidth * 0.6));
+    });
+    window.addEventListener("pointerup", () => {
+      if (!arrastando) return;
+      arrastando = false;
+      if (arrastou) mover(Math.round(alvo));
+    });
+    cf.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") { e.preventDefault(); irCard(Math.round(alvo) - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); irCard(Math.round(alvo) + 1); }
+    });
+
+    /* visor */
+    const visor = $("#visor"), frame = $("#visorFrame"), janela = $("#visorJanela"), carreg = $("#visorCarregando");
+    const fora = [$("main"), $("#topoFixo"), $(".rodape"), $("#wppFlutuante")].filter(Boolean);
+    let vIdx = 0, focoAntes = null;
+    const dois = (n) => String(n).padStart(2, "0");
+    const mostrar = (i) => {
+      vIdx = (i + N) % N;
+      const c = cards[vIdx], nv = c.dataset.nivel;
+      visor.style.setProperty("--nv", `var(--n${nv})`);
+      $("#visorNv").textContent = NIVEIS[nv].nome;
+      $("#visorNome").textContent = c.dataset.nome;
+      $("#visorDesc").textContent = c.dataset.local + " · Projeto conceito";
+      $("#visorUrl").textContent = c.dataset.dominio;
+      $("#visorAbrir").href = c.getAttribute("href");
+      $("#visorConta").textContent = `${dois(vIdx + 1)} / ${dois(N)}`;
+      carreg.classList.remove("some");
+      frame.title = `Site conceito ${c.dataset.nome}, ${NIVEIS[nv].nome}`;
+      frame.src = c.getAttribute("href");
+      if (animar) gsap.fromTo(".visor-txt > *", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, overwrite: true });
+    };
+    frame.addEventListener("load", () => { if (frame.src && !frame.src.startsWith("about:")) carreg.classList.add("some"); });
+    const abrirVisor = (i) => {
+      focoAntes = document.activeElement;
+      mostrar(i);
+      visor.hidden = false; visorAberto = true;
+      raiz.classList.add("visor-aberto");
+      fora.forEach((el) => { el.inert = true; });
+      if (lenis) lenis.stop();
+      if (animar) {
+        gsap.fromTo(visor, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out" });
+        gsap.fromTo(janela, { y: 50, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.7, ease: "power4.out", clearProps: "transform" });
+      }
+      $("#visorFechar").focus();
+    };
+    fecharVisor = () => {
+      if (!visorAberto) return;
+      visorAberto = false;
+      const fim = () => {
+        visor.hidden = true; frame.src = "about:blank";
+        raiz.classList.remove("visor-aberto");
+        fora.forEach((el) => { el.inert = false; });
+        if (lenis) lenis.start();
+        if (stCf) irCard(vIdx); else mover(vIdx);
+        if (focoAntes && focoAntes.focus) focoAntes.focus({ preventScroll: true });
       };
-      if (animar) gsap.to(cards, { opacity: 0, y: 20, duration: 0.25, stagger: 0.02, onComplete: aplicar });
-      else aplicar();
+      if (animar) gsap.to(visor, { opacity: 0, duration: 0.3, onComplete: fim }); else fim();
+    };
+    cards.forEach((c, i) => c.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (arrastou) { arrastou = false; return; }
+      if (Math.abs(i - pos) > 0.5) irCard(i); else abrirVisor(i);
+    }));
+    $("#visorFechar").addEventListener("click", fecharVisor);
+    $("#visorAnt").addEventListener("click", () => mostrar(vIdx - 1));
+    $("#visorProx").addEventListener("click", () => mostrar(vIdx + 1));
+    $$(".visor-telas button").forEach((b) => b.addEventListener("click", () => {
+      $$(".visor-telas button").forEach((x) => { x.classList.toggle("ativo", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+      janela.classList.toggle("cel", b.dataset.tela === "cel");
+    }));
+    document.addEventListener("keydown", (e) => {
+      if (!visorAberto) return;
+      if (e.key === "Escape") fecharVisor();
+      if (e.key === "ArrowLeft" && !e.target.closest("iframe")) mostrar(vIdx - 1);
+      if (e.key === "ArrowRight" && !e.target.closest("iframe")) mostrar(vIdx + 1);
     });
-  });
+  }
 
   /* ---------- KM 06 · três níveis ---------- */
   const comp = $("#comparador");
