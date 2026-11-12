@@ -478,7 +478,7 @@
 
   /* chegada: alfinete de destino e anel pulsando */
   const chegTr = trechoDo("chegada");
-  let pino = null, anel = null, pinoBaseY = 3;
+  let pino = null, anel = null, pinoBaseY = 3, posAnel = null;
   if (chegTr) {
     const p = em(chegTr.ini + chegTr.L * 0.85);
     pino = new THREE.Group();
@@ -487,26 +487,70 @@
     const miolo = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshBasicMaterial({ color: 0x0a0c22 })); miolo.position.set(0, 6, 0);
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: texBrilho, color: COR.m, transparent: true, opacity: 0.75, blending: THREE.AdditiveBlending, depthWrite: false })); halo.scale.set(22, 22, 1); halo.position.y = 5;
     pino.add(corpo, cabeca, miolo, halo);
-    /* o destino de verdade: o prédio "Seu site no ar" ao lado da pista, com o alfinete em cima e a faixa de chegada */
-    const lp = lado(p, LARG / 2 + 13, 0);
-    const texDest = texJanelas.clone(); texDest.needsUpdate = true; texDest.wrapS = texDest.wrapT = THREE.RepeatWrapping; texDest.repeat.set(2, 2);
-    const predioD = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ map: texDest, color: 0xffd9ff })); predioD.position.set(lp.x, 8, lp.z); predioD.rotation.y = -p.h; predioD.scale.set(16, 16, 14); cena.add(predioD);
-    const cD = tela(1024, 256, (g, w, h) => {
-      g.fillStyle = "#070920"; g.fillRect(0, 0, w, h);
-      g.strokeStyle = "#ff3df2"; g.lineWidth = 8; g.shadowColor = "#ff3df2"; g.shadowBlur = 24; g.strokeRect(12, 12, w - 24, h - 24); g.shadowBlur = 18;
-      g.fillStyle = "#ffffff"; g.font = "800 92px 'Plus Jakarta Sans', sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("SEU SITE NO AR", w / 2, h / 2 + 4);
+    /* ---------- o destino: a rodovia termina numa praça em frente ao prédio "Seu site no ar" ---------- */
+    const fimP = A[A.length - 1], hF = fimP.h;
+    const aqui = (dist, off = 0, alt = 0) => new THREE.Vector3(fimP.x + Math.sin(hF) * dist + Math.cos(hF) * off, fimP.y + alt, fimP.z - Math.cos(hF) * dist + Math.sin(hF) * off);
+    const virado = anguloFrente(hF);
+    const semNevoa = (m) => { m.fog = false; return m; };
+    /* praça circular com anéis neon */
+    const praca = new THREE.Mesh(new THREE.CylinderGeometry(26, 26, 0.4, 64), new THREE.MeshBasicMaterial({ color: 0x0d1030 }));
+    praca.position.copy(aqui(20, 0, 0.05)); cena.add(praca);
+    [[25.6, 26, COR.c], [17, 17.4, COR.m], [8, 8.3, COR.r]].forEach(([r0, r1, cor]) => {
+      const an = new THREE.Mesh(new THREE.RingGeometry(r0, r1, 72), semNevoa(aditivo(cor, 0.9))); an.rotation.x = -Math.PI / 2; an.position.copy(aqui(20, 0, 0.3)); cena.add(an);
     });
-    const tD = textura(cD);
-    const letD = new THREE.Mesh(new THREE.PlaneGeometry(15, 3.75), new THREE.MeshBasicMaterial({ map: tD, side: THREE.DoubleSide }));
-    letD.position.set(lp.x, 17.8, lp.z); letD.rotation.y = anguloFrente(p.h, 1, 0.9); cena.add(letD);
-    const portaD = new THREE.Mesh(new THREE.PlaneGeometry(4, 5), aditivo(COR.m, 0.7)); portaD.position.copy(lado(p, LARG / 2 + 5.9, 2.5)); portaD.rotation.y = -p.h + Math.PI / 2; cena.add(portaD);
+    /* faixa xadrez de chegada no fim da pista */
     const texX = textura(tela(64, 16, (g) => { for (let i = 0; i < 16; i++) for (let j = 0; j < 4; j++) { g.fillStyle = (i + j) % 2 ? "#eef1ff" : "#05060f"; g.fillRect(i * 4, j * 4, 4, 4); } }));
-    const faixaX = new THREE.Mesh(new THREE.PlaneGeometry(LARG, 2.2), new THREE.MeshBasicMaterial({ map: texX, transparent: true, opacity: 0.85 }));
-    faixaX.rotation.set(-Math.PI / 2, 0, -p.h); faixaX.position.copy(lado(p, 0, 0.06)); cena.add(faixaX);
-    pinoBaseY = 16 + 4;
-    pino.position.set(lp.x, pinoBaseY, lp.z); cena.add(pino);
+    const faixaX = new THREE.Mesh(new THREE.PlaneGeometry(LARG + 2, 2.4), new THREE.MeshBasicMaterial({ map: texX }));
+    faixaX.rotation.set(-Math.PI / 2, 0, -hF); faixaX.position.copy(aqui(-8, 0, 0.07)); cena.add(faixaX);
+    /* pórtico de chegada sobre a pista */
+    const cArco = tela(1024, 200, (g, w, h) => {
+      g.fillStyle = "#070920"; g.fillRect(0, 0, w, h);
+      g.strokeStyle = "#ff3df2"; g.lineWidth = 8; g.shadowColor = "#ff3df2"; g.shadowBlur = 24; g.strokeRect(10, 10, w - 20, h - 20); g.shadowBlur = 0;
+      g.fillStyle = "#ff3df2"; g.font = "500 40px 'JetBrains Mono', monospace"; g.fillText("KM 11", 50, 112);
+      g.fillStyle = "#ffffff"; g.font = "800 84px 'Plus Jakarta Sans', sans-serif"; g.fillText("DESTINO", 250, 130);
+    });
+    const tArco = textura(cArco);
+    [-1, 1].forEach((sl) => { const m = new THREE.Mesh(caixa, matEscuro); m.position.copy(aqui(-34, sl * (LARG / 2 + 2), 6)); m.rotation.y = -hF; m.scale.set(0.8, 12, 0.8); cena.add(m); });
+    const arco = new THREE.Mesh(new THREE.PlaneGeometry(14, 2.75), semNevoa(new THREE.MeshBasicMaterial({ map: tArco, side: THREE.DoubleSide })));
+    arco.position.copy(aqui(-34, 0, 12.5)); arco.rotation.y = virado; cena.add(arco);
+    /* o prédio */
+    const texTorreD = texJanelas.clone(); texTorreD.needsUpdate = true; texTorreD.wrapS = texTorreD.wrapT = THREE.RepeatWrapping; texTorreD.repeat.set(4, 8);
+    const matPredio = semNevoa(new THREE.MeshBasicMaterial({ map: texTorreD, color: 0xd8c8ff }));
+    const base = new THREE.Mesh(caixa, matPredio); base.position.copy(aqui(58, 0, 9)); base.rotation.y = -hF; base.scale.set(64, 18, 26); cena.add(base);
+    const torre = new THREE.Mesh(caixa, matPredio); torre.position.copy(aqui(62, 0, 46)); torre.rotation.y = -hF; torre.scale.set(36, 58, 20); cena.add(torre);
+    const topo = new THREE.Mesh(caixa, semNevoa(new THREE.MeshBasicMaterial({ color: 0x151a42 }))); topo.position.copy(aqui(62, 0, 76.5)); topo.rotation.y = -hF; topo.scale.set(38, 3, 22); cena.add(topo);
+    [[0, 75, 38.4, 0.4, COR.c], [0, 18.3, 64.4, 0.4, COR.m]].forEach(([off, alt, larg, esp, cor]) => {
+      const f = new THREE.Mesh(caixa, semNevoa(new THREE.MeshBasicMaterial({ color: cor }))); f.position.copy(aqui(62 - (alt > 50 ? 11.1 : 7.1), off, alt)); f.rotation.y = -hF; f.scale.set(larg, esp, 0.3); cena.add(f);
+    });
+    /* telão: um site no ar na fachada */
+    const telaoTex = new THREE.TextureLoader().load("imagens/prints/estetica-n3-topo.webp");
+    const telao = new THREE.Mesh(new THREE.PlaneGeometry(30, 18.75), semNevoa(new THREE.MeshBasicMaterial({ map: telaoTex })));
+    telao.position.copy(aqui(51.85, 0, 42)); telao.rotation.y = virado; cena.add(telao);
+    const moldura = new THREE.Mesh(new THREE.PlaneGeometry(31.6, 20.35), semNevoa(aditivo(COR.c, 0.9))); moldura.position.copy(aqui(51.9, 0, 42)); moldura.rotation.y = virado; cena.add(moldura);
+    const haloT = new THREE.Mesh(new THREE.PlaneGeometry(56, 40), semNevoa(aditivo(COR.r, 0.35, texBrilho))); haloT.position.copy(aqui(52, 0, 42)); haloT.rotation.y = virado; cena.add(haloT);
+    /* letreiro SEU SITE NO AR */
+    const cLet = tela(2048, 300, (g, w, h) => {
+      g.clearRect(0, 0, w, h);
+      g.font = "800 200px 'Plus Jakarta Sans', sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
+      const l = g.createLinearGradient(200, 0, w - 200, 0); l.addColorStop(0, "#29ecff"); l.addColorStop(0.5, "#b350ff"); l.addColorStop(1, "#ff3df2");
+      g.shadowColor = "#b350ff"; g.shadowBlur = 40; g.fillStyle = l; g.fillText("SEU SITE NO AR", w / 2, h / 2 + 10);
+      g.shadowBlur = 0; g.fillStyle = "rgba(255,255,255,.55)"; g.fillText("SEU SITE NO AR", w / 2, h / 2 + 10);
+    });
+    const tLet = textura(cLet);
+    const letreiroD = new THREE.Mesh(new THREE.PlaneGeometry(44, 6.45), semNevoa(new THREE.MeshBasicMaterial({ map: tLet, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
+    letreiroD.position.copy(aqui(44.6, 0, 22.5)); letreiroD.rotation.y = virado; cena.add(letreiroD);
+    /* entrada iluminada */
+    const portaD = new THREE.Mesh(new THREE.PlaneGeometry(12, 7), semNevoa(aditivo(COR.m, 0.75))); portaD.position.copy(aqui(44.9, 0, 3.5)); portaD.rotation.y = virado; cena.add(portaD);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { tArco.needsUpdate = true; tLet.needsUpdate = true; });
+    /* alfinete flutuando sobre o prédio */
+    const pTopo = aqui(62, 0, 0);
+    pinoBaseY = fimP.y + 92;
+    pino.scale.setScalar(2.6);
+    pino.traverse((o) => { if (o.material) o.material.fog = false; });
+    pino.position.set(pTopo.x, pinoBaseY, pTopo.z); cena.add(pino);
+    posAnel = aqui(20, 0, 0.35);
     miolo.position.z = 2.2;
-    anel = new THREE.Mesh(new THREE.RingGeometry(3, 3.6, 48), aditivo(COR.m, 0.8)); anel.rotation.x = -Math.PI / 2; anel.position.copy(lado(p, LARG / 2 + 5, 0.08)); cena.add(anel);
+    anel = new THREE.Mesh(new THREE.RingGeometry(3, 3.6, 48), aditivo(COR.m, 0.8)); anel.rotation.x = -Math.PI / 2; if (posAnel) anel.position.copy(posAnel); cena.add(anel);
   }
 
   let luzAntena = null;
@@ -617,7 +661,8 @@
   const local = (x, y, z) => { v3.set(x, y, z); return v3.applyMatrix4(obj.matrix); };
   const moverCarros = (dt) => {
     carros.forEach((c, k) => {
-      if (!reduz) c.d = (c.d + c.v * dt + TOTAL) % TOTAL;
+      const VIA = TOTAL - 14;
+      if (!reduz) c.d = (c.d + c.v * dt + VIA) % VIA;
       const p = em(c.d), base = lado(p, c.off, 0);
       const giro = -p.h + (c.vem ? Math.PI : 0);
       const pend = (em(c.d + 3).y - em(c.d - 3).y) / 6;
@@ -668,7 +713,7 @@
       const s = clamp(el.getBoundingClientRect().top + sy - vh * 0.45, 1, maxS);
       if (s > ancoras[ancoras.length - 1].s + 1) ancoras.push({ s, d: tr.ini + 2 });
     });
-    ancoras.push({ s: maxS + 1, d: TOTAL - 40 });
+    ancoras.push({ s: maxS + 1, d: TOTAL - 16 });
   };
   const dDaRolagem = (s) => {
     for (let k = 0; k < ancoras.length - 1; k++) {

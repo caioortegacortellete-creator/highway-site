@@ -348,7 +348,7 @@
       scrollTrigger: {
         trigger: hero, pin: true, scrub: 0.7, anticipatePin: 1,
         start: () => (hero.offsetHeight > window.innerHeight + 4 ? "bottom bottom" : "top top"),
-        end: () => "+=" + Math.round(window.innerHeight * (window.innerWidth > 900 ? 2.4 : 1.7)),
+        end: () => "+=" + Math.round(window.innerHeight * (window.innerWidth > 900 ? 3.6 : 2.6)),
         invalidateOnRefresh: true,
         onUpdate: (s) => {
           const p = s.progress;
