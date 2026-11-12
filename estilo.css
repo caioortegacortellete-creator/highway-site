@@ -1011,3 +1011,9 @@ main .cab h2, main .cab p, .manifesto-texto, .niveis-txt, .destino-txt, .passo p
 .cena-num { color: rgba(238, 241, 255, calc(.45 + var(--aceso) * .55)); text-shadow: 0 0 calc(var(--aceso) * 12px) rgba(41, 236, 255, .8); }
 .cena:nth-child(even) .cena-num { text-shadow: 0 0 calc(var(--aceso) * 12px) rgba(255, 61, 242, .8); }
 .cena::after { opacity: calc(.4 + var(--aceso) * .6); box-shadow: 0 0 calc(var(--aceso) * 16px) rgba(179, 80, 255, .95); }
+
+/* palavras coloridas: Unbounded (larga, arredondada, com cara de painel de estrada) */
+:root { --f-destaque: "Unbounded", "Plus Jakarta Sans", system-ui, sans-serif; }
+h1 em, h2 em, .hist-legenda em, .quiz-resultado h3 em { font-family: var(--f-destaque); font-style: normal; font-weight: 600; font-size: .84em; line-height: 1; letter-spacing: -.035em; word-spacing: .02em; padding-right: .04em; }
+.hero h1 em { font-size: .82em; }
+.hist-legenda em { font-size: .9em; font-weight: 500; }

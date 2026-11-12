@@ -427,27 +427,72 @@
     anel = new THREE.Mesh(new THREE.RingGeometry(3, 3.6, 48), aditivo(COR.m, 0.8)); anel.rotation.x = -Math.PI / 2; anel.position.copy(lado(p, 0, 0.08)); cena.add(anel);
   }
 
-  /* ---------- trânsito: faróis vindo e lanternas indo ---------- */
-  const NC = leve ? 26 : 56;
+  /* ---------- trânsito: carros de verdade, com lataria, cabine, faróis, lanternas e neon por baixo ---------- */
+  cena.add(new THREE.HemisphereLight(0x9aa6ff, 0x2a0a3a, 1.15));
+  const sol = new THREE.DirectionalLight(0xff8ff0, 0.55); sol.position.set(-1, 2, 1); cena.add(sol);
+  const NC = leve ? 22 : 46;
+  const coresLataria = [0x1b2056, 0x2a1450, 0x0f1230, 0x3a1048, 0xd8dcf0, 0x14304a, 0x501030, 0x22264a];
   const carros = Array.from({ length: NC }, (_, k) => {
     const vem = k % 2 === 0;
-    return { d: Math.random() * TOTAL, off: vem ? (k % 4 ? -2 : -6) : (k % 3 ? 2 : 6), v: vem ? -rnd(28, 40) : rnd(12, 22), vem };
+    return { d: Math.random() * TOTAL, off: vem ? (k % 4 ? -2 : -6) : 6, v: vem ? -rnd(26, 38) : rnd(14, 24), vem, tipo: k % 5 === 0 ? 1 : 0, neon: k % 3 };
   });
-  const geoCarro = new THREE.BufferGeometry();
-  const posC = new Float32Array(NC * 2 * 3), corC = new Float32Array(NC * 2 * 3);
-  carros.forEach((c, k) => { const col = c.vem ? [0.9, 0.97, 1] : [1, 0.12, 0.35]; corC.set([...col, ...col], k * 6); });
-  geoCarro.setAttribute("position", new THREE.BufferAttribute(posC, 3));
-  geoCarro.setAttribute("color", new THREE.BufferAttribute(corC, 3));
-  const ptsCarro = new THREE.Points(geoCarro, new THREE.PointsMaterial({ size: 1.5, map: texBrilho, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-  ptsCarro.frustumCulled = false; cena.add(ptsCarro);
+  const matCarro = new THREE.MeshLambertMaterial({ color: 0xffffff });
+  const matVidro = new THREE.MeshBasicMaterial({ color: 0x0a0d24 });
+  const iLataria = new THREE.InstancedMesh(new THREE.BoxGeometry(2, 0.62, 4.4), matCarro, NC);
+  const iCapo = new THREE.InstancedMesh(new THREE.BoxGeometry(1.92, 0.22, 4.2), matCarro, NC);
+  const iCabine = new THREE.InstancedMesh(new THREE.BoxGeometry(1.7, 0.6, 2.1), matVidro, NC);
+  const iTeto = new THREE.InstancedMesh(new THREE.BoxGeometry(1.6, 0.08, 1.8), matCarro, NC);
+  const iRodas = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.38, 0.38, 2.12, 12), new THREE.MeshBasicMaterial({ color: 0x05060f }), NC * 2);
+  const iNeon = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: texBrilho, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false }), NC);
+  const iFacho = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: texDegrade, color: 0xdff6ff, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }), NC);
+  const neonCores = [new THREE.Color(COR.c), new THREE.Color(COR.m), new THREE.Color(COR.r)];
+  carros.forEach((c, k) => {
+    const cor = new THREE.Color(coresLataria[k % coresLataria.length]);
+    iLataria.setColorAt(k, cor); iCapo.setColorAt(k, cor); iTeto.setColorAt(k, cor);
+    iNeon.setColorAt(k, neonCores[c.neon]);
+  });
+  [iLataria, iCapo, iCabine, iTeto, iRodas, iNeon, iFacho].forEach((m) => { m.frustumCulled = false; m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); cena.add(m); });
+  /* faróis (brancos) na frente e lanternas (vermelhas) atrás: 4 pontos por carro */
+  const geoLuzes = new THREE.BufferGeometry();
+  const posL = new Float32Array(NC * 4 * 3), corL = new Float32Array(NC * 4 * 3);
+  for (let k = 0; k < NC; k++) corL.set([0.95, 0.98, 1, 0.95, 0.98, 1, 1, 0.1, 0.3, 1, 0.1, 0.3], k * 12);
+  geoLuzes.setAttribute("position", new THREE.BufferAttribute(posL, 3));
+  geoLuzes.setAttribute("color", new THREE.BufferAttribute(corL, 3));
+  const ptsLuzes = new THREE.Points(geoLuzes, new THREE.PointsMaterial({ size: 1.1, map: texBrilho, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  ptsLuzes.frustumCulled = false; cena.add(ptsLuzes);
+  const obj = new THREE.Object3D(), v3 = new THREE.Vector3();
+  const local = (x, y, z) => { v3.set(x, y, z); return v3.applyMatrix4(obj.matrix); };
   const moverCarros = (dt) => {
     carros.forEach((c, k) => {
       if (!reduz) c.d = (c.d + c.v * dt + TOTAL) % TOTAL;
-      const p = em(c.d);
-      const a = lado(p, c.off - 0.75, 0.75), b = lado(p, c.off + 0.75, 0.75);
-      posC.set([a.x, a.y, a.z, b.x, b.y, b.z], k * 6);
+      const p = em(c.d), base = lado(p, c.off, 0);
+      const giro = -p.h + (c.vem ? Math.PI : 0);
+      const pend = (em(c.d + 3).y - em(c.d - 3).y) / 6;
+      obj.position.set(base.x, base.y, base.z); obj.rotation.set(c.vem ? -Math.atan(pend) : Math.atan(pend), giro, 0, "YXZ"); obj.scale.set(1, 1, 1); obj.updateMatrix();
+      const m = obj.matrix.clone();
+      const coloca = (inst, i, x, y, z, sx = 1, sy = 1, sz = 1, rx = 0) => {
+        tmp.position.set(x, y, z); tmp.rotation.set(rx, 0, 0); tmp.scale.set(sx, sy, sz); tmp.updateMatrix();
+        tmp.matrix.premultiply(m); inst.setMatrixAt(i, tmp.matrix);
+      };
+      const longo = c.tipo ? 1.18 : 1;
+      coloca(iLataria, k, 0, 0.62, 0, 1, 1, longo);
+      coloca(iCapo, k, 0, 1.0, 0.25, 1, 1, longo * 0.9);
+      coloca(iCabine, k, 0, 1.38, 0.35, 1, c.tipo ? 1.25 : 1, c.tipo ? 1.5 : 1);
+      coloca(iTeto, k, 0, c.tipo ? 1.76 : 1.7, 0.35, 1, 1, c.tipo ? 1.5 : 1);
+      coloca(iRodas, k * 2, 0, 0.38, -1.4 * longo, 1, 1, 1);
+      coloca(iRodas, k * 2 + 1, 0, 0.38, 1.4 * longo, 1, 1, 1);
+      iRodas.setMatrixAt(k * 2, (() => { tmp.position.set(0, 0.38, -1.4 * longo); tmp.rotation.set(0, 0, Math.PI / 2); tmp.scale.set(1, 1, 1); tmp.updateMatrix(); return tmp.matrix.premultiply(m); })());
+      iRodas.setMatrixAt(k * 2 + 1, (() => { tmp.position.set(0, 0.38, 1.4 * longo); tmp.rotation.set(0, 0, Math.PI / 2); tmp.scale.set(1, 1, 1); tmp.updateMatrix(); return tmp.matrix.premultiply(m); })());
+      coloca(iNeon, k, 0, 0.06, 0, 3.6, 6.4, 1, -Math.PI / 2);
+      coloca(iFacho, k, 0, 0.07, -2.2 * longo - 6, 3.4, 12, 1, -Math.PI / 2);
+      const fr = -2.21 * longo, tr = 2.21 * longo;
+      let q = local(-0.7, 0.72, fr); posL.set([q.x, q.y, q.z], k * 12);
+      q = local(0.7, 0.72, fr); posL.set([q.x, q.y, q.z], k * 12 + 3);
+      q = local(-0.75, 0.78, tr); posL.set([q.x, q.y, q.z], k * 12 + 6);
+      q = local(0.75, 0.78, tr); posL.set([q.x, q.y, q.z], k * 12 + 9);
     });
-    geoCarro.attributes.position.needsUpdate = true;
+    [iLataria, iCapo, iCabine, iTeto, iRodas, iNeon, iFacho].forEach((mm) => { mm.instanceMatrix.needsUpdate = true; });
+    geoLuzes.attributes.position.needsUpdate = true;
   };
 
   /* ---------- rolagem → posição na estrada ---------- */
@@ -473,18 +518,35 @@
   };
 
   /* ---------- câmera ---------- */
-  let impulso = 0;
+  let impulso = 0, passT = 0, passS = 0;
   let dCam = 6, dAntes = 6, vel = 0, mx = 0, my = 0, alvoMx = 0, alvoMy = 0, tempo = 0;
   window.addEventListener("pointermove", (e) => { alvoMx = e.clientX / window.innerWidth - 0.5; alvoMy = e.clientY / window.innerHeight - 0.5; }, { passive: true });
   const olhar = new THREE.Vector3();
+  const suave = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+  const orbita = new THREE.Vector3(), alvoGiro = new THREE.Vector3();
   const posicionar = () => {
     const p = em(dCam), f = em(dCam + 26), atras = em(dCam - 10);
     const pos = lado(p, 2.6 + mx * 1.2, 3.4 + Math.sin(tempo * 0.8) * 0.08);
-    cam.position.copy(pos);
     olhar.copy(lado(f, 1.2 + mx * 3, 1.9 - my * 2));
+    let rolagem = clamp(-(f.h - atras.h) * 0.9, -0.12, 0.12);
+    /* passagem do topo: a câmera sobe, dá a volta em espiral sobre a avenida e mergulha de volta na pista */
+    const g = passS;
+    if (g > 0.001 && g < 0.999) {
+      const mistura = suave(0, 0.2, g) * (1 - suave(0.8, 1, g));
+      const T = em(dCam + 34);
+      alvoGiro.set(T.x, T.y + 1.5, T.z);
+      const ang = -T.h + Math.PI + suave(0.05, 0.92, g) * Math.PI * 2;
+      const sino = Math.sin(Math.PI * suave(0.05, 0.95, g));
+      const raio = 34 + sino * 42, alt = 3.4 + sino * 58;
+      const bx = -Math.sin(T.h), bz = Math.cos(T.h), phi = ang + T.h - Math.PI;
+      orbita.set(T.x + (bx * Math.cos(phi) + bz * Math.sin(phi)) * raio, T.y + alt, T.z + (-bx * Math.sin(phi) + bz * Math.cos(phi)) * raio);
+      pos.lerp(orbita, mistura);
+      olhar.lerp(alvoGiro, mistura);
+      rolagem += Math.sin(suave(0.05, 0.92, g) * Math.PI * 2) * 0.55 * mistura;
+    }
+    cam.position.copy(pos);
     cam.lookAt(olhar);
-    let curva = f.h - atras.h;
-    cam.rotateZ(clamp(-curva * 0.9, -0.12, 0.12));
+    cam.rotateZ(rolagem);
     ceu.position.set(pos.x, 0, pos.z);
     const fov = 62 + clamp(Math.abs(vel) * 0.55, 0, 14) + impulso * 24;
     if (Math.abs(cam.fov - fov) > 0.05) { cam.fov += (fov - cam.fov) * 0.12; cam.updateProjectionMatrix(); }
@@ -511,6 +573,8 @@
     if (reduz) dCam = alvo; else dCam += (alvo - dCam) * Math.min(1, dt * 4.2);
     vel = (dCam - dAntes) / Math.max(dt, 0.001); dAntes = dCam;
     mx += (alvoMx - mx) * 0.04; my += (alvoMy - my) * 0.04;
+    passS += (passT - passS) * Math.min(1, dt * 5);
+    if (Math.abs(passT - passS) < 0.0005) passS = passT;
     moverCarros(dt);
     if (texLed && !reduz) texLed.offset.x = (texLed.offset.x + dt * 0.06) % 1;
     if (pino) { pino.position.y = em(chegTr.ini + chegTr.L * 0.85).y + 3 + Math.sin(tempo * 2) * 0.6; pino.rotation.y += dt * 0.6; }
@@ -521,5 +585,5 @@
   if (window.gsap) window.gsap.ticker.add(quadro);
   else { const loop = () => { quadro(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
 
-  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); } };
+  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); }, passagem: (v) => { passT = clamp(v, 0, 1); } };
 })();

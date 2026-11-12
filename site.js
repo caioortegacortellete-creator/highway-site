@@ -306,27 +306,29 @@
       scrollTrigger: {
         trigger: hero, pin: true, scrub: 0.7, anticipatePin: 1,
         start: () => (hero.offsetHeight > window.innerHeight + 4 ? "bottom bottom" : "top top"),
-        end: () => "+=" + Math.round(window.innerHeight * (window.innerWidth > 900 ? 1.35 : 1.0)),
+        end: () => "+=" + Math.round(window.innerHeight * (window.innerWidth > 900 ? 2.4 : 1.7)),
         invalidateOnRefresh: true,
         onUpdate: (s) => {
           const p = s.progress;
-          if (window.HighwayEstrada && window.HighwayEstrada.impulso) window.HighwayEstrada.impulso(Math.sin(Math.PI * clamp((p - 0.15) / 0.8, 0, 1)));
+          const E = window.HighwayEstrada;
+          if (E && E.passagem) E.passagem(p);
+          if (E && E.impulso) E.impulso(Math.sin(Math.PI * clamp((p - 0.74) / 0.26, 0, 1)));
           if (veuP) veuP.style.setProperty("--veu", (0.12 + clamp((p - 0.78) / 0.22, 0, 1) * 0.34).toFixed(3));
         }
       }
     });
     passagem
-      .fromTo(".hero-txt", { y: 0, opacity: 1, filter: "blur(0px)" }, { y: -140, opacity: 0, filter: "blur(12px)", duration: 0.32, ease: "power2.in" }, 0)
-      .fromTo(".historia", { x: 0, opacity: 1, rotationY: 0, filter: "blur(0px)" }, { x: 260, opacity: 0, rotationY: -40, filter: "blur(10px)", duration: 0.32, ease: "power2.in" }, 0.02)
-      .fromTo(hero, { "--hero-veu": 1 }, { "--hero-veu": 0, duration: 0.3 }, 0.08)
-      .fromTo(".hero-passagem", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12 }, 0.22)
-      .fromTo(".hp-riscos", { scale: 0.45, opacity: 0, rotation: 0 }, { scale: 1.5, opacity: 1, rotation: 12, duration: 0.5 }, 0.22)
-      .fromTo(".hp-faixas i", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, stagger: 0.03, duration: 0.25, ease: "power2.out" }, 0.26)
-      .fromTo(".hp-frase", { scale: 0.3, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.26, ease: "power3.out" }, 0.3)
-      .to(".hp-frase", { scale: 4.2, opacity: 0, filter: "blur(8px)", duration: 0.26, ease: "power2.in" }, 0.66)
-      .to(".hp-faixas i", { scaleY: 2.4, opacity: 0, duration: 0.2 }, 0.74)
-      .to(".hp-riscos", { scale: 2.4, opacity: 0, duration: 0.2 }, 0.78)
-      .to(".hero-passagem", { autoAlpha: 0, duration: 0.06 }, 0.94);
+      .fromTo(".hero-txt", { y: 0, opacity: 1, filter: "blur(0px)" }, { y: -140, opacity: 0, filter: "blur(12px)", duration: 0.18, ease: "power2.in" }, 0)
+      .fromTo(".historia", { x: 0, opacity: 1, rotationY: 0, filter: "blur(0px)" }, { x: 260, opacity: 0, rotationY: -40, filter: "blur(10px)", duration: 0.18, ease: "power2.in" }, 0.01)
+      .fromTo(hero, { "--hero-veu": 1 }, { "--hero-veu": 0, duration: 0.16 }, 0.04)
+      .fromTo(".hero-passagem", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04 }, 0.36)
+      .fromTo(".hp-frase", { scale: 0.3, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power3.out" }, 0.38)
+      .to(".hp-frase", { scale: 4.2, opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in" }, 0.6)
+      .fromTo(".hp-riscos", { scale: 0.45, opacity: 0, rotation: 0 }, { scale: 1.6, opacity: 1, rotation: 14, duration: 0.18 }, 0.74)
+      .fromTo(".hp-faixas i", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, stagger: 0.02, duration: 0.12, ease: "power2.out" }, 0.76)
+      .to(".hp-faixas i", { scaleY: 2.4, opacity: 0, duration: 0.08 }, 0.9)
+      .to(".hp-riscos", { scale: 2.4, opacity: 0, duration: 0.08 }, 0.9)
+      .to(".hero-passagem", { autoAlpha: 0, duration: 0.03 }, 0.97);
   }
 
   /* ---------- KM 02 · caminho do cliente ---------- */
