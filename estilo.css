@@ -1142,3 +1142,29 @@ h1 em, h2 em, .hist-legenda em, .quiz-resultado h3 em { font-family: var(--f-des
 .saida span { font-size: 11.5px; }
 @media (max-width: 1100px) { .saidas-grade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .mapa-rotulo { font-size: 13px; } .mapa-rotulo .r-preco { display: none; } }
+
+/* =========================================================
+   VIAGEM: transição ao navegar pelo menu
+   ========================================================= */
+.viagem { position: fixed; inset: 0; z-index: 400; pointer-events: none; visibility: hidden; }
+.viagem.ativa { visibility: visible; pointer-events: auto; }
+.vg-metade { position: absolute; left: 0; right: 0; height: 50.5%; background: #0b0d24; overflow: hidden; }
+.vg-metade.cima { top: 0; background: linear-gradient(180deg, #05060f, #0d1030); }
+.vg-metade.baixo { bottom: 0; background: linear-gradient(0deg, #05060f, #0d1030); }
+.vg-metade::before { content: ""; position: absolute; inset: 0; opacity: .5; background: repeating-linear-gradient(90deg, transparent 0 60px, rgba(150, 170, 255, .05) 60px 61px); }
+.vg-metade.cima .vg-borda, .vg-metade.baixo .vg-borda { position: absolute; left: 0; right: 0; height: 3px; }
+.vg-metade.cima .vg-borda { bottom: 10px; background: var(--neon-c); box-shadow: 0 0 14px var(--neon-c), 0 0 34px rgba(41, 236, 255, .6); }
+.vg-metade.baixo .vg-borda { top: 10px; background: var(--neon-m); box-shadow: 0 0 14px var(--neon-m), 0 0 34px rgba(255, 61, 242, .6); }
+.vg-faixa { position: absolute; left: 0; right: 0; top: 50%; height: 6px; margin-top: -3px; transform-origin: 0 50%; transform: scaleX(0); background: repeating-linear-gradient(90deg, rgba(238, 241, 255, .9) 0 46px, transparent 46px 86px); filter: drop-shadow(0 0 8px rgba(255, 255, 255, .6)); animation: faixa-corre .5s linear infinite; }
+.viagem.volta .vg-faixa { animation-direction: reverse; }
+@keyframes faixa-corre { to { background-position: 86px 0; } }
+.vg-placa { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(460px, calc(100% - 40px)); display: grid; justify-items: center; gap: 6px; padding: 26px 28px 22px; border-radius: 18px; text-align: center; opacity: 0;
+  background: rgba(8, 10, 30, .96); box-shadow: inset 0 0 0 1.5px rgba(41, 236, 255, .55), 0 0 40px rgba(123, 45, 255, .45), 0 30px 80px -20px #000; }
+.vg-placa small { font-family: var(--f-km); font-size: 11.5px; letter-spacing: .26em; text-transform: uppercase; color: var(--neblina); }
+.vg-placa b { font-family: var(--f-km); font-size: 13px; font-weight: 500; letter-spacing: .14em; color: var(--neon-c); padding: 3px 10px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--neon-c), 0 0 12px rgba(41, 236, 255, .4); text-shadow: 0 0 8px rgba(41, 236, 255, .8); }
+.vg-placa b:empty { display: none; }
+.vg-placa strong { font-family: var(--f-destaque, var(--f-titulo)); font-weight: 600; font-size: clamp(26px, 4vw, 40px); line-height: 1.1; letter-spacing: -.02em; background: var(--rastro); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 14px rgba(255, 61, 242, .4)); }
+.vg-rota { position: relative; width: 100%; height: 14px; margin-top: 10px; }
+.vg-rota::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: repeating-linear-gradient(90deg, rgba(238, 241, 255, .35) 0 8px, transparent 8px 14px); }
+.vg-carro { position: absolute; top: 50%; left: 0; width: 26px; height: 12px; margin: -6px 0 0 -13px; border-radius: 4px; background: #0d1130; box-shadow: inset 0 0 0 1.5px var(--neon-m), 0 0 12px var(--neon-m), 14px 0 20px -4px rgba(255, 255, 255, .8); }
+.viagem.volta .vg-carro { transform: scaleX(-1); }

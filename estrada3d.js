@@ -745,5 +745,5 @@
   if (window.gsap) window.gsap.ticker.add(quadro);
   else { const loop = () => { quadro(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
 
-  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); }, estado: () => ({ d: dCam, v: vel, alvo: dDaRolagem(window.scrollY) }), passagem: (v) => { passT = clamp(v, 0, 1); } };
+  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); }, estado: () => ({ d: dCam, v: vel, alvo: dDaRolagem(window.scrollY) }), saltar: () => { const a = dDaRolagem(window.scrollY); dCam = dAntes = a; velCam = 0; vel = 0; passS = passT; }, passagem: (v) => { passT = clamp(v, 0, 1); } };
 })();

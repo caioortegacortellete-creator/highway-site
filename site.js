@@ -50,6 +50,47 @@
     else if (alvo === 0) window.scrollTo({ top: 0, behavior: reduz ? "auto" : "smooth" });
     else alvo.scrollIntoView({ behavior: reduz ? "auto" : "smooth" });
   };
+  /* viagem: cortina de estrada fecha, a página pula para a seção (e a rodovia 3D junto) e a estrada abre */
+  const viagem = $("#viagem");
+  let viajando = false;
+  const posicaoDe = (alvo) => {
+    const topo = parseFloat(getComputedStyle(raiz).getPropertyValue("--topo-h")) || 70;
+    if (alvo === 0) return 0;
+    return alvo.getBoundingClientRect().top + window.scrollY - (alvo.id === "contato" || alvo.id === "planos" || alvo.id === "duvidas" || alvo.id === "como-funciona" ? topo + 10 : 0);
+  };
+  const rotuloDe = (alvo) => {
+    if (alvo === 0) return ["KM 00", "Início"];
+    const k = $(".km", alvo);
+    if (!k) return ["", alvo.getAttribute("aria-label") || ""];
+    const b = $("b", k);
+    return [b ? b.textContent.trim() : "", k.textContent.replace(b ? b.textContent : "", "").trim()];
+  };
+  const viajarPara = (alvo) => {
+    if (!viagem || !animar || viajando) { irPara(alvo); return; }
+    viajando = true;
+    const [km, nome] = rotuloDe(alvo);
+    $("#vgKm").textContent = km; $("#vgNome").textContent = nome;
+    const indoParaCima = posicaoDe(alvo) < window.scrollY;
+    $("#vgSub").textContent = indoParaCima ? "Voltando para" : "Seguindo para";
+    viagem.classList.toggle("volta", indoParaCima);
+    const tl = gsap.timeline({ onComplete: () => { viajando = false; viagem.classList.remove("ativa"); } });
+    tl.call(() => viagem.classList.add("ativa"))
+      .fromTo(".vg-metade.cima", { y: 0, yPercent: -101 }, { yPercent: 0, duration: 0.55, ease: "power3.in" }, 0)
+      .fromTo(".vg-metade.baixo", { y: 0, yPercent: 101 }, { yPercent: 0, duration: 0.55, ease: "power3.in" }, 0)
+      .fromTo(".vg-faixa", { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.45, ease: "power2.out" }, 0.4)
+      .fromTo(".vg-placa", { scale: 0.7, opacity: 0, filter: "blur(10px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "back.out(1.6)" }, 0.5)
+      .fromTo(".vg-carro", { left: "0%" }, { left: "100%", duration: 0.9, ease: "power1.inOut" }, 0.55)
+      .call(() => {
+        const y = posicaoDe(alvo);
+        if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+        ScrollTrigger.update();
+        requestAnimationFrame(() => { const E = window.HighwayEstrada; if (E && E.saltar) E.saltar(); });
+      }, null, 0.75)
+      .to(".vg-placa", { scale: 1.25, opacity: 0, filter: "blur(8px)", duration: 0.35, ease: "power2.in" }, 1.45)
+      .to(".vg-faixa", { opacity: 0, duration: 0.25 }, 1.5)
+      .to(".vg-metade.cima", { yPercent: -101, duration: 0.7, ease: "power3.inOut" }, 1.55)
+      .to(".vg-metade.baixo", { yPercent: 101, duration: 0.7, ease: "power3.inOut" }, 1.55);
+  };
   document.addEventListener("click", (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -58,8 +99,9 @@
     const alvo = id === "#inicio" ? 0 : $(id);
     if (alvo === null) return;
     e.preventDefault();
+    const doMenu = !!a.closest(".pm-lista, .marca");
     fecharMenu();
-    irPara(alvo);
+    if (doMenu) viajarPara(alvo); else irPara(alvo);
   });
 
   /* ---------- botão de menu e painel lateral (estilo Firsight) ---------- */
