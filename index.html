@@ -608,10 +608,51 @@
           <div class="rota-eta"><small>Tempo estimado</small><b>~2 min</b></div>
         </div>
 
-        <div class="rota-trajeto" aria-hidden="true">
-          <div class="rota-ponta origem"><i></i><span>Você está aqui</span></div>
-          <div class="rota-linha"><b id="rotaProg"></b><span class="rota-carro" id="rotaCarro"></span></div>
-          <div class="rota-ponta fim"><svg viewBox="0 0 40 52" aria-hidden="true"><path d="M20 2C10 2 3 9 3 19c0 12 17 31 17 31s17-19 17-31C37 9 30 2 20 2z"/><circle cx="20" cy="19" r="6"/></svg><span>Seu site no ar</span></div>
+        <div class="rota-mapa" aria-hidden="false">
+          <svg class="mapa" id="mapaRota" viewBox="0 0 520 268" role="radiogroup" aria-label="Escolha a sua saída no mapa">
+            <defs>
+              <linearGradient id="gRota" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#29ecff"/><stop offset=".55" stop-color="#b350ff"/><stop offset="1" stop-color="#ff3df2"/></linearGradient>
+              <pattern id="gQuadra" width="26" height="26" patternUnits="userSpaceOnUse"><rect x="3" y="3" width="20" height="20" rx="3" fill="rgba(150,170,255,.05)"/></pattern>
+            </defs>
+            <rect width="520" height="268" fill="url(#gQuadra)"/>
+            <path class="via-base" d="M28,236 C 70,232 96,200 120,176 S 170,136 214,132"/>
+            <path class="via-luz" id="viaLuz" d="M28,236 C 70,232 96,200 120,176 S 170,136 214,132"/>
+            <path id="viaPrincipal" d="M28,236 C 70,232 96,200 120,176 S 170,136 214,132" fill="none" stroke="none"/>
+            <circle class="rotatoria" cx="214" cy="132" r="15"/>
+            <circle class="rotatoria-miolo" cx="214" cy="132" r="6"/>
+          <g class="mapa-saida s-n1" data-valor="Essencial (Nível 1)" tabindex="0" role="radio" aria-checked="false" aria-label="Saída N1, Essencial, R$ 597,90">
+            <path class="ramo-base" d="M214,132 C 252,128 270,88 300,66 S 380,34 452,34"/>
+            <path class="ramo-luz" d="M214,132 C 252,128 270,88 300,66 S 380,34 452,34"/>
+            <path class="ramo-toque" d="M214,132 C 252,128 270,88 300,66 S 380,34 452,34"/>
+            <g class="mapa-pino" transform="translate(452,34)"><path d="M0,-22 C-9,-22 -14,-15 -14,-8 C-14,2 0,12 0,12 C0,12 14,2 14,-8 C14,-15 9,-22 0,-22 Z"/><circle cx="0" cy="-8" r="4.5"/><text class="pino-sigla" x="0" y="-5">N1</text></g>
+            <text class="mapa-rotulo" x="444" y="60" text-anchor="end"><tspan class="r-nome">Essencial</tspan><tspan class="r-preco" dx="6">R$ 597,90</tspan></text>
+          </g>
+          <g class="mapa-saida s-n2" data-valor="Profissional (Nível 2)" tabindex="0" role="radio" aria-checked="false" aria-label="Saída N2, Profissional, R$ 997,90">
+            <path class="ramo-base" d="M214,132 C 260,132 300,112 350,106 S 420,100 470,100"/>
+            <path class="ramo-luz" d="M214,132 C 260,132 300,112 350,106 S 420,100 470,100"/>
+            <path class="ramo-toque" d="M214,132 C 260,132 300,112 350,106 S 420,100 470,100"/>
+            <g class="mapa-pino" transform="translate(470,100)"><path d="M0,-22 C-9,-22 -14,-15 -14,-8 C-14,2 0,12 0,12 C0,12 14,2 14,-8 C14,-15 9,-22 0,-22 Z"/><circle cx="0" cy="-8" r="4.5"/><text class="pino-sigla" x="0" y="-5">N2</text></g>
+            <text class="mapa-rotulo" x="462" y="126" text-anchor="end"><tspan class="r-nome">Profissional</tspan><tspan class="r-preco" dx="6">R$ 997,90</tspan></text>
+          </g>
+          <g class="mapa-saida s-n3" data-valor="Premium (Nível 3)" tabindex="0" role="radio" aria-checked="false" aria-label="Saída N3, Premium, R$ 1.297,90">
+            <path class="ramo-base" d="M214,132 C 258,140 296,164 344,172 S 420,178 466,172"/>
+            <path class="ramo-luz" d="M214,132 C 258,140 296,164 344,172 S 420,178 466,172"/>
+            <path class="ramo-toque" d="M214,132 C 258,140 296,164 344,172 S 420,178 466,172"/>
+            <g class="mapa-pino" transform="translate(466,172)"><path d="M0,-22 C-9,-22 -14,-15 -14,-8 C-14,2 0,12 0,12 C0,12 14,2 14,-8 C14,-15 9,-22 0,-22 Z"/><circle cx="0" cy="-8" r="4.5"/><text class="pino-sigla" x="0" y="-5">N3</text></g>
+            <text class="mapa-rotulo" x="460" y="198" text-anchor="end"><tspan class="r-nome">Premium</tspan><tspan class="r-preco" dx="6">R$ 1.297,90</tspan></text>
+          </g>
+          <g class="mapa-saida s-livre" data-valor="Ainda não sei" tabindex="0" role="radio" aria-checked="false" aria-label="Saída ?, Rota livre, me ajudem">
+            <path class="ramo-base" d="M214,132 C 226,168 236,206 272,226 S 316,240 356,238"/>
+            <path class="ramo-luz" d="M214,132 C 226,168 236,206 272,226 S 316,240 356,238"/>
+            <path class="ramo-toque" d="M214,132 C 226,168 236,206 272,226 S 316,240 356,238"/>
+            <g class="mapa-pino" transform="translate(356,238)"><path d="M0,-22 C-9,-22 -14,-15 -14,-8 C-14,2 0,12 0,12 C0,12 14,2 14,-8 C14,-15 9,-22 0,-22 Z"/><circle cx="0" cy="-8" r="4.5"/><text class="pino-sigla" x="0" y="-5">?</text></g>
+            <text class="mapa-rotulo" x="372" y="236" text-anchor="start"><tspan class="r-nome">Rota livre</tspan><tspan class="r-preco" dx="6">me ajudem</tspan></text>
+          </g>
+            <g class="mapa-origem" transform="translate(28,236)"><circle r="11" class="o-halo"/><circle r="5.5" class="o-ponto"/></g>
+            <text class="mapa-rotulo origem-txt" x="16" y="214">Você está aqui</text>
+            <g class="mapa-carro" id="mapaCarro"><path class="facho" d="M8,-4 L30,-11 L30,11 L8,4 Z"/><rect x="-9" y="-5" width="18" height="10" rx="3"/><rect class="farol" x="6" y="-4" width="2.5" height="8" rx="1"/></g>
+          </svg>
+          <p class="mapa-dica" id="mapaDica">Preencha os dados e escolha uma das 4 saídas no mapa</p>
         </div>
 
         <ol class="rota-paradas">
@@ -632,7 +673,7 @@
           <li class="parada" data-parada="3">
             <span class="parada-num">3</span>
             <fieldset class="campo saidas">
-              <legend>Escolha a sua saída</legend>
+              <legend>Escolha a sua saída <small>(no mapa ou aqui)</small></legend>
               <input type="hidden" id="fPlano" name="plano" value="Ainda não sei">
               <div class="saidas-grade" role="radiogroup" aria-label="Plano de interesse">
                 <button type="button" class="saida" role="radio" aria-checked="false" data-valor="Essencial (Nível 1)" style="--nv: var(--n1)"><small>Saída N1</small><b>Essencial</b><span>R$ 597,90</span></button>

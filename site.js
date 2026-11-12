@@ -786,7 +786,8 @@
     entrar(".destino-txt > *:not(#pino)", { y: 40, opacity: 0, stagger: 0.1, duration: 0.9, delay: 0.2, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     entrar(".formulario", { x: 60, opacity: 0, duration: 1.1, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     entrar(".parada", { x: 40, opacity: 0, stagger: 0.12, duration: 0.8, delay: 0.3, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
-    gsap.fromTo(".rota-linha", { "--desenha": 0 }, { "--desenha": 1, duration: 1.4, ease: "power2.inOut", scrollTrigger: { trigger: ".destino", start: "top 70%" } });
+    gsap.fromTo(".mapa .via-base, .mapa .ramo-base", { strokeDasharray: 600, strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 1.6, stagger: 0.15, ease: "power2.inOut", scrollTrigger: { trigger: ".destino", start: "top 70%" }, onComplete: function () { this.targets().forEach((t) => { t.style.strokeDasharray = "none"; }); } });
+    gsap.fromTo(".mapa-pino", { scale: 0, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.6, stagger: 0.12, delay: 1, ease: "back.out(2.5)", scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     const letras = $$(".marca-gigante tspan");
     gsap.set(letras, { strokeOpacity: 0.06 });
     gsap.timeline({ scrollTrigger: { trigger: ".rodape", start: "top 85%" } })
@@ -796,42 +797,82 @@
   const form = $("#formulario");
   if (form) {
     const nome = $("#fNome"), neg = $("#fNegocio"), plano = $("#fPlano"), aceite = $("#fAceite"), erro = $("#formErro");
-    const prog = $("#rotaProg"), carroR = $("#rotaCarro"), paradas = $$(".parada", form), saidas = $$(".saida", form);
-    let escolheuSaida = false;
-    /* o carrinho avança na rota conforme a pessoa preenche */
-    const avancar = () => {
-      const feitos = [!!nome.value.trim(), !!neg.value.trim(), escolheuSaida, aceite.checked];
-      paradas.forEach((p, i) => p.classList.toggle("feita", feitos[i]));
-      const n = feitos.filter(Boolean).length, pct = 6 + (n / feitos.length) * 88;
-      prog.style.width = pct + "%"; carroR.style.left = pct + "%";
-      form.classList.toggle("pronta", n === feitos.length);
+    const paradas = $$(".parada", form), cartoes = $$(".saida", form), ramos = $$(".mapa-saida", form);
+    const via = $("#viaPrincipal"), viaLuz = $("#viaLuz"), carro = $("#mapaCarro"), dica = $("#mapaDica");
+    const LP = via.getTotalLength();
+    viaLuz.style.strokeDasharray = LP; viaLuz.style.strokeDashoffset = LP;
+    let escolha = null, ramoPath = null, LR = 0;
+    const estado = { d: 0 };
+    const pontoEm = (d) => {
+      if (!ramoPath || d <= LP) { const p = via.getPointAtLength(Math.min(d, LP)), q = via.getPointAtLength(Math.min(d + 1, LP)); return [p, q, d >= LP - 0.5]; }
+      const r = Math.min(d - LP, LR), p = ramoPath.getPointAtLength(r), q = ramoPath.getPointAtLength(Math.min(r + 1, LR));
+      return [p, q, false];
     };
-    [nome, neg].forEach((c) => c.addEventListener("input", () => { c.classList.remove("erro"); avancar(); }));
-    aceite.addEventListener("change", avancar);
-    saidas.forEach((b) => b.addEventListener("click", () => {
-      saidas.forEach((x) => { x.classList.toggle("ativa", x === b); x.setAttribute("aria-checked", String(x === b)); });
-      plano.value = b.dataset.valor; escolheuSaida = true; avancar();
-      if (animar) gsap.fromTo(b, { scale: 0.96 }, { scale: 1, duration: 0.5, ease: "back.out(3)" });
-    }));
+    const desenhar = () => {
+      const [p, q] = pontoEm(estado.d);
+      const ang = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI;
+      carro.setAttribute("transform", `translate(${p.x.toFixed(1)},${p.y.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+      viaLuz.style.strokeDashoffset = Math.max(0, LP - estado.d);
+      if (ramoPath) { const luz = ramoPath.parentNode.querySelector(".ramo-luz"); luz.style.strokeDashoffset = Math.max(0, LR - (estado.d - LP)); }
+    };
+    const irPara = (d, dur = 0.9) => {
+      if (animar) gsap.to(estado, { d, duration: dur, ease: "power2.inOut", onUpdate: desenhar, overwrite: true });
+      else { estado.d = d; desenhar(); }
+    };
+    const alvo = () => {
+      const n = !!nome.value.trim(), g = !!neg.value.trim();
+      if (escolha && aceite.checked) return LP + LR;
+      if (escolha) return LP + LR * 0.55;
+      return LP * (0.08 + (n ? 0.42 : 0) + (g ? 0.42 : 0));
+    };
+    const atualizar = (dur) => {
+      const feitos = [!!nome.value.trim(), !!neg.value.trim(), !!escolha, aceite.checked];
+      paradas.forEach((p, i) => p.classList.toggle("feita", feitos[i]));
+      form.classList.toggle("pronta", feitos.every(Boolean));
+      form.classList.toggle("chegou-destino", !!escolha && aceite.checked);
+      dica.textContent = !escolha ? (feitos[0] && feitos[1] ? "Agora escolha uma das 4 saídas no mapa" : "Preencha os dados e escolha uma das 4 saídas no mapa")
+        : aceite.checked ? "Chegou! É só iniciar a rota no WhatsApp" : "Saída escolhida. Confirme o envio para chegar ao destino";
+      irPara(alvo(), dur);
+    };
+    const escolher = (valor) => {
+      const ramo = ramos.find((r) => r.dataset.valor === valor);
+      const trocou = escolha && escolha !== valor;
+      escolha = valor; plano.value = valor;
+      ramos.forEach((r) => { const on = r === ramo; r.classList.toggle("ativa", on); r.setAttribute("aria-checked", String(on)); });
+      cartoes.forEach((c) => { const on = c.dataset.valor === valor; c.classList.toggle("ativa", on); c.setAttribute("aria-checked", String(on)); });
+      form.classList.add("tem-saida");
+      if (ramoPath) { const luzVelha = ramoPath.parentNode.querySelector(".ramo-luz"); luzVelha.style.strokeDashoffset = LR; }
+      ramoPath = ramo.querySelector(".ramo-base"); LR = ramoPath.getTotalLength();
+      const luz = ramo.querySelector(".ramo-luz"); luz.style.strokeDasharray = LR; luz.style.strokeDashoffset = LR;
+      if (trocou || estado.d > LP) { gsap.killTweensOf(estado); estado.d = Math.min(estado.d, LP); desenhar(); }
+      if (animar) gsap.fromTo(ramo.querySelector(".mapa-pino"), { scale: 0.6, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.6, ease: "back.out(3)" });
+      atualizar(1.3);
+    };
+    ramos.forEach((r) => {
+      r.addEventListener("click", () => escolher(r.dataset.valor));
+      r.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); escolher(r.dataset.valor); } });
+    });
+    cartoes.forEach((c) => c.addEventListener("click", () => escolher(c.dataset.valor)));
+    cartoes.forEach((c) => { c.classList.remove("ativa"); c.setAttribute("aria-checked", "false"); });
+    [nome, neg].forEach((c) => c.addEventListener("input", () => { c.classList.remove("erro"); atualizar(0.8); }));
+    aceite.addEventListener("change", () => atualizar(1.1));
     $$(".parada input", form).forEach((c) => {
       c.addEventListener("focus", () => c.closest(".parada").classList.add("foco"));
       c.addEventListener("blur", () => c.closest(".parada").classList.remove("foco"));
     });
-    avancar();
+    estado.d = LP * 0.08; desenhar();
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       [nome, neg].forEach((c) => c.classList.toggle("erro", !c.value.trim()));
       if (!nome.value.trim() || !neg.value.trim()) { erro.textContent = "Preencha seu nome e o nome do seu negócio para continuar."; (nome.value.trim() ? neg : nome).focus(); return; }
+      if (!escolha) { erro.textContent = "Escolha uma das 4 saídas no mapa (se não souber, use a Rota livre)."; return; }
       if (!aceite.checked) { erro.textContent = "Marque a caixa de concordância para continuar."; aceite.focus(); return; }
       erro.textContent = "";
       const msg = `Oi! Meu nome é ${nome.value.trim()}, do negócio ${neg.value.trim()}. Vim pelo site da Highway e tenho interesse no plano: ${plano.value}.`;
       const url = linkWpp(msg);
       const w = window.open(url, "_blank", "noopener");
       if (!w) window.location.href = url;
-      /* chegada: o carrinho vai até o destino e o alfinete pula */
-      prog.style.width = "100%"; carroR.style.left = "100%";
-      form.classList.add("chegou");
-      if (animar) gsap.fromTo(".rota-ponta.fim svg", { y: 0 }, { y: -14, duration: 0.35, yoyo: true, repeat: 3, ease: "power2.out", delay: 0.5 });
+      if (animar) gsap.fromTo(".mapa-saida.ativa .mapa-pino", { y: 0 }, { y: -10, duration: 0.3, yoyo: true, repeat: 3, ease: "power2.out" });
     });
   }
 
