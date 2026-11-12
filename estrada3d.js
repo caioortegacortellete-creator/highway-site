@@ -701,24 +701,32 @@
 
   /* ---------- rolagem → posição na estrada ---------- */
   let ancoras = [];
+  /* "anda e para": enquanto uma seção está na tela, a estrada fica parada num ponto de vista do cenário dela.
+     A estrada só anda na passagem de uma seção para a próxima (quando a próxima entra na tela). */
   const medirAncoras = () => {
     const sy = window.scrollY, vh = window.innerHeight;
     const maxS = Math.max(1, document.documentElement.scrollHeight - vh);
     const stP = window.ScrollTrigger ? window.ScrollTrigger.getAll().find((t) => t.pin && t.trigger && t.trigger.id === "hero") : null;
-    ancoras = [{ s: 0, d: D_POUSO }];
-    if (stP && stP.end > 2) ancoras.push({ s: stP.end, d: D_POUSO });
+    ancoras = [{ s: 0, d: D_POUSO, fixo: true }];
+    let ultS = stP && stP.end > 2 ? stP.end : 0, dAnt = D_POUSO;
+    if (ultS) ancoras.push({ s: ultS, d: D_POUSO, fixo: true });
     TRECHOS.forEach((tr, i) => {
       if (i === 0) return;
       const el = $(tr.sel); if (!el) return;
-      const s = clamp(el.getBoundingClientRect().top + sy - vh * 0.45, 1, maxS);
-      if (s > ancoras[ancoras.length - 1].s + 1) ancoras.push({ s, d: tr.ini + 2 });
+      const T = el.getBoundingClientRect().top + sy;
+      const parada = tr.sel === ".rodape" ? TOTAL - 16 : Math.max(dAnt, tr.ini - 22);
+      const s0 = clamp(T - vh * 0.95, ultS + 1, maxS);
+      const s1 = clamp(T - vh * 0.12, s0 + 1, maxS + 0.5);
+      ancoras.push({ s: s0, d: dAnt, fixo: true }, { s: s1, d: parada });
+      ultS = s1; dAnt = parada;
     });
-    ancoras.push({ s: maxS + 1, d: TOTAL - 16 });
+    ancoras.push({ s: maxS + 2, d: dAnt, fixo: true });
   };
+  const suaveA = (t) => t * t * (3 - 2 * t);
   const dDaRolagem = (s) => {
     for (let k = 0; k < ancoras.length - 1; k++) {
       const a = ancoras[k], b = ancoras[k + 1];
-      if (s < b.s) return a.d + ((s - a.s) / (b.s - a.s)) * (b.d - a.d);
+      if (s < b.s) return a.d + suaveA(clamp((s - a.s) / (b.s - a.s), 0, 1)) * (b.d - a.d);
     }
     return ancoras[ancoras.length - 1].d;
   };
@@ -726,7 +734,7 @@
   /* ---------- câmera ---------- */
   let impulso = 0, passT = 0, passS = 0;
   let velCam = 0;
-  const VEL_MAX = 20;
+  const VEL_MAX = 42;
   let dCam = D_POUSO, dAntes = D_POUSO, vel = 0, mx = 0, my = 0, alvoMx = 0, alvoMy = 0, tempo = 0;
   window.addEventListener("pointermove", (e) => { alvoMx = e.clientX / window.innerWidth - 0.5; alvoMy = e.clientY / window.innerHeight - 0.5; }, { passive: true });
   const olhar = new THREE.Vector3();
@@ -849,7 +857,7 @@
     if (luzAntena) luzAntena.material.opacity = Math.sin(tempo * 3) > 0.2 ? 1 : 0.15;
     if (cancelas.length) {
       cancelas.forEach((cc) => {
-        const perto = dCam > dPraca - 34 + cc.atraso * 20;
+        const perto = dCam > dPraca - 80 + cc.atraso * 12;
         const alvoA = perto ? 1.35 : 0;
         cc.ang += (alvoA - cc.ang) * Math.min(1, dt * 2.6);
         cc.braco.rotation.z = cc.ang;
