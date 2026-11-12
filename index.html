@@ -602,28 +602,52 @@
         <h2 id="destino-titulo" class="titulo-grande">Vamos colocar seu negócio <em>na estrada?</em></h2>
         <p>Responda rapidinho e a conversa já começa no WhatsApp, com tudo que precisamos para te atender.</p>
       </div>
-      <form class="formulario" id="formulario" novalidate>
-        <div class="campo">
-          <label for="fNome">Seu nome</label>
-          <input id="fNome" name="nome" type="text" autocomplete="name" required placeholder="Como podemos te chamar?">
+      <form class="formulario rota" id="formulario" novalidate>
+        <div class="rota-cab">
+          <div class="rota-gps"><i></i><span>GPS Highway</span></div>
+          <div class="rota-eta"><small>Tempo estimado</small><b>~2 min</b></div>
         </div>
-        <div class="campo">
-          <label for="fNegocio">Nome e tipo do negócio</label>
-          <input id="fNegocio" name="negocio" type="text" required placeholder="Ex.: Clínica Bella, estética">
+
+        <div class="rota-trajeto" aria-hidden="true">
+          <div class="rota-ponta origem"><i></i><span>Você está aqui</span></div>
+          <div class="rota-linha"><b id="rotaProg"></b><span class="rota-carro" id="rotaCarro"></span></div>
+          <div class="rota-ponta fim"><svg viewBox="0 0 40 52" aria-hidden="true"><path d="M20 2C10 2 3 9 3 19c0 12 17 31 17 31s17-19 17-31C37 9 30 2 20 2z"/><circle cx="20" cy="19" r="6"/></svg><span>Seu site no ar</span></div>
         </div>
-        <div class="campo">
-          <label for="fPlano">Plano de interesse</label>
-          <select id="fPlano" name="plano">
-            <option value="Ainda não sei">Ainda não sei</option>
-            <option value="Essencial (Nível 1)">Essencial · R$ 597,90</option>
-            <option value="Profissional (Nível 2)">Profissional · R$ 997,90</option>
-            <option value="Premium (Nível 3)">Premium · a partir de R$ 1.297,90</option>
-          </select>
-        </div>
+
+        <ol class="rota-paradas">
+          <li class="parada" data-parada="1">
+            <span class="parada-num">1</span>
+            <div class="campo">
+              <label for="fNome">Quem está dirigindo?</label>
+              <input id="fNome" name="nome" type="text" autocomplete="name" required placeholder="Seu nome">
+            </div>
+          </li>
+          <li class="parada" data-parada="2">
+            <span class="parada-num">2</span>
+            <div class="campo">
+              <label for="fNegocio">Qual é o seu negócio?</label>
+              <input id="fNegocio" name="negocio" type="text" required placeholder="Ex.: Clínica Bella, estética">
+            </div>
+          </li>
+          <li class="parada" data-parada="3">
+            <span class="parada-num">3</span>
+            <fieldset class="campo saidas">
+              <legend>Escolha a sua saída</legend>
+              <input type="hidden" id="fPlano" name="plano" value="Ainda não sei">
+              <div class="saidas-grade" role="radiogroup" aria-label="Plano de interesse">
+                <button type="button" class="saida" role="radio" aria-checked="false" data-valor="Essencial (Nível 1)" style="--nv: var(--n1)"><small>Saída N1</small><b>Essencial</b><span>R$ 597,90</span></button>
+                <button type="button" class="saida" role="radio" aria-checked="false" data-valor="Profissional (Nível 2)" style="--nv: var(--n2)"><small>Saída N2</small><b>Profissional</b><span>R$ 997,90</span></button>
+                <button type="button" class="saida" role="radio" aria-checked="false" data-valor="Premium (Nível 3)" style="--nv: var(--n3)"><small>Saída N3</small><b>Premium</b><span>a partir de R$ 1.297,90</span></button>
+                <button type="button" class="saida ativa" role="radio" aria-checked="true" data-valor="Ainda não sei" style="--nv: #eef1ff"><small>Rota livre</small><b>Ainda não sei</b><span>me ajudem a escolher</span></button>
+              </div>
+            </fieldset>
+          </li>
+        </ol>
+
         <label class="aceite" for="fAceite"><input id="fAceite" type="checkbox" required> <span>Concordo em enviar esses dados pelo WhatsApp para a Highway entrar em contato.</span></label>
         <p class="form-erro" id="formErro" role="alert"></p>
-        <button class="btn p mag" type="submit">Continuar no WhatsApp
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="btn-rota mag" type="submit"><span class="btn-rota-txt">Iniciar rota no WhatsApp</span><span class="btn-rota-seta" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+        <p class="rota-rodape"><i></i>Resposta rápida pelo WhatsApp · (43) 98412-4448</p>
       </form>
     </div>
   </section>

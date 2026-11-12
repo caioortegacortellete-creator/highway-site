@@ -1017,3 +1017,85 @@ main .cab h2, main .cab p, .manifesto-texto, .niveis-txt, .destino-txt, .passo p
 h1 em, h2 em, .hist-legenda em, .quiz-resultado h3 em { font-family: var(--f-destaque); font-style: normal; font-weight: 600; font-size: .84em; line-height: 1; letter-spacing: -.035em; word-spacing: .02em; padding-right: .04em; }
 .hero h1 em { font-size: .82em; }
 .hist-legenda em { font-size: .9em; font-weight: 500; }
+
+/* =========================================================
+   KM 11 · DESTINO: o formulário como painel de GPS / bilhete de viagem
+   ========================================================= */
+.formulario.rota { --c: 0px; clip-path: none; position: relative; gap: 20px; padding: clamp(22px, 3vw, 32px); border-radius: 24px; overflow: hidden;
+  background: radial-gradient(120% 70% at 100% 0%, rgba(255, 61, 242, .12), transparent 55%), radial-gradient(120% 80% at 0% 100%, rgba(41, 236, 255, .1), transparent 55%), linear-gradient(170deg, rgba(14, 17, 46, .94), rgba(7, 9, 26, .96));
+  box-shadow: inset 0 0 0 1px rgba(150, 170, 255, .2), 0 40px 90px -40px rgba(123, 45, 255, .7), 0 0 0 1px rgba(5, 6, 15, .6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.formulario.rota::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(140deg, rgba(41, 236, 255, .7), transparent 30%, transparent 70%, rgba(255, 61, 242, .7)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.formulario.rota::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; background: linear-gradient(rgba(150, 170, 255, .05) 1px, transparent 1px) 0 0 / 28px 28px, linear-gradient(90deg, rgba(150, 170, 255, .05) 1px, transparent 1px) 0 0 / 28px 28px; -webkit-mask-image: radial-gradient(80% 60% at 70% 20%, #000, transparent); mask-image: radial-gradient(80% 60% at 70% 20%, #000, transparent); }
+.formulario.rota > * { position: relative; z-index: 1; }
+
+.rota-cab { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.rota-gps { display: inline-flex; align-items: center; gap: 9px; font-family: var(--f-km); font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--neon-c); }
+.rota-gps i { width: 9px; height: 9px; border-radius: 50%; background: var(--neon-v); box-shadow: 0 0 10px var(--neon-v); animation: pulsa 2s infinite; }
+.rota-eta { display: grid; justify-items: end; line-height: 1.15; }
+.rota-eta small { font-family: var(--f-km); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--neblina); }
+.rota-eta b { font-family: var(--f-destaque, var(--f-titulo)); font-size: 17px; font-weight: 600; color: var(--faixa); }
+
+/* trajeto origem → destino */
+.rota-trajeto { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 14px 14px; border-radius: 16px; background: rgba(5, 6, 18, .55); box-shadow: inset 0 0 0 1px rgba(150, 170, 255, .12); }
+.rota-ponta { display: grid; justify-items: center; gap: 4px; font-family: var(--f-km); font-size: 10px; letter-spacing: .06em; color: var(--neblina); text-align: center; white-space: nowrap; }
+.rota-ponta.origem i { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle, #fff 0 30%, var(--neon-c) 34% 60%, transparent 64%); box-shadow: 0 0 14px var(--neon-c); }
+.rota-ponta.fim svg { width: 20px; height: 26px; }
+.rota-ponta.fim path { fill: var(--neon-m); filter: drop-shadow(0 0 8px var(--neon-m)); }
+.rota-ponta.fim circle { fill: #0a0c22; }
+.rota-linha { --desenha: 1; position: relative; height: 22px; }
+.rota-linha::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 3px; margin-top: -1.5px; border-radius: 3px; clip-path: inset(0 calc((1 - var(--desenha)) * 100%) 0 0); background: repeating-linear-gradient(90deg, rgba(238, 241, 255, .35) 0 10px, transparent 10px 18px); }
+.rota-linha b { position: absolute; left: 0; top: 50%; height: 3px; width: 6%; margin-top: -1.5px; border-radius: 3px; background: linear-gradient(90deg, var(--neon-c), var(--neon-r), var(--neon-m)); box-shadow: 0 0 12px rgba(179, 80, 255, .9); transition: width .8s var(--ease); }
+.rota-carro { position: absolute; top: 50%; left: 6%; width: 26px; height: 13px; margin: -6.5px 0 0 -13px; border-radius: 4px; background: #0d1130; box-shadow: inset 0 0 0 1.5px var(--neon-c), 0 0 12px var(--neon-c); transition: left .8s var(--ease); }
+.rota-carro::before { content: ""; position: absolute; right: -16px; top: 50%; width: 18px; height: 14px; margin-top: -7px; background: linear-gradient(90deg, rgba(255, 255, 255, .55), transparent); clip-path: polygon(0 35%, 100% 0, 100% 100%, 0 65%); }
+.rota-carro::after { content: ""; position: absolute; right: 2px; top: 2px; bottom: 2px; width: 3px; border-radius: 2px; background: #fff; box-shadow: 0 0 6px #fff; }
+
+/* paradas */
+.rota-paradas { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; position: relative; }
+.rota-paradas::before { content: ""; position: absolute; left: 15px; top: 18px; bottom: 18px; width: 2px; background: repeating-linear-gradient(180deg, rgba(150, 170, 255, .35) 0 6px, transparent 6px 12px); }
+.parada { position: relative; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 14px; align-items: start; }
+.parada-num { position: relative; z-index: 1; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; margin-top: 22px; font-family: var(--f-km); font-size: 13px; color: var(--neblina); background: #0c0f2c; box-shadow: inset 0 0 0 1.5px rgba(150, 170, 255, .3); transition: background .4s, color .4s, box-shadow .4s; }
+.parada.foco .parada-num { color: var(--faixa); box-shadow: inset 0 0 0 1.5px var(--neon-c), 0 0 14px rgba(41, 236, 255, .5); }
+.parada.feita .parada-num { color: #04121a; background: var(--neon-c); box-shadow: 0 0 16px rgba(41, 236, 255, .7); font-size: 0; }
+.parada.feita .parada-num::after { content: ""; width: 12px; height: 7px; border-left: 2.5px solid #04121a; border-bottom: 2.5px solid #04121a; transform: translateY(-2px) rotate(-45deg); }
+.rota .campo label, .rota .campo legend { font-family: var(--f-km); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--neblina); padding: 0; margin-bottom: 8px; }
+.rota .campo input { --c: 0px; clip-path: none; border-radius: 12px; padding: 14px 16px; background: rgba(5, 6, 18, .6); box-shadow: inset 0 0 0 1px rgba(150, 170, 255, .18); font-size: 16px; }
+.rota .campo input:focus { box-shadow: inset 0 0 0 1.5px var(--neon-c), 0 0 0 4px rgba(41, 236, 255, .1), 0 0 22px rgba(41, 236, 255, .2); }
+.rota .campo input.erro { box-shadow: inset 0 0 0 1.5px var(--neon-m), 0 0 18px rgba(255, 61, 242, .25); }
+.saidas { border: 0; margin: 0; padding: 0; min-width: 0; }
+.saidas-grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.saida { position: relative; display: grid; gap: 2px; text-align: left; padding: 12px 14px 12px 16px; border: 0; border-radius: 12px; cursor: pointer; overflow: hidden; color: var(--faixa); background: rgba(5, 6, 18, .6); box-shadow: inset 0 0 0 1px rgba(150, 170, 255, .16); transition: box-shadow .35s, background .35s, transform .35s var(--ease); }
+.saida::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--nv); opacity: .5; transition: opacity .35s, box-shadow .35s; }
+.saida small { font-family: var(--f-km); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--nv); }
+.saida b { font-size: 15px; font-weight: 700; }
+.saida span { font-size: 12.5px; color: var(--neblina); }
+.saida:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--nv) 60%, transparent); }
+.saida.ativa { background: color-mix(in srgb, var(--nv) 11%, rgba(5, 6, 18, .7)); box-shadow: inset 0 0 0 1.5px var(--nv), 0 0 22px color-mix(in srgb, var(--nv) 35%, transparent); }
+.saida.ativa::before { opacity: 1; box-shadow: 0 0 12px var(--nv); }
+.saida.ativa::after { content: ""; position: absolute; top: 12px; right: 12px; width: 9px; height: 9px; border-radius: 50%; background: var(--nv); box-shadow: 0 0 10px var(--nv); }
+
+.rota .aceite { padding-left: 46px; }
+.btn-rota { --mx: 0px; --my: 0px; position: relative; display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; height: 60px; padding: 0 8px 0 24px; border: 0; border-radius: 16px; cursor: pointer; overflow: hidden; color: #fff; font: inherit; font-weight: 700; font-size: 16px;
+  background: linear-gradient(90deg, #13a8d6, #4d5dff 45%, #a640ff 75%, #e93df0); background-size: 160% 100%; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25), 0 18px 40px -16px rgba(179, 80, 255, .9), 0 0 30px -6px rgba(255, 61, 242, .5);
+  transform: translate(var(--mx), var(--my)); transition: background-position .7s var(--ease), transform .3s var(--ease), box-shadow .35s; }
+.btn-rota::before { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .35), transparent); transform: skewX(-18deg); transition: left .9s var(--ease); }
+.btn-rota:hover { background-position: 100% 0; }
+.btn-rota:hover::before { left: 120%; }
+.btn-rota-seta { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: rgba(5, 6, 18, .35); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); transition: transform .4s var(--ease); }
+.btn-rota-seta svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.btn-rota:hover .btn-rota-seta { transform: translateX(3px); }
+.formulario.pronta .btn-rota { animation: pronto 2.4s ease-in-out infinite; }
+@keyframes pronto { 50% { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .4), 0 18px 40px -12px rgba(179, 80, 255, 1), 0 0 44px -2px rgba(255, 61, 242, .75); } }
+.rota-rodape { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; color: var(--neblina); text-align: center; }
+.rota-rodape i { width: 7px; height: 7px; border-radius: 50%; background: #3dffa2; box-shadow: 0 0 8px #3dffa2; }
+.formulario.chegou .rota-carro { box-shadow: inset 0 0 0 1.5px var(--neon-m), 0 0 16px var(--neon-m); }
+@media (max-width: 520px) {
+  .saidas-grade { grid-template-columns: 1fr; }
+  .rota-trajeto { gap: 8px; padding: 12px 10px; }
+  .rota .aceite { padding-left: 0; }
+  .parada { grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .parada-num { width: 28px; height: 28px; }
+  .rota-paradas::before { left: 13px; }
+}
+.formulario.rota { align-content: start; grid-template-rows: none; height: auto; }
+.rota-trajeto { height: auto; min-height: 0; align-self: start; }
+.rota-ponta, .rota-linha { align-self: center; }

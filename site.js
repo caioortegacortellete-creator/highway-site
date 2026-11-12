@@ -785,6 +785,8 @@
     entrar("#pino", { y: -160, opacity: 0, duration: 1.3, ease: "bounce.out", scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     entrar(".destino-txt > *:not(#pino)", { y: 40, opacity: 0, stagger: 0.1, duration: 0.9, delay: 0.2, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     entrar(".formulario", { x: 60, opacity: 0, duration: 1.1, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
+    entrar(".parada", { x: 40, opacity: 0, stagger: 0.12, duration: 0.8, delay: 0.3, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
+    gsap.fromTo(".rota-linha", { "--desenha": 0 }, { "--desenha": 1, duration: 1.4, ease: "power2.inOut", scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     const letras = $$(".marca-gigante tspan");
     gsap.set(letras, { strokeOpacity: 0.06 });
     gsap.timeline({ scrollTrigger: { trigger: ".rodape", start: "top 85%" } })
@@ -793,9 +795,31 @@
   }
   const form = $("#formulario");
   if (form) {
+    const nome = $("#fNome"), neg = $("#fNegocio"), plano = $("#fPlano"), aceite = $("#fAceite"), erro = $("#formErro");
+    const prog = $("#rotaProg"), carroR = $("#rotaCarro"), paradas = $$(".parada", form), saidas = $$(".saida", form);
+    let escolheuSaida = false;
+    /* o carrinho avança na rota conforme a pessoa preenche */
+    const avancar = () => {
+      const feitos = [!!nome.value.trim(), !!neg.value.trim(), escolheuSaida, aceite.checked];
+      paradas.forEach((p, i) => p.classList.toggle("feita", feitos[i]));
+      const n = feitos.filter(Boolean).length, pct = 6 + (n / feitos.length) * 88;
+      prog.style.width = pct + "%"; carroR.style.left = pct + "%";
+      form.classList.toggle("pronta", n === feitos.length);
+    };
+    [nome, neg].forEach((c) => c.addEventListener("input", () => { c.classList.remove("erro"); avancar(); }));
+    aceite.addEventListener("change", avancar);
+    saidas.forEach((b) => b.addEventListener("click", () => {
+      saidas.forEach((x) => { x.classList.toggle("ativa", x === b); x.setAttribute("aria-checked", String(x === b)); });
+      plano.value = b.dataset.valor; escolheuSaida = true; avancar();
+      if (animar) gsap.fromTo(b, { scale: 0.96 }, { scale: 1, duration: 0.5, ease: "back.out(3)" });
+    }));
+    $$(".parada input", form).forEach((c) => {
+      c.addEventListener("focus", () => c.closest(".parada").classList.add("foco"));
+      c.addEventListener("blur", () => c.closest(".parada").classList.remove("foco"));
+    });
+    avancar();
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const nome = $("#fNome"), neg = $("#fNegocio"), plano = $("#fPlano"), aceite = $("#fAceite"), erro = $("#formErro");
       [nome, neg].forEach((c) => c.classList.toggle("erro", !c.value.trim()));
       if (!nome.value.trim() || !neg.value.trim()) { erro.textContent = "Preencha seu nome e o nome do seu negócio para continuar."; (nome.value.trim() ? neg : nome).focus(); return; }
       if (!aceite.checked) { erro.textContent = "Marque a caixa de concordância para continuar."; aceite.focus(); return; }
@@ -804,6 +828,10 @@
       const url = linkWpp(msg);
       const w = window.open(url, "_blank", "noopener");
       if (!w) window.location.href = url;
+      /* chegada: o carrinho vai até o destino e o alfinete pula */
+      prog.style.width = "100%"; carroR.style.left = "100%";
+      form.classList.add("chegou");
+      if (animar) gsap.fromTo(".rota-ponta.fim svg", { y: 0 }, { y: -14, duration: 0.35, yoyo: true, repeat: 3, ease: "power2.out", delay: 0.5 });
     });
   }
 
