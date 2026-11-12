@@ -101,6 +101,7 @@
     A.push({ x, y, z, h, d, i: TRECHOS.length - 1 });
   }
   const TOTAL = A[A.length - 1].d;
+  const D_POUSO = 120;
   const em = (d) => {
     d = clamp(d, 0, TOTAL - 0.001);
     const i = Math.floor(d / PASSO), f = d / PASSO - i, a = A[i], b = A[Math.min(i + 1, A.length - 1)];
@@ -557,7 +558,9 @@
   const medirAncoras = () => {
     const sy = window.scrollY, vh = window.innerHeight;
     const maxS = Math.max(1, document.documentElement.scrollHeight - vh);
-    ancoras = [{ s: 0, d: 6 }];
+    const stP = window.ScrollTrigger ? window.ScrollTrigger.getAll().find((t) => t.pin && t.trigger && t.trigger.id === "hero") : null;
+    ancoras = [{ s: 0, d: D_POUSO }];
+    if (stP && stP.end > 2) ancoras.push({ s: stP.end, d: D_POUSO });
     TRECHOS.forEach((tr, i) => {
       if (i === 0) return;
       const el = $(tr.sel); if (!el) return;
@@ -576,9 +579,43 @@
 
   /* ---------- câmera ---------- */
   let impulso = 0, passT = 0, passS = 0;
-  let dCam = 6, dAntes = 6, vel = 0, mx = 0, my = 0, alvoMx = 0, alvoMy = 0, tempo = 0;
+  let dCam = D_POUSO, dAntes = D_POUSO, vel = 0, mx = 0, my = 0, alvoMx = 0, alvoMy = 0, tempo = 0;
   window.addEventListener("pointermove", (e) => { alvoMx = e.clientX / window.innerWidth - 0.5; alvoMy = e.clientY / window.innerHeight - 0.5; }, { passive: true });
   const olhar = new THREE.Vector3();
+  /* trajeto da passagem: espiral do heliponto até a pista (curvas Catmull-Rom) */
+  let trajeto = null;
+  const vTraj = new THREE.Vector3(), vOlhar = new THREE.Vector3();
+  const montarTrajeto = () => {
+    const C = new THREE.Vector3(centroTorre.x, torreY + 1, centroTorre.z);
+    const longe = em(300), pouso = em(D_POUSO), antes = em(D_POUSO - 60), meio = em(D_POUSO - 28);
+    const angDe = (v) => Math.atan2(v.x - C.x, v.z - C.z);
+    const ang0 = angDe(longe);
+    const chegada = lado(antes, 2.6, 20);
+    const DOIS_PI = Math.PI * 2;
+    const m0 = (((angDe(chegada) - ang0) % DOIS_PI) + DOIS_PI) % DOIS_PI;
+    const opcoes = [m0, m0 - DOIS_PI, m0 + DOIS_PI, m0 - 2 * DOIS_PI].filter((v) => Math.abs(v) >= Math.PI * 1.2 && Math.abs(v) <= Math.PI * 2.25);
+    const varre = opcoes.length ? opcoes.sort((x, y) => Math.abs(x) - Math.abs(y))[0] : m0 + DOIS_PI;
+    const rFinal = Math.hypot(chegada.x - C.x, chegada.z - C.z);
+    const olharPista = lado(em(D_POUSO + 26), 1.2, 1.9);
+    const pts = [], olh = [];
+    const N = 10;
+    for (let k = 0; k < N; k++) {
+      const f = k / (N - 1);
+      const ang = ang0 + varre * f;
+      const abre = Math.pow(Math.max(0, (f - 0.5) / 0.5), 1.5);
+      const kz = window.innerWidth < 760 ? 1.6 : 1;
+      const raio = (14 + 9 * Math.min(f / 0.5, 1)) * kz + (rFinal - 23 * kz) * abre;
+      const alt = (torreY + 7.5) + Math.sin(Math.PI * Math.min(f / 0.55, 1)) * 9 * kz - abre * (torreY + 7.5 - chegada.y);
+      pts.push(new THREE.Vector3(C.x + Math.sin(ang) * raio, alt, C.z + Math.cos(ang) * raio));
+      const w = Math.pow(Math.max(0, (f - 0.45) / 0.55), 1.3);
+      olh.push(k === 0 ? new THREE.Vector3(longe.x, 22, longe.z) : new THREE.Vector3().lerpVectors(C, olharPista, w));
+    }
+    pts[N - 1].copy(chegada);
+    pts.push(lado(meio, 2.6, 8)); olh.push(olharPista.clone());
+    pts.push(lado(pouso, 2.6, 3.4)); olh.push(olharPista.clone());
+    trajeto = { pos: new THREE.CatmullRomCurve3(pts, false, "centripetal"), olhar: new THREE.CatmullRomCurve3(olh, false, "centripetal") };
+  };
+
   const suave = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
   const orbita = new THREE.Vector3(), alvoGiro = new THREE.Vector3();
   const posicionar = () => {
@@ -586,32 +623,25 @@
     const pos = lado(p, 2.6 + mx * 1.2, 3.4 + Math.sin(tempo * 0.8) * 0.08);
     olhar.copy(lado(f, 1.2 + mx * 3, 1.9 - my * 2));
     let rolagem = clamp(-(f.h - atras.h) * 0.9, -0.12, 0.12);
-    /* topo e passagem: a câmera começa no terraço da Highway, gira em volta do prédio e mergulha na rodovia */
+    /* topo e passagem: um só movimento contínuo. A câmera sai da beira do terraço, contorna o heliponto
+       em espiral já se afastando do prédio e descendo, e entra na pista por trás, alinhada com a estrada. */
     const g = passS;
     let modoTerraco = 0;
     if (g < 0.999) {
-      const C = new THREE.Vector3(centroTorre.x, torreY + 1, centroTorre.z);
-      const frenteTorre = em(300);
-      const paraEstrada = new THREE.Vector3(frenteTorre.x - C.x, 0, frenteTorre.z - C.z).normalize();
-      const ang0 = Math.atan2(paraEstrada.x, paraEstrada.z);
-      /* pose do topo: na beira do terraço olhando a cidade e a rodovia lá embaixo */
-      const giro = suave(0.04, 0.62, g) * Math.PI * 2;
-      const sobe = Math.sin(Math.PI * suave(0.04, 0.62, g));
-      const raio = 13.5 + sobe * 32;
-      const ang = ang0 + giro;
-      const alt = 5.5 + sobe * 28;
-      const orbX = C.x + Math.sin(ang) * raio, orbZ = C.z + Math.cos(ang) * raio;
-      const orbPos = new THREE.Vector3(orbX + mx * 2 * (1 - suave(0, 0.1, g)), C.y + alt + my * -1, orbZ);
-      const olharTopo = new THREE.Vector3(frenteTorre.x + mx * 40, 22 - my * 14, frenteTorre.z);
-      const olharGiro = new THREE.Vector3().copy(olharTopo).lerp(C, suave(0.02, 0.14, g) * (1 - suave(0.5, 0.66, g)));
-      /* mergulho: do fim do giro até a pose normal na pista, num arco */
-      const m = suave(0.6, 1, g);
-      const arco = Math.sin(Math.PI * m) * 18;
-      const mergulho = new THREE.Vector3().copy(orbPos).lerp(pos, m * m * (3 - 2 * m)); mergulho.y += arco * (1 - m);
-      pos.copy(mergulho);
-      olhar.copy(olharGiro).lerp(olhar, suave(0.62, 0.95, g));
-      rolagem = rolagem * m + Math.sin(giro) * 0.42 * (1 - m);
-      modoTerraco = 1 - suave(0.7, 1, g);
+      if (!trajeto) montarTrajeto();
+      const t = suave(0, 1, clamp((g - 0.02) / 0.96, 0, 1));
+      const tc = t;
+      trajeto.pos.getPoint(tc, vTraj);
+      trajeto.olhar.getPoint(tc, vOlhar);
+      const inicio = 1 - suave(0, 0.08, g);
+      vTraj.x += mx * 2 * inicio; vTraj.y -= my * inicio;
+      vOlhar.x += mx * 40 * inicio; vOlhar.y -= my * 14 * inicio;
+      const fim = suave(0.9, 1, g);
+      const posPista = pos.clone(), olharPista = olhar.clone();
+      pos.copy(vTraj).lerp(posPista, fim);
+      olhar.copy(vOlhar).lerp(olharPista, fim);
+      rolagem = rolagem * fim + Math.sin(tc * Math.PI) * 0.32 * (1 - fim);
+      modoTerraco = 1 - suave(0.72, 1, g);
     }
     cena.fog.density = DENS_NEVOA * (1 - modoTerraco) + 0.0032 * modoTerraco;
     cam.position.copy(pos);
@@ -628,7 +658,7 @@
     cam.aspect = w / h; cam.updateProjectionMatrix();
   };
   ajustar();
-  window.addEventListener("resize", () => { ajustar(); medirAncoras(); });
+  window.addEventListener("resize", () => { ajustar(); medirAncoras(); trajeto = null; });
   medirAncoras();
   if (window.ScrollTrigger) window.ScrollTrigger.addEventListener("refresh", medirAncoras);
   window.addEventListener("load", medirAncoras);
