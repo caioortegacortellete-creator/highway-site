@@ -27,7 +27,8 @@
 
   const cena = new THREE.Scene();
   const NEVOA = 0x150a33;
-  cena.fog = new THREE.FogExp2(NEVOA, leve ? 0.0105 : 0.0088);
+  const DENS_NEVOA = leve ? 0.0105 : 0.0088;
+  cena.fog = new THREE.FogExp2(NEVOA, DENS_NEVOA);
   const cam = new THREE.PerspectiveCamera(62, 1, 0.1, 1200);
 
   /* ---------- texturas desenhadas em canvas ---------- */
@@ -427,6 +428,62 @@
     anel = new THREE.Mesh(new THREE.RingGeometry(3, 3.6, 48), aditivo(COR.m, 0.8)); anel.rotation.x = -Math.PI / 2; anel.position.copy(lado(p, 0, 0.08)); cena.add(anel);
   }
 
+  let luzAntena = null;
+  /* ---------- o ponto de partida: terraço do arranha-céu da Highway ----------
+     O topo do site acontece aqui em cima. Na passagem, a câmera gira em volta do prédio
+     (heliponto em H e letreiro HIGHWAY) e mergulha até a rodovia lá embaixo. */
+  const ALT_TORRE = 82, LADO_TORRE = 30;
+  const baseTorre = em(110), centroTorre = lado(baseTorre, LARG / 2 + 92, 0);
+  const torreY = ALT_TORRE;
+  {
+    const texTorre = texJanelas.clone(); texTorre.needsUpdate = true; texTorre.wrapS = texTorre.wrapT = THREE.RepeatWrapping; texTorre.repeat.set(3, 7);
+    const corpo = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ map: texTorre, color: 0xb9a8ff }));
+    corpo.position.set(centroTorre.x, ALT_TORRE / 2, centroTorre.z); corpo.rotation.y = -baseTorre.h; corpo.scale.set(LADO_TORRE, ALT_TORRE, LADO_TORRE); cena.add(corpo);
+    /* laje do terraço */
+    const laje = new THREE.Mesh(new THREE.BoxGeometry(LADO_TORRE + 1, 0.8, LADO_TORRE + 1), new THREE.MeshBasicMaterial({ color: 0x0c0f2c }));
+    laje.position.set(centroTorre.x, torreY + 0.4, centroTorre.z); laje.rotation.y = -baseTorre.h; cena.add(laje);
+    /* parapeito neon nas quatro bordas */
+    const ladoT = (LADO_TORRE + 1) / 2;
+    [[0, ladoT, LADO_TORRE + 1, 0.25, COR.c], [0, -ladoT, LADO_TORRE + 1, 0.25, COR.m], [ladoT, 0, 0.25, LADO_TORRE + 1, COR.r], [-ladoT, 0, 0.25, LADO_TORRE + 1, COR.c]].forEach(([ox, oz, sx, sz, cor]) => {
+      const g = new THREE.Group(); g.position.set(centroTorre.x, torreY + 0.8, centroTorre.z); g.rotation.y = -baseTorre.h;
+      const m = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: cor })); m.position.set(ox, 0.9, oz); m.scale.set(sx, 0.18, sz); g.add(m);
+      const vidro = new THREE.Mesh(caixa, aditivo(cor, 0.1)); vidro.position.set(ox, 0.45, oz); vidro.scale.set(Math.max(sx, 0.05), 0.9, Math.max(sz, 0.05)); g.add(vidro);
+      cena.add(g);
+    });
+    /* heliponto com o H da marca */
+    const texHeli = textura(tela(512, 512, (g, w) => {
+      g.clearRect(0, 0, w, w);
+      g.strokeStyle = "#29ecff"; g.lineWidth = 16; g.shadowColor = "#29ecff"; g.shadowBlur = 30;
+      g.beginPath(); g.arc(w / 2, w / 2, w * 0.42, 0, Math.PI * 2); g.stroke();
+      const l = g.createLinearGradient(140, 0, 372, 0); l.addColorStop(0, "#29ecff"); l.addColorStop(0.5, "#b350ff"); l.addColorStop(1, "#ff3df2");
+      g.fillStyle = l; g.shadowColor = "#b350ff"; g.shadowBlur = 26;
+      g.fillRect(150, 130, 56, 252); g.fillRect(306, 130, 56, 252); g.fillRect(150, 228, 212, 56);
+    }));
+    const heli = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshBasicMaterial({ map: texHeli, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    heli.rotation.set(-Math.PI / 2, 0, -baseTorre.h); heli.position.set(centroTorre.x, torreY + 0.85, centroTorre.z); cena.add(heli);
+    /* letreiro HIGHWAY na borda de trás, virado para a cidade */
+    const texLetreiro = textura(tela(2048, 400, (g, w, h) => {
+      g.clearRect(0, 0, w, h);
+      g.font = "900 300px 'Archivo', 'Arial Black', sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
+      const l = g.createLinearGradient(200, 0, w - 200, 0); l.addColorStop(0, "#29ecff"); l.addColorStop(0.35, "#4d8dff"); l.addColorStop(0.65, "#b350ff"); l.addColorStop(1, "#ff3df2");
+      g.lineWidth = 12; g.strokeStyle = l; g.shadowColor = "#b350ff"; g.shadowBlur = 40; g.strokeText("HIGHWAY", w / 2, h / 2 + 12);
+      g.shadowBlur = 0; g.lineWidth = 5; g.strokeStyle = "rgba(255,255,255,.85)"; g.strokeText("HIGHWAY", w / 2, h / 2 + 12);
+    }));
+    const matLetreiro = new THREE.MeshBasicMaterial({ map: texLetreiro, transparent: true, side: THREE.FrontSide, blending: THREE.AdditiveBlending, depthWrite: false });
+    const letreiro = new THREE.Mesh(new THREE.PlaneGeometry(30, 5.9), matLetreiro);
+    const letreiroVerso = new THREE.Mesh(new THREE.PlaneGeometry(30, 5.9), matLetreiro); letreiroVerso.rotation.y = Math.PI; letreiro.add(letreiroVerso);
+    const fundoTorre = lado(baseTorre, LARG / 2 + 92 + ladoT - 1, 0);
+    letreiro.position.set(fundoTorre.x, torreY + 5.6, fundoTorre.z); letreiro.rotation.y = -baseTorre.h + Math.PI / 2; cena.add(letreiro);
+    [-11, 0, 11].forEach((o) => { const m = new THREE.Mesh(caixa, matEscuro); m.position.copy(letreiro.position); m.rotation.y = letreiro.rotation.y; m.translateX(o); m.position.y = torreY + 1.6; m.scale.set(0.25, 2.4, 0.25); cena.add(m); });
+    /* casa de máquinas, caixa d'água e antena com luz piscando */
+    const casa = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: 0x151a42 })); casa.position.set(centroTorre.x, torreY + 2.2, centroTorre.z); casa.rotation.y = -baseTorre.h; casa.translateX(-10); casa.translateZ(-9); casa.scale.set(6, 3.6, 5); cena.add(casa);
+    const antena = new THREE.Mesh(caixa, matEscuro); antena.position.copy(casa.position); antena.position.y = torreY + 9; antena.scale.set(0.3, 11, 0.3); cena.add(antena);
+    luzAntena = new THREE.Sprite(new THREE.SpriteMaterial({ map: texBrilho, color: 0xff3355, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    luzAntena.position.set(antena.position.x, torreY + 14.8, antena.position.z); luzAntena.scale.set(4, 4, 1); cena.add(luzAntena);
+    /* brilho do letreiro refletido no terraço */
+    const reflexo = new THREE.Mesh(new THREE.PlaneGeometry(34, 14), aditivo(COR.r, 0.18, texBrilho)); reflexo.rotation.set(-Math.PI / 2, 0, -baseTorre.h); reflexo.position.set(fundoTorre.x, torreY + 0.86, fundoTorre.z); cena.add(reflexo);
+  }
+
   /* ---------- trânsito: carros de verdade, com lataria, cabine, faróis, lanternas e neon por baixo ---------- */
   cena.add(new THREE.HemisphereLight(0x9aa6ff, 0x2a0a3a, 1.15));
   const sol = new THREE.DirectionalLight(0xff8ff0, 0.55); sol.position.set(-1, 2, 1); cena.add(sol);
@@ -529,21 +586,34 @@
     const pos = lado(p, 2.6 + mx * 1.2, 3.4 + Math.sin(tempo * 0.8) * 0.08);
     olhar.copy(lado(f, 1.2 + mx * 3, 1.9 - my * 2));
     let rolagem = clamp(-(f.h - atras.h) * 0.9, -0.12, 0.12);
-    /* passagem do topo: a câmera sobe, dá a volta em espiral sobre a avenida e mergulha de volta na pista */
+    /* topo e passagem: a câmera começa no terraço da Highway, gira em volta do prédio e mergulha na rodovia */
     const g = passS;
-    if (g > 0.001 && g < 0.999) {
-      const mistura = suave(0, 0.2, g) * (1 - suave(0.8, 1, g));
-      const T = em(dCam + 34);
-      alvoGiro.set(T.x, T.y + 1.5, T.z);
-      const ang = -T.h + Math.PI + suave(0.05, 0.92, g) * Math.PI * 2;
-      const sino = Math.sin(Math.PI * suave(0.05, 0.95, g));
-      const raio = 34 + sino * 42, alt = 3.4 + sino * 58;
-      const bx = -Math.sin(T.h), bz = Math.cos(T.h), phi = ang + T.h - Math.PI;
-      orbita.set(T.x + (bx * Math.cos(phi) + bz * Math.sin(phi)) * raio, T.y + alt, T.z + (-bx * Math.sin(phi) + bz * Math.cos(phi)) * raio);
-      pos.lerp(orbita, mistura);
-      olhar.lerp(alvoGiro, mistura);
-      rolagem += Math.sin(suave(0.05, 0.92, g) * Math.PI * 2) * 0.55 * mistura;
+    let modoTerraco = 0;
+    if (g < 0.999) {
+      const C = new THREE.Vector3(centroTorre.x, torreY + 1, centroTorre.z);
+      const frenteTorre = em(300);
+      const paraEstrada = new THREE.Vector3(frenteTorre.x - C.x, 0, frenteTorre.z - C.z).normalize();
+      const ang0 = Math.atan2(paraEstrada.x, paraEstrada.z);
+      /* pose do topo: na beira do terraço olhando a cidade e a rodovia lá embaixo */
+      const giro = suave(0.04, 0.62, g) * Math.PI * 2;
+      const sobe = Math.sin(Math.PI * suave(0.04, 0.62, g));
+      const raio = 13.5 + sobe * 32;
+      const ang = ang0 + giro;
+      const alt = 5.5 + sobe * 28;
+      const orbX = C.x + Math.sin(ang) * raio, orbZ = C.z + Math.cos(ang) * raio;
+      const orbPos = new THREE.Vector3(orbX + mx * 2 * (1 - suave(0, 0.1, g)), C.y + alt + my * -1, orbZ);
+      const olharTopo = new THREE.Vector3(frenteTorre.x + mx * 40, 22 - my * 14, frenteTorre.z);
+      const olharGiro = new THREE.Vector3().copy(olharTopo).lerp(C, suave(0.02, 0.14, g) * (1 - suave(0.5, 0.66, g)));
+      /* mergulho: do fim do giro até a pose normal na pista, num arco */
+      const m = suave(0.6, 1, g);
+      const arco = Math.sin(Math.PI * m) * 18;
+      const mergulho = new THREE.Vector3().copy(orbPos).lerp(pos, m * m * (3 - 2 * m)); mergulho.y += arco * (1 - m);
+      pos.copy(mergulho);
+      olhar.copy(olharGiro).lerp(olhar, suave(0.62, 0.95, g));
+      rolagem = rolagem * m + Math.sin(giro) * 0.42 * (1 - m);
+      modoTerraco = 1 - suave(0.7, 1, g);
     }
+    cena.fog.density = DENS_NEVOA * (1 - modoTerraco) + 0.0032 * modoTerraco;
     cam.position.copy(pos);
     cam.lookAt(olhar);
     cam.rotateZ(rolagem);
@@ -563,6 +633,7 @@
   if (window.ScrollTrigger) window.ScrollTrigger.addEventListener("refresh", medirAncoras);
   window.addEventListener("load", medirAncoras);
 
+  if (window.scrollY > window.innerHeight * 3) { passT = passS = 1; }
   let ultimo = performance.now(), visivel = true;
   document.addEventListener("visibilitychange", () => { visivel = !document.hidden; ultimo = performance.now(); });
   const quadro = () => {
@@ -577,6 +648,7 @@
     if (Math.abs(passT - passS) < 0.0005) passS = passT;
     moverCarros(dt);
     if (texLed && !reduz) texLed.offset.x = (texLed.offset.x + dt * 0.06) % 1;
+    if (luzAntena) luzAntena.material.opacity = Math.sin(tempo * 3) > 0.2 ? 1 : 0.15;
     if (pino) { pino.position.y = em(chegTr.ini + chegTr.L * 0.85).y + 3 + Math.sin(tempo * 2) * 0.6; pino.rotation.y += dt * 0.6; }
     if (anel) { const s = 1 + ((tempo * 0.6) % 1) * 2.2; anel.scale.set(s, s, s); anel.material.opacity = 0.8 * (1 - ((tempo * 0.6) % 1)); }
     posicionar();
