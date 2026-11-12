@@ -607,8 +607,11 @@
       const raio = (14 + 9 * Math.min(f / 0.5, 1)) * kz + (rFinal - 23 * kz) * abre;
       const alt = (torreY + 7.5) + Math.sin(Math.PI * Math.min(f / 0.55, 1)) * 9 * kz - abre * (torreY + 7.5 - chegada.y);
       pts.push(new THREE.Vector3(C.x + Math.sin(ang) * raio, alt, C.z + Math.cos(ang) * raio));
-      const w = Math.pow(Math.max(0, (f - 0.45) / 0.55), 1.3);
-      olh.push(k === 0 ? new THREE.Vector3(longe.x, 22, longe.z) : new THREE.Vector3().lerpVectors(C, olharPista, w));
+      /* o olhar vira aos poucos: da cidade para o heliponto e, no fim, para a pista */
+      const olharCidade = new THREE.Vector3(longe.x, 22, longe.z);
+      const paraHeli = suave(0, 0.6, f);
+      const w = Math.pow(Math.max(0, (f - 0.5) / 0.5), 1.3);
+      olh.push(new THREE.Vector3().lerpVectors(olharCidade, C, paraHeli).lerp(olharPista, w));
     }
     pts[N - 1].copy(chegada);
     pts.push(lado(meio, 2.6, 8)); olh.push(olharPista.clone());
@@ -629,18 +632,19 @@
     let modoTerraco = 0;
     if (g < 0.999) {
       if (!trajeto) montarTrajeto();
-      const t = suave(0, 1, clamp((g - 0.02) / 0.96, 0, 1));
-      const tc = t;
+      /* começo bem lento (a câmera "solta" do terraço), meio fluido e chegada suave */
+      const u = clamp(g / 0.98, 0, 1);
+      const tc = u < 0.25 ? 0.25 * Math.pow(u / 0.25, 2.2) * 0.62 : 0.155 + (u - 0.25) / 0.75 * 0.845 - Math.sin(Math.PI * (u - 0.25) / 0.75) * 0.04;
       trajeto.pos.getPoint(tc, vTraj);
       trajeto.olhar.getPoint(tc, vOlhar);
-      const inicio = 1 - suave(0, 0.08, g);
+      const inicio = 1 - suave(0, 0.2, g);
       vTraj.x += mx * 2 * inicio; vTraj.y -= my * inicio;
       vOlhar.x += mx * 40 * inicio; vOlhar.y -= my * 14 * inicio;
       const fim = suave(0.9, 1, g);
       const posPista = pos.clone(), olharPista = olhar.clone();
       pos.copy(vTraj).lerp(posPista, fim);
       olhar.copy(vOlhar).lerp(olharPista, fim);
-      rolagem = rolagem * fim + Math.sin(tc * Math.PI) * 0.32 * (1 - fim);
+      rolagem = rolagem * fim + Math.sin(tc * Math.PI) * 0.32 * suave(0, 0.3, g) * (1 - fim);
       modoTerraco = 1 - suave(0.72, 1, g);
     }
     cena.fog.density = DENS_NEVOA * (1 - modoTerraco) + 0.0032 * modoTerraco;

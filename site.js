@@ -318,9 +318,9 @@
       }
     });
     passagem
-      .fromTo(".hero-txt", { y: 0, opacity: 1, filter: "blur(0px)" }, { y: -140, opacity: 0, filter: "blur(12px)", duration: 0.18, ease: "power2.in" }, 0)
-      .fromTo(".historia", { x: 0, opacity: 1, rotationY: 0, filter: "blur(0px)" }, { x: 260, opacity: 0, rotationY: -40, filter: "blur(10px)", duration: 0.18, ease: "power2.in" }, 0.01)
-      .fromTo(hero, { "--hero-veu": 1 }, { "--hero-veu": 0, duration: 0.16 }, 0.04)
+      .fromTo(".hero-txt", { y: 0, opacity: 1, filter: "blur(0px)" }, { y: -90, opacity: 0, filter: "blur(10px)", duration: 0.26, ease: "power1.inOut" }, 0)
+      .fromTo(".historia", { x: 0, opacity: 1, rotationY: 0, filter: "blur(0px)" }, { x: 160, opacity: 0, rotationY: -28, filter: "blur(8px)", duration: 0.26, ease: "power1.inOut" }, 0.02)
+      .fromTo(hero, { "--hero-veu": 1 }, { "--hero-veu": 0, duration: 0.3, ease: "power1.inOut" }, 0)
       .fromTo(".hero-passagem", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04 }, 0.36)
       .fromTo(".hp-frase", { scale: 0.3, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power3.out" }, 0.38)
       .to(".hp-frase", { scale: 4.2, opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in" }, 0.6)
