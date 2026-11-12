@@ -366,10 +366,8 @@
       .fromTo(".hero-passagem", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04 }, 0.36)
       .fromTo(".hp-frase", { scale: 0.3, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power3.out" }, 0.38)
       .to(".hp-frase", { scale: 4.2, opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in" }, 0.6)
-      .fromTo(".hp-riscos", { scale: 0.45, opacity: 0, rotation: 0 }, { scale: 1.6, opacity: 1, rotation: 14, duration: 0.18 }, 0.74)
-      .fromTo(".hp-faixas i", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, stagger: 0.02, duration: 0.12, ease: "power2.out" }, 0.76)
-      .to(".hp-faixas i", { scaleY: 2.4, opacity: 0, duration: 0.08 }, 0.9)
-      .to(".hp-riscos", { scale: 2.4, opacity: 0, duration: 0.08 }, 0.9)
+      .fromTo(".hp-riscos", { scale: 0.9, opacity: 0, rotation: 0 }, { scale: 1.1, opacity: 0.35, rotation: 6, duration: 0.14, ease: "sine.inOut" }, 0.7)
+      .to(".hp-riscos", { scale: 1.2, opacity: 0, duration: 0.14, ease: "sine.inOut" }, 0.84)
       .to(".hero-passagem", { autoAlpha: 0, duration: 0.03 }, 0.97);
   }
 
@@ -819,6 +817,22 @@
     });
   }
 
+  /* ---------- KM 09 · equipe ---------- */
+  if (animar) {
+    entrar(".equipe .cab > *", { y: 30, opacity: 0, stagger: 0.08, duration: 0.8, scrollTrigger: { trigger: ".equipe", start: "top 75%" } });
+    $$(".piloto").forEach((pc, k) => {
+      entrar(pc, { y: 70, opacity: 0, rotationY: k ? -12 : 12, duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: pc, start: "top 85%" } });
+      entrar($$(".piloto-tags li", pc), { y: 12, opacity: 0, stagger: 0.08, duration: 0.5, delay: 0.5, scrollTrigger: { trigger: pc, start: "top 80%" } });
+    });
+  }
+  if (animar && fino) {
+    $$(".piloto").forEach((pc) => {
+      const f = $(".piloto-foto", pc);
+      pc.addEventListener("pointermove", (e) => { const r = pc.getBoundingClientRect(); gsap.to(f, { rotationY: ((e.clientX - r.left) / r.width - 0.5) * 10, rotationX: (0.5 - (e.clientY - r.top) / r.height) * 8, duration: 0.6 }); });
+      pc.addEventListener("pointerleave", () => gsap.to(f, { rotationY: 0, rotationX: 0, duration: 0.8 }));
+    });
+  }
+
   /* ---------- KM 10 · dúvidas ---------- */
   if (animar) {
     entrar(".duvidas .cab > *", { y: 30, opacity: 0, stagger: 0.08, duration: 0.8, scrollTrigger: { trigger: ".duvidas", start: "top 75%" } });
@@ -989,7 +1003,7 @@
 
   /* ---------- menu marca a seção atual ---------- */
   if (temGSAP) {
-    ["portfolio", "planos", "como-funciona", "duvidas"].forEach((id) => {
+    ["portfolio", "planos", "como-funciona", "equipe", "duvidas"].forEach((id) => {
       const link = $(`.pm-lista a[href="#${id}"]`), sec = $("#" + id);
       if (!link || !sec) return;
       ScrollTrigger.create({ trigger: sec, start: "top 50%", end: "bottom 50%", onToggle: (s) => link.classList.toggle("atual", s.isActive) });

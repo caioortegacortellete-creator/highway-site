@@ -76,13 +76,13 @@
     { sel: "#hero", L: 170, giro: 0, sobe: 0, tema: "cidade", fixo: true },
     { sel: "#caminho", giro: -60, sobe: 0, tema: "curva", min: 50 },
     { sel: ".nichos", giro: 0, sobe: 0, tema: "portico", min: 24 },
-    { sel: ".manifesto", giro: 42, sobe: 0, tema: "cidade", min: 36 },
     { sel: "#portfolio", giro: 0, sobe: 0, tema: "outdoors", min: 100 },
     { sel: "#niveis", giro: 45, sobe: 18, tema: "rampa", min: 64 },
     { sel: "#planos", giro: 0, sobe: 0, tema: "pedagio", min: 50 },
     { sel: "#quiz", giro: -70, sobe: 0, tema: "elevado", min: 50 },
     { sel: "#como-funciona", giro: 0, sobe: -18, tema: "descida", min: 64 },
     { sel: ".porque", giro: 35, sobe: 0, tema: "tunel", min: 50 },
+    { sel: "#equipe", giro: 30, sobe: 0, tema: "cidade", min: 50 },
     { sel: "#duvidas", giro: 0, sobe: 0, tema: "praca", min: 60 },
     { sel: "#contato", giro: 0, sobe: 0, tema: "chegada", min: 44 },
     { sel: ".rodape", L: 120, giro: 0, sobe: 0, tema: "chegada", fixo: true }
@@ -418,7 +418,7 @@
       g.clearRect(0, 0, w, h); g.fillStyle = "#070920"; g.fillRect(0, 0, w, h);
       g.strokeStyle = "#ffb84d"; g.lineWidth = 6; g.shadowColor = "#ffb84d"; g.shadowBlur = 20; g.strokeRect(10, 10, w - 20, h - 20); g.shadowBlur = 0;
       g.fillStyle = "#ffb84d"; g.font = "800 120px 'Archivo', 'Arial Black', sans-serif"; g.textBaseline = "middle"; g.fillText("PEDÁGIO", 60, h / 2 + 6);
-      g.fillStyle = "#eef1ff"; g.font = "600 70px 'Plus Jakarta Sans', sans-serif"; g.fillText("das perguntas", 690, h / 2 + 6);
+      g.fillStyle = "#eef1ff"; g.font = "600 70px 'Plus Jakarta Sans', sans-serif"; g.fillText("das perguntas", 760, h / 2 + 6);
       ["?", "?", "?", "?"].forEach((t, k) => { const x = 1300 + k * 175; g.strokeStyle = ["#29ecff", "#b350ff", "#ff3df2", "#3dffa2"][k]; g.lineWidth = 7; g.beginPath(); g.arc(x, h / 2, 62, 0, Math.PI * 2); g.stroke(); g.fillStyle = g.strokeStyle; g.font = "800 90px 'Plus Jakarta Sans', sans-serif"; g.textAlign = "center"; g.fillText(t, x, h / 2 + 8); g.textAlign = "left"; });
     };
     const c = tela(2048, 256, desenharPraca);
@@ -700,8 +700,14 @@
       olh.push(new THREE.Vector3().lerpVectors(olharCidade, C, paraHeli).lerp(olharPista, w));
     }
     pts[N - 1].copy(chegada);
-    pts.push(lado(meio, 2.6, 8)); olh.push(olharPista.clone());
-    pts.push(lado(pouso, 2.6, 3.4)); olh.push(olharPista.clone());
+    /* pouso longo e suave: a câmera vem descendo junto da pista até a altura de dirigir */
+    const PL = 6;
+    for (let k = 1; k <= PL; k++) {
+      const f = k / PL, e = 1 - Math.pow(1 - f, 2.2);
+      const d = (D_POUSO - 60) + 60 * f;
+      pts.push(lado(em(d), 2.6, 20 - (20 - 3.4) * e));
+      olh.push(lado(em(d + 26), 1.2, 1.9 + (1 - e) * 6));
+    }
     trajeto = { pos: new THREE.CatmullRomCurve3(pts, false, "centripetal"), olhar: new THREE.CatmullRomCurve3(olh, false, "centripetal") };
   };
 
@@ -720,13 +726,14 @@
       if (!trajeto) montarTrajeto();
       /* começo bem lento (a câmera "solta" do terraço), meio fluido e chegada suave */
       const u = clamp(g / 0.98, 0, 1);
-      const tc = u < 0.25 ? 0.25 * Math.pow(u / 0.25, 2.2) * 0.62 : 0.155 + (u - 0.25) / 0.75 * 0.845 - Math.sin(Math.PI * (u - 0.25) / 0.75) * 0.04;
+      const sR = (u - 0.25) / 0.75;
+      const tc = u < 0.25 ? 0.25 * Math.pow(u / 0.25, 2.2) * 0.62 : 0.155 + 0.845 * (1.5 * sR - 0.5 * sR * sR * sR);
       trajeto.pos.getPoint(tc, vTraj);
       trajeto.olhar.getPoint(tc, vOlhar);
       const inicio = 1 - suave(0, 0.2, g);
       vTraj.x += mx * 2 * inicio; vTraj.y -= my * inicio;
       vOlhar.x += mx * 40 * inicio; vOlhar.y -= my * 14 * inicio;
-      const fim = suave(0.9, 1, g);
+      const fim = suave(0.86, 1, g);
       const posPista = pos.clone(), olharPista = olhar.clone();
       pos.copy(vTraj).lerp(posPista, fim);
       olhar.copy(vOlhar).lerp(olharPista, fim);
@@ -738,7 +745,7 @@
     cam.lookAt(olhar);
     cam.rotateZ(rolagem);
     ceu.position.set(pos.x, 0, pos.z);
-    const fov = 62 + clamp(Math.abs(vel) * 0.18, 0, 4) + impulso * 16;
+    const fov = 62 + clamp(Math.abs(vel) * 0.18, 0, 4) + impulso * 3;
     if (Math.abs(cam.fov - fov) > 0.05) { cam.fov += (fov - cam.fov) * 0.12; cam.updateProjectionMatrix(); }
   };
 
