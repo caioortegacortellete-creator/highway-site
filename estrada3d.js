@@ -71,21 +71,38 @@
   }));
 
   /* ---------- o traçado: um trecho por seção ---------- */
+  /* min/max: espaço mínimo que o cenário de cada trecho precisa (rampa, outdoors, pedágio, túnel...) */
   const TRECHOS = [
-    { sel: "#hero", L: 170, giro: 0, sobe: 0, tema: "cidade" },
-    { sel: "#caminho", L: 150, giro: -60, sobe: 0, tema: "curva" },
-    { sel: ".nichos", L: 60, giro: 0, sobe: 0, tema: "portico" },
-    { sel: ".manifesto", L: 110, giro: 42, sobe: 0, tema: "cidade" },
-    { sel: "#portfolio", L: 200, giro: 0, sobe: 0, tema: "outdoors" },
-    { sel: "#niveis", L: 150, giro: 45, sobe: 18, tema: "rampa" },
-    { sel: "#planos", L: 140, giro: 0, sobe: 0, tema: "pedagio" },
-    { sel: "#quiz", L: 130, giro: -70, sobe: 0, tema: "elevado" },
-    { sel: "#como-funciona", L: 150, giro: 0, sobe: -18, tema: "descida" },
-    { sel: ".porque", L: 150, giro: 35, sobe: 0, tema: "tunel" },
-    { sel: "#duvidas", L: 130, giro: -35, sobe: 0, tema: "estrada" },
-    { sel: "#contato", L: 150, giro: 0, sobe: 0, tema: "chegada" },
-    { sel: ".rodape", L: 120, giro: 0, sobe: 0, tema: "chegada" }
+    { sel: "#hero", L: 170, giro: 0, sobe: 0, tema: "cidade", fixo: true },
+    { sel: "#caminho", giro: -60, sobe: 0, tema: "curva", min: 50 },
+    { sel: ".nichos", giro: 0, sobe: 0, tema: "portico", min: 24 },
+    { sel: ".manifesto", giro: 42, sobe: 0, tema: "cidade", min: 36 },
+    { sel: "#portfolio", giro: 0, sobe: 0, tema: "outdoors", min: 100 },
+    { sel: "#niveis", giro: 45, sobe: 18, tema: "rampa", min: 64 },
+    { sel: "#planos", giro: 0, sobe: 0, tema: "pedagio", min: 50 },
+    { sel: "#quiz", giro: -70, sobe: 0, tema: "elevado", min: 50 },
+    { sel: "#como-funciona", giro: 0, sobe: -18, tema: "descida", min: 64 },
+    { sel: ".porque", giro: 35, sobe: 0, tema: "tunel", min: 50 },
+    { sel: "#duvidas", giro: -35, sobe: 0, tema: "estrada", min: 36 },
+    { sel: "#contato", giro: 0, sobe: 0, tema: "chegada", min: 44 },
+    { sel: ".rodape", L: 120, giro: 0, sobe: 0, tema: "chegada", fixo: true }
   ];
+  /* comprimento de cada trecho = rolagem que a seção ocupa × RITMO (com o limite de velocidade da câmera,
+     a estrada acompanha a rolagem e cada cenário chega junto com a sua seção) */
+  const RITMO = 0.03;
+  {
+    try { if (window.ScrollTrigger) window.ScrollTrigger.refresh(); } catch (e) { /* segue com o layout atual */ }
+    const sy = window.scrollY, fimDoc = document.documentElement.scrollHeight;
+    const topo = (sel) => { const el = document.querySelector(sel); return el ? el.getBoundingClientRect().top + sy : null; };
+    const tops = TRECHOS.map((tr) => topo(tr.sel));
+    TRECHOS.forEach((tr, i) => {
+      if (tr.fixo) return;
+      let prox = null;
+      for (let k = i + 1; k < TRECHOS.length && prox === null; k++) prox = tops[k];
+      const span = tops[i] === null ? 0 : Math.max(0, (prox === null ? fimDoc : prox) - tops[i]);
+      tr.L = Math.round(clamp(span * RITMO, tr.min, 260) / 2) * 2;
+    });
+  }
   const PASSO = 2;
   const A = [];
   {
@@ -350,7 +367,7 @@
     const sites = ["estetica-n1", "advocacia-n1", "otica-n1", "estetica-n2", "advocacia-n2", "otica-n2", "estetica-n3", "advocacia-n3", "otica-n3"];
     const corNv = [COR.c, COR.r, COR.m];
     sites.forEach((s, k) => {
-      const d = outTr.ini + 24 + k * ((outTr.L - 40) / 9), p = em(d), sl = k % 2 ? 1 : -1;
+      const d = outTr.ini + 14 + k * ((outTr.L - 22) / 9), p = em(d), sl = k % 2 ? 1 : -1;
       const c = lado(p, sl * (LARG / 2 + 13), 9.5), ang = anguloFrente(p.h, sl, 0.5);
       const tex = loader.load(`imagens/prints/${s}-topo.webp`);
       const quadro = new THREE.Mesh(new THREE.PlaneGeometry(15, 9.4), new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide }));
@@ -728,5 +745,5 @@
   if (window.gsap) window.gsap.ticker.add(quadro);
   else { const loop = () => { quadro(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
 
-  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); }, estado: () => ({ d: dCam, v: vel }), passagem: (v) => { passT = clamp(v, 0, 1); } };
+  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); }, estado: () => ({ d: dCam, v: vel, alvo: dDaRolagem(window.scrollY) }), passagem: (v) => { passT = clamp(v, 0, 1); } };
 })();
