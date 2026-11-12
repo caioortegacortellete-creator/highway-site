@@ -785,8 +785,8 @@
   const orbita = new THREE.Vector3(), alvoGiro = new THREE.Vector3();
   const posicionar = () => {
     const p = em(dCam), f = em(dCam + 26), atras = em(dCam - 10);
-    const pos = lado(p, 2.6 + mx * 1.2, 3.4 + Math.sin(tempo * 0.8) * 0.08);
-    olhar.copy(lado(f, 1.2 + mx * 3, 1.9 - my * 2));
+    const pos = lado(p, 2.6, 3.4);
+    olhar.copy(lado(f, 1.2, 1.9));
     let rolagem = clamp(-(f.h - atras.h) * 0.5, -0.06, 0.06);
     /* topo e passagem: um só movimento contínuo. A câmera sai da beira do terraço, contorna o heliponto
        em espiral já se afastando do prédio e descendo, e entra na pista por trás, alinhada com a estrada. */
@@ -853,8 +853,6 @@
     passS += (passT - passS) * Math.min(1, dt * 5);
     if (Math.abs(passT - passS) < 0.0005) passS = passT;
     moverCarros(dt);
-    if (texLed && !reduz) texLed.offset.x = (texLed.offset.x + dt * 0.06) % 1;
-    if (luzAntena) luzAntena.material.opacity = Math.sin(tempo * 3) > 0.2 ? 1 : 0.15;
     if (cancelas.length) {
       cancelas.forEach((cc) => {
         const perto = dCam > dPraca - 80 + cc.atraso * 12;
@@ -864,8 +862,7 @@
         cc.luz.material.color.setHex(cc.ang > 0.9 ? 0x3dffa2 : 0xff2a5a);
       });
     }
-    if (pino) { pino.position.y = pinoBaseY + Math.sin(tempo * 2) * 0.6; pino.rotation.y += dt * 0.6; }
-    if (anel) { const s = 1 + ((tempo * 0.6) % 1) * 2.2; anel.scale.set(s, s, s); anel.material.opacity = 0.8 * (1 - ((tempo * 0.6) % 1)); }
+    if (pino) { pino.position.y = pinoBaseY; }
     posicionar();
     renderer.render(cena, cam);
   };
