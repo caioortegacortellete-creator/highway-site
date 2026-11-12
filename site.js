@@ -846,7 +846,8 @@
     entrar(".formulario", { x: 60, opacity: 0, duration: 1.1, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     entrar(".parada", { x: 40, opacity: 0, stagger: 0.12, duration: 0.8, delay: 0.3, scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     gsap.fromTo(".mapa .via-base, .mapa .ramo-base", { strokeDasharray: 600, strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 1.6, stagger: 0.15, ease: "power2.inOut", scrollTrigger: { trigger: ".destino", start: "top 70%" }, onComplete: function () { this.targets().forEach((t) => { t.style.strokeDasharray = "none"; }); } });
-    gsap.fromTo(".mapa-pino", { scale: 0, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.6, stagger: 0.12, delay: 1, ease: "back.out(2.5)", scrollTrigger: { trigger: ".destino", start: "top 70%" } });
+    gsap.fromTo(".mapa .predio", { scale: 0, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.6, stagger: 0.1, delay: 0.9, ease: "back.out(2)", scrollTrigger: { trigger: ".destino", start: "top 70%" } });
+    gsap.fromTo(".mapa-pino", { scale: 0, transformOrigin: "50% 100%" }, { scale: 0.65, duration: 0.6, stagger: 0.12, delay: 1.3, ease: "back.out(2.5)", scrollTrigger: { trigger: ".destino", start: "top 70%" } });
     const letras = $$(".marca-gigante tspan");
     gsap.set(letras, { strokeOpacity: 0.06 });
     gsap.timeline({ scrollTrigger: { trigger: ".rodape", start: "top 85%" } })
@@ -904,7 +905,7 @@
       ramoPath = ramo.querySelector(".ramo-base"); LR = ramoPath.getTotalLength();
       const luz = ramo.querySelector(".ramo-luz"); luz.style.strokeDasharray = LR; luz.style.strokeDashoffset = LR;
       if (trocou || estado.d > LP) { gsap.killTweensOf(estado); estado.d = Math.min(estado.d, LP); desenhar(); }
-      if (animar) gsap.fromTo(ramo.querySelector(".mapa-pino"), { scale: 0.6, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.6, ease: "back.out(3)" });
+      if (animar) gsap.fromTo(ramo.querySelector(".mapa-pino"), { scale: 0.4, transformOrigin: "50% 100%" }, { scale: 0.65, duration: 0.6, ease: "back.out(3)" });
       atualizar(1.3);
     };
     ramos.forEach((r) => {

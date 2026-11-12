@@ -478,7 +478,7 @@
 
   /* chegada: alfinete de destino e anel pulsando */
   const chegTr = trechoDo("chegada");
-  let pino = null, anel = null;
+  let pino = null, anel = null, pinoBaseY = 3;
   if (chegTr) {
     const p = em(chegTr.ini + chegTr.L * 0.85);
     pino = new THREE.Group();
@@ -487,9 +487,26 @@
     const miolo = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshBasicMaterial({ color: 0x0a0c22 })); miolo.position.set(0, 6, 0);
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: texBrilho, color: COR.m, transparent: true, opacity: 0.75, blending: THREE.AdditiveBlending, depthWrite: false })); halo.scale.set(22, 22, 1); halo.position.y = 5;
     pino.add(corpo, cabeca, miolo, halo);
-    pino.position.copy(lado(p, 0, 3)); cena.add(pino);
+    /* o destino de verdade: o prédio "Seu site no ar" ao lado da pista, com o alfinete em cima e a faixa de chegada */
+    const lp = lado(p, LARG / 2 + 13, 0);
+    const texDest = texJanelas.clone(); texDest.needsUpdate = true; texDest.wrapS = texDest.wrapT = THREE.RepeatWrapping; texDest.repeat.set(2, 2);
+    const predioD = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ map: texDest, color: 0xffd9ff })); predioD.position.set(lp.x, 8, lp.z); predioD.rotation.y = -p.h; predioD.scale.set(16, 16, 14); cena.add(predioD);
+    const cD = tela(1024, 256, (g, w, h) => {
+      g.fillStyle = "#070920"; g.fillRect(0, 0, w, h);
+      g.strokeStyle = "#ff3df2"; g.lineWidth = 8; g.shadowColor = "#ff3df2"; g.shadowBlur = 24; g.strokeRect(12, 12, w - 24, h - 24); g.shadowBlur = 18;
+      g.fillStyle = "#ffffff"; g.font = "800 92px 'Plus Jakarta Sans', sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("SEU SITE NO AR", w / 2, h / 2 + 4);
+    });
+    const tD = textura(cD);
+    const letD = new THREE.Mesh(new THREE.PlaneGeometry(15, 3.75), new THREE.MeshBasicMaterial({ map: tD, side: THREE.DoubleSide }));
+    letD.position.set(lp.x, 17.8, lp.z); letD.rotation.y = anguloFrente(p.h, 1, 0.9); cena.add(letD);
+    const portaD = new THREE.Mesh(new THREE.PlaneGeometry(4, 5), aditivo(COR.m, 0.7)); portaD.position.copy(lado(p, LARG / 2 + 5.9, 2.5)); portaD.rotation.y = -p.h + Math.PI / 2; cena.add(portaD);
+    const texX = textura(tela(64, 16, (g) => { for (let i = 0; i < 16; i++) for (let j = 0; j < 4; j++) { g.fillStyle = (i + j) % 2 ? "#eef1ff" : "#05060f"; g.fillRect(i * 4, j * 4, 4, 4); } }));
+    const faixaX = new THREE.Mesh(new THREE.PlaneGeometry(LARG, 2.2), new THREE.MeshBasicMaterial({ map: texX, transparent: true, opacity: 0.85 }));
+    faixaX.rotation.set(-Math.PI / 2, 0, -p.h); faixaX.position.copy(lado(p, 0, 0.06)); cena.add(faixaX);
+    pinoBaseY = 16 + 4;
+    pino.position.set(lp.x, pinoBaseY, lp.z); cena.add(pino);
     miolo.position.z = 2.2;
-    anel = new THREE.Mesh(new THREE.RingGeometry(3, 3.6, 48), aditivo(COR.m, 0.8)); anel.rotation.x = -Math.PI / 2; anel.position.copy(lado(p, 0, 0.08)); cena.add(anel);
+    anel = new THREE.Mesh(new THREE.RingGeometry(3, 3.6, 48), aditivo(COR.m, 0.8)); anel.rotation.x = -Math.PI / 2; anel.position.copy(lado(p, LARG / 2 + 5, 0.08)); cena.add(anel);
   }
 
   let luzAntena = null;
@@ -794,7 +811,7 @@
         cc.luz.material.color.setHex(cc.ang > 0.9 ? 0x3dffa2 : 0xff2a5a);
       });
     }
-    if (pino) { pino.position.y = em(chegTr.ini + chegTr.L * 0.85).y + 3 + Math.sin(tempo * 2) * 0.6; pino.rotation.y += dt * 0.6; }
+    if (pino) { pino.position.y = pinoBaseY + Math.sin(tempo * 2) * 0.6; pino.rotation.y += dt * 0.6; }
     if (anel) { const s = 1 + ((tempo * 0.6) % 1) * 2.2; anel.scale.set(s, s, s); anel.material.opacity = 0.8 * (1 - ((tempo * 0.6) % 1)); }
     posicionar();
     renderer.render(cena, cam);
