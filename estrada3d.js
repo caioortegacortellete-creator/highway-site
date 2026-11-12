@@ -34,6 +34,11 @@
   /* ---------- texturas desenhadas em canvas ---------- */
   const tela = (w, h, fn) => { const c = document.createElement("canvas"); c.width = w; c.height = h; fn(c.getContext("2d"), w, h); return c; };
   const textura = (c, rep) => { const t = new THREE.CanvasTexture(c); if (rep) { t.wrapS = t.wrapT = THREE.RepeatWrapping; } t.anisotropy = 4; return t; };
+  const texHalo = textura(tela(64, 64, (g, w) => {
+    const r = g.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
+    r.addColorStop(0, "rgba(255,255,255,.9)"); r.addColorStop(0.12, "rgba(255,255,255,.55)"); r.addColorStop(0.4, "rgba(255,255,255,.12)"); r.addColorStop(1, "rgba(255,255,255,0)");
+    g.fillStyle = r; g.fillRect(0, 0, w, w);
+  }));
   const texBrilho = textura(tela(64, 64, (g, w) => {
     const r = g.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
     r.addColorStop(0, "rgba(255,255,255,1)"); r.addColorStop(0.25, "rgba(255,255,255,.55)"); r.addColorStop(1, "rgba(255,255,255,0)");
@@ -68,18 +73,18 @@
   /* ---------- o traçado: um trecho por seção ---------- */
   const TRECHOS = [
     { sel: "#hero", L: 170, giro: 0, sobe: 0, tema: "cidade" },
-    { sel: "#caminho", L: 230, giro: -60, sobe: 0, tema: "curva" },
-    { sel: ".nichos", L: 80, giro: 0, sobe: 0, tema: "portico" },
-    { sel: ".manifesto", L: 170, giro: 42, sobe: 0, tema: "cidade" },
-    { sel: "#portfolio", L: 280, giro: 0, sobe: 0, tema: "outdoors" },
-    { sel: "#niveis", L: 230, giro: 45, sobe: 18, tema: "rampa" },
-    { sel: "#planos", L: 210, giro: 0, sobe: 0, tema: "pedagio" },
-    { sel: "#quiz", L: 190, giro: -70, sobe: 0, tema: "elevado" },
-    { sel: "#como-funciona", L: 210, giro: 0, sobe: -18, tema: "descida" },
-    { sel: ".porque", L: 230, giro: 35, sobe: 0, tema: "tunel" },
-    { sel: "#duvidas", L: 190, giro: -35, sobe: 0, tema: "estrada" },
-    { sel: "#contato", L: 220, giro: 0, sobe: 0, tema: "chegada" },
-    { sel: ".rodape", L: 160, giro: 0, sobe: 0, tema: "chegada" }
+    { sel: "#caminho", L: 150, giro: -60, sobe: 0, tema: "curva" },
+    { sel: ".nichos", L: 60, giro: 0, sobe: 0, tema: "portico" },
+    { sel: ".manifesto", L: 110, giro: 42, sobe: 0, tema: "cidade" },
+    { sel: "#portfolio", L: 200, giro: 0, sobe: 0, tema: "outdoors" },
+    { sel: "#niveis", L: 150, giro: 45, sobe: 18, tema: "rampa" },
+    { sel: "#planos", L: 140, giro: 0, sobe: 0, tema: "pedagio" },
+    { sel: "#quiz", L: 130, giro: -70, sobe: 0, tema: "elevado" },
+    { sel: "#como-funciona", L: 150, giro: 0, sobe: -18, tema: "descida" },
+    { sel: ".porque", L: 150, giro: 35, sobe: 0, tema: "tunel" },
+    { sel: "#duvidas", L: 130, giro: -35, sobe: 0, tema: "estrada" },
+    { sel: "#contato", L: 150, giro: 0, sobe: 0, tema: "chegada" },
+    { sel: ".rodape", L: 120, giro: 0, sobe: 0, tema: "chegada" }
   ];
   const PASSO = 2;
   const A = [];
@@ -502,7 +507,16 @@
   const iTeto = new THREE.InstancedMesh(new THREE.BoxGeometry(1.6, 0.08, 1.8), matCarro, NC);
   const iRodas = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.38, 0.38, 2.12, 12), new THREE.MeshBasicMaterial({ color: 0x05060f }), NC * 2);
   const iNeon = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: texBrilho, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false }), NC);
-  const iFacho = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: texDegrade, color: 0xdff6ff, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }), NC);
+  const texCone = textura(tela(128, 256, (g, w, h) => {
+    const img = g.createImageData(w, h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const v = y / h, larg = 0.1 + v * 0.42, dx = Math.abs(x / w - 0.5);
+      const borda = Math.max(0, 1 - dx / larg); const a = Math.pow(borda, 1.6) * Math.pow(1 - v, 1.4) * Math.min(1, v * 6);
+      const i = (y * w + x) * 4; img.data[i] = img.data[i + 1] = img.data[i + 2] = 255; img.data[i + 3] = a * 255;
+    }
+    g.putImageData(img, 0, 0);
+  }));
+  const iFacho = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: texCone, color: 0xdff6ff, transparent: true, opacity: 0.38, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }), NC);
   const neonCores = [new THREE.Color(COR.c), new THREE.Color(COR.m), new THREE.Color(COR.r)];
   carros.forEach((c, k) => {
     const cor = new THREE.Color(coresLataria[k % coresLataria.length]);
@@ -510,13 +524,19 @@
     iNeon.setColorAt(k, neonCores[c.neon]);
   });
   [iLataria, iCapo, iCabine, iTeto, iRodas, iNeon, iFacho].forEach((m) => { m.frustumCulled = false; m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); cena.add(m); });
-  /* faróis (brancos) na frente e lanternas (vermelhas) atrás: 4 pontos por carro */
+  /* lentes redondas dos faróis (2 por carro) e faixa de LED das lanternas */
+  const iLente = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.2, 0.2, 0.08, 20), new THREE.MeshBasicMaterial({ color: 0xf4fbff }), NC * 2);
+  const iAnel = new THREE.InstancedMesh(new THREE.TorusGeometry(0.24, 0.035, 6, 24), new THREE.MeshBasicMaterial({ color: 0x9feaff }), NC * 2);
+  const iLed = new THREE.InstancedMesh(new THREE.BoxGeometry(1.7, 0.1, 0.05), new THREE.MeshBasicMaterial({ color: 0xff2a5a }), NC);
+  const iDrl = new THREE.InstancedMesh(new THREE.BoxGeometry(1.5, 0.05, 0.05), new THREE.MeshBasicMaterial({ color: 0xbff3ff }), NC);
+  [iLente, iAnel, iLed, iDrl].forEach((m) => { m.frustumCulled = false; m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); cena.add(m); });
+  /* brilho suave em volta dos faróis e das lanternas: 4 pontos por carro */
   const geoLuzes = new THREE.BufferGeometry();
   const posL = new Float32Array(NC * 4 * 3), corL = new Float32Array(NC * 4 * 3);
   for (let k = 0; k < NC; k++) corL.set([0.95, 0.98, 1, 0.95, 0.98, 1, 1, 0.1, 0.3, 1, 0.1, 0.3], k * 12);
   geoLuzes.setAttribute("position", new THREE.BufferAttribute(posL, 3));
   geoLuzes.setAttribute("color", new THREE.BufferAttribute(corL, 3));
-  const ptsLuzes = new THREE.Points(geoLuzes, new THREE.PointsMaterial({ size: 1.1, map: texBrilho, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  const ptsLuzes = new THREE.Points(geoLuzes, new THREE.PointsMaterial({ size: 1.6, map: texHalo, opacity: 0.8, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
   ptsLuzes.frustumCulled = false; cena.add(ptsLuzes);
   const obj = new THREE.Object3D(), v3 = new THREE.Vector3();
   const local = (x, y, z) => { v3.set(x, y, z); return v3.applyMatrix4(obj.matrix); };
@@ -542,14 +562,20 @@
       iRodas.setMatrixAt(k * 2, (() => { tmp.position.set(0, 0.38, -1.4 * longo); tmp.rotation.set(0, 0, Math.PI / 2); tmp.scale.set(1, 1, 1); tmp.updateMatrix(); return tmp.matrix.premultiply(m); })());
       iRodas.setMatrixAt(k * 2 + 1, (() => { tmp.position.set(0, 0.38, 1.4 * longo); tmp.rotation.set(0, 0, Math.PI / 2); tmp.scale.set(1, 1, 1); tmp.updateMatrix(); return tmp.matrix.premultiply(m); })());
       coloca(iNeon, k, 0, 0.06, 0, 3.6, 6.4, 1, -Math.PI / 2);
-      coloca(iFacho, k, 0, 0.07, -2.2 * longo - 6, 3.4, 12, 1, -Math.PI / 2);
+      coloca(iFacho, k, 0, 0.07, -2.2 * longo - 6.6, 6.4, 13, 1, -Math.PI / 2);
       const fr = -2.21 * longo, tr = 2.21 * longo;
-      let q = local(-0.7, 0.72, fr); posL.set([q.x, q.y, q.z], k * 12);
-      q = local(0.7, 0.72, fr); posL.set([q.x, q.y, q.z], k * 12 + 3);
+      [-0.62, 0.62].forEach((x, j) => {
+        coloca(iLente, k * 2 + j, x, 0.76, fr - 0.02, 1, 1, 1, Math.PI / 2);
+        coloca(iAnel, k * 2 + j, x, 0.76, fr - 0.03, 1, 1, 1, 0);
+      });
+      coloca(iDrl, k, 0, 0.98, fr - 0.01, 1, 1, 1);
+      coloca(iLed, k, 0, 0.82, tr + 0.01, 1, 1, 1);
+      let q = local(-0.62, 0.76, fr - 0.3); posL.set([q.x, q.y, q.z], k * 12);
+      q = local(0.62, 0.76, fr - 0.3); posL.set([q.x, q.y, q.z], k * 12 + 3);
       q = local(-0.75, 0.78, tr); posL.set([q.x, q.y, q.z], k * 12 + 6);
       q = local(0.75, 0.78, tr); posL.set([q.x, q.y, q.z], k * 12 + 9);
     });
-    [iLataria, iCapo, iCabine, iTeto, iRodas, iNeon, iFacho].forEach((mm) => { mm.instanceMatrix.needsUpdate = true; });
+    [iLataria, iCapo, iCabine, iTeto, iRodas, iNeon, iFacho, iLente, iAnel, iLed, iDrl].forEach((mm) => { mm.instanceMatrix.needsUpdate = true; });
     geoLuzes.attributes.position.needsUpdate = true;
   };
 
@@ -564,7 +590,7 @@
     TRECHOS.forEach((tr, i) => {
       if (i === 0) return;
       const el = $(tr.sel); if (!el) return;
-      const s = clamp(el.getBoundingClientRect().top + sy - vh * 0.55, 1, maxS);
+      const s = clamp(el.getBoundingClientRect().top + sy - vh * 0.45, 1, maxS);
       if (s > ancoras[ancoras.length - 1].s + 1) ancoras.push({ s, d: tr.ini + 2 });
     });
     ancoras.push({ s: maxS + 1, d: TOTAL - 40 });
@@ -675,7 +701,7 @@
     if (!visivel) return;
     tempo += dt;
     const alvo = dDaRolagem(window.scrollY);
-    if (reduz) dCam = alvo; else dCam += (alvo - dCam) * Math.min(1, dt * 4.2);
+    if (reduz) dCam = alvo; else dCam += (alvo - dCam) * Math.min(1, dt * 2.6);
     vel = (dCam - dAntes) / Math.max(dt, 0.001); dAntes = dCam;
     mx += (alvoMx - mx) * 0.04; my += (alvoMy - my) * 0.04;
     passS += (passT - passS) * Math.min(1, dt * 5);
