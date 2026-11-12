@@ -822,7 +822,6 @@
     entrar(".equipe .cab > *", { y: 30, opacity: 0, stagger: 0.08, duration: 0.8, scrollTrigger: { trigger: ".equipe", start: "top 75%" } });
     $$(".piloto").forEach((pc, k) => {
       entrar(pc, { y: 70, opacity: 0, rotationY: k ? -12 : 12, duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: pc, start: "top 85%" } });
-      entrar($$(".piloto-tags li", pc), { y: 12, opacity: 0, stagger: 0.08, duration: 0.5, delay: 0.5, scrollTrigger: { trigger: pc, start: "top 80%" } });
     });
   }
   if (animar && fino) {
