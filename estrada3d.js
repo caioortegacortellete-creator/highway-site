@@ -605,6 +605,8 @@
 
   /* ---------- câmera ---------- */
   let impulso = 0, passT = 0, passS = 0;
+  let velCam = 0;
+  const VEL_MAX = 20;
   let dCam = D_POUSO, dAntes = D_POUSO, vel = 0, mx = 0, my = 0, alvoMx = 0, alvoMy = 0, tempo = 0;
   window.addEventListener("pointermove", (e) => { alvoMx = e.clientX / window.innerWidth - 0.5; alvoMy = e.clientY / window.innerHeight - 0.5; }, { passive: true });
   const olhar = new THREE.Vector3();
@@ -651,7 +653,7 @@
     const p = em(dCam), f = em(dCam + 26), atras = em(dCam - 10);
     const pos = lado(p, 2.6 + mx * 1.2, 3.4 + Math.sin(tempo * 0.8) * 0.08);
     olhar.copy(lado(f, 1.2 + mx * 3, 1.9 - my * 2));
-    let rolagem = clamp(-(f.h - atras.h) * 0.9, -0.12, 0.12);
+    let rolagem = clamp(-(f.h - atras.h) * 0.5, -0.06, 0.06);
     /* topo e passagem: um só movimento contínuo. A câmera sai da beira do terraço, contorna o heliponto
        em espiral já se afastando do prédio e descendo, e entra na pista por trás, alinhada com a estrada. */
     const g = passS;
@@ -678,7 +680,7 @@
     cam.lookAt(olhar);
     cam.rotateZ(rolagem);
     ceu.position.set(pos.x, 0, pos.z);
-    const fov = 62 + clamp(Math.abs(vel) * 0.55, 0, 14) + impulso * 24;
+    const fov = 62 + clamp(Math.abs(vel) * 0.18, 0, 4) + impulso * 16;
     if (Math.abs(cam.fov - fov) > 0.05) { cam.fov += (fov - cam.fov) * 0.12; cam.updateProjectionMatrix(); }
   };
 
@@ -701,7 +703,16 @@
     if (!visivel) return;
     tempo += dt;
     const alvo = dDaRolagem(window.scrollY);
-    if (reduz) dCam = alvo; else dCam += (alvo - dCam) * Math.min(1, dt * 2.6);
+    if (reduz) dCam = alvo;
+    else {
+      /* limite de velocidade: a estrada nunca passa de VEL_MAX (unidades/s), acelera e freia suave.
+         Em saltos grandes (menu), o limite cresce para não demorar demais. */
+      const falta = alvo - dCam, limite = VEL_MAX + Math.max(0, Math.abs(falta) - 450) * 0.6;
+      const desejada = clamp(falta * 1.6, -limite, limite);
+      velCam += (desejada - velCam) * Math.min(1, dt * 2.2);
+      dCam += velCam * dt;
+      if (Math.abs(falta) < 0.05 && Math.abs(velCam) < 0.2) { dCam = alvo; velCam = 0; }
+    }
     vel = (dCam - dAntes) / Math.max(dt, 0.001); dAntes = dCam;
     mx += (alvoMx - mx) * 0.04; my += (alvoMy - my) * 0.04;
     passS += (passT - passS) * Math.min(1, dt * 5);
@@ -717,5 +728,5 @@
   if (window.gsap) window.gsap.ticker.add(quadro);
   else { const loop = () => { quadro(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
 
-  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); }, passagem: (v) => { passT = clamp(v, 0, 1); } };
+  window.HighwayEstrada = { medirAncoras, trechos: TRECHOS, total: TOTAL, impulso: (v) => { impulso = clamp(v, 0, 1); }, estado: () => ({ d: dCam, v: vel }), passagem: (v) => { passT = clamp(v, 0, 1); } };
 })();
