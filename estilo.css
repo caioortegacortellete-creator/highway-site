@@ -1168,3 +1168,53 @@ h1 em, h2 em, .hist-legenda em, .quiz-resultado h3 em { font-family: var(--f-des
 .vg-rota::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: repeating-linear-gradient(90deg, rgba(238, 241, 255, .35) 0 8px, transparent 8px 14px); }
 .vg-carro { position: absolute; top: 50%; left: 0; width: 26px; height: 12px; margin: -6px 0 0 -13px; border-radius: 4px; background: #0d1130; box-shadow: inset 0 0 0 1.5px var(--neon-m), 0 0 12px var(--neon-m), 14px 0 20px -4px rgba(255, 255, 255, .8); }
 .viagem.volta .vg-carro { transform: scaleX(-1); }
+
+/* =========================================================
+   KM 10 · PEDÁGIO DAS PERGUNTAS
+   ========================================================= */
+.faq-placa { display: inline-grid; width: fit-content; gap: 2px; margin-top: 10px; padding: 12px 18px; border-radius: 10px; transform-origin: 50% 0; background: #070920; box-shadow: inset 0 0 0 2px var(--sodio), 0 0 22px rgba(255, 184, 77, .35); }
+.faq-placa span { font-family: var(--f-marca); font-stretch: 125%; font-weight: 900; font-size: 26px; letter-spacing: .12em; color: var(--sodio); text-shadow: 0 0 14px rgba(255, 184, 77, .7); }
+.faq-placa b { font-family: var(--f-km); font-weight: 400; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--neblina); }
+.faq { border-top: 0; display: grid; gap: 10px; }
+.faq details.cabine { border: 0; border-radius: 14px; overflow: hidden; background: linear-gradient(90deg, rgba(12, 16, 40, .92), rgba(9, 11, 30, .92)); box-shadow: inset 0 0 0 1px rgba(150, 170, 255, .14); transition: box-shadow .4s; }
+.faq details.cabine[open]:not(.fechando) { box-shadow: inset 0 0 0 1.5px rgba(61, 255, 162, .55), 0 0 26px rgba(61, 255, 162, .12); }
+.cabine summary { position: relative; display: grid; grid-template-columns: 92px minmax(0, 1fr) 30px; align-items: center; gap: 14px; padding: 18px 18px 22px 0; font-size: 16.5px; }
+.cabine summary::after { content: ""; position: absolute; left: 92px; right: 0; bottom: 8px; height: 2px; background: repeating-linear-gradient(90deg, rgba(238, 241, 255, .22) 0 14px, transparent 14px 26px); }
+.cab-num { align-self: stretch; display: grid; place-content: center; justify-items: center; gap: 1px; margin: -18px 0 -22px; background: #0e1236; box-shadow: inset -1px 0 0 rgba(150, 170, 255, .16); font-family: var(--f-km); font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--neblina); }
+.cab-num b { font-family: var(--f-destaque, var(--f-titulo)); font-size: 22px; font-weight: 600; letter-spacing: -.02em; color: var(--faixa); }
+.cab-q { line-height: 1.35; }
+.cab-sinal { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: #05060f; box-shadow: inset 0 0 0 1.5px rgba(150, 170, 255, .25); justify-self: end; }
+.cab-sinal i { width: 12px; height: 12px; border-radius: 50%; background: #ff2a5a; box-shadow: 0 0 10px #ff2a5a; transition: background .35s, box-shadow .35s; }
+.cabine[open]:not(.fechando) .cab-sinal i { background: #3dffa2; box-shadow: 0 0 12px #3dffa2; }
+.cab-cancela { position: absolute; left: 100px; right: 54px; bottom: 4px; height: 0; pointer-events: none; }
+.cab-cancela i { position: absolute; left: 0; bottom: 0; width: 100%; height: 6px; border-radius: 3px; transform-origin: 0 50%; background: repeating-linear-gradient(90deg, #ff2a5a 0 18px, #fff 18px 36px); box-shadow: 0 0 10px rgba(255, 42, 90, .55); transition: transform .7s cubic-bezier(.5, 1.6, .5, 1), opacity .5s; opacity: .85; }
+.cab-cancela::before { content: ""; position: absolute; left: -6px; bottom: -4px; width: 12px; height: 12px; border-radius: 3px; background: #1d2150; box-shadow: inset 0 0 0 1.5px rgba(150, 170, 255, .4); }
+.cabine[open]:not(.fechando) .cab-cancela i { transform: rotate(-78deg) scaleX(.18); opacity: .5; }
+.cabine summary:hover .cab-q { color: #fff; text-shadow: 0 0 12px rgba(41, 236, 255, .4); }
+.cabine summary:hover .cab-num { color: var(--neon-c); }
+.faq details[open] summary { color: inherit; text-shadow: none; }
+.cabine .faq-corpo { padding: 0 18px 18px 106px; }
+.ticket { position: relative; padding: 16px 18px 14px; border-radius: 10px; background: linear-gradient(180deg, #11163f, #0b0e2c); box-shadow: inset 0 0 0 1px rgba(150, 170, 255, .2);
+  -webkit-mask: radial-gradient(circle 6px at 6px 50%, transparent 98%, #000) -6px 0 / 100% 100%, radial-gradient(circle 6px at calc(100% - 6px) 50%, transparent 98%, #000); mask-composite: intersect; }
+.ticket::before { content: ""; position: absolute; left: 12px; right: 12px; top: 0; height: 6px; background: radial-gradient(circle at 4px 0, transparent 3px, transparent 3.5px) 0 0 / 10px 6px; border-top: 2px dashed rgba(150, 170, 255, .25); }
+.ticket-cab { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed rgba(150, 170, 255, .22); font-family: var(--f-km); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--sodio); }
+.ticket-cab span:last-child { color: var(--neblina); }
+.ticket p { padding: 0 !important; color: var(--texto); font-size: 15.5px; line-height: 1.6; }
+.ticket-rodape { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(150, 170, 255, .22); font-family: var(--f-km); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #3dffa2; }
+.ticket-ok { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; color: #04140b; background: #3dffa2; box-shadow: 0 0 10px rgba(61, 255, 162, .6); }
+@media (max-width: 600px) {
+  .cabine summary { grid-template-columns: 64px minmax(0, 1fr) 24px; gap: 10px; padding-right: 12px; font-size: 15.5px; }
+  .cabine summary::after { left: 64px; }
+  .cab-num b { font-size: 18px; }
+  .cab-num { font-size: 8.5px; letter-spacing: .12em; }
+  .cab-cancela { left: 72px; right: 40px; }
+  .cabine .faq-corpo { padding: 0 12px 14px 12px; }
+}
+
+/* sobrescreve o antigo ícone "+" das dúvidas dentro das cabines */
+.faq details.cabine summary i { width: auto; height: auto; flex: none; color: inherit; }
+.faq details.cabine summary i::before, .faq details.cabine summary i::after { display: none; }
+.faq details.cabine .cab-sinal i { width: 12px; height: 12px; transform: none; }
+.faq details.cabine .cab-cancela i { position: absolute; width: 100%; height: 6px; transform: none; }
+.faq details.cabine[open]:not(.fechando) .cab-cancela i { transform: rotate(-90deg) scaleX(.05); opacity: .9; }
+.faq details.cabine[open]:not(.fechando) .cab-sinal i { transform: none; }

@@ -83,7 +83,7 @@
     { sel: "#quiz", giro: -70, sobe: 0, tema: "elevado", min: 50 },
     { sel: "#como-funciona", giro: 0, sobe: -18, tema: "descida", min: 64 },
     { sel: ".porque", giro: 35, sobe: 0, tema: "tunel", min: 50 },
-    { sel: "#duvidas", giro: -35, sobe: 0, tema: "estrada", min: 36 },
+    { sel: "#duvidas", giro: 0, sobe: 0, tema: "praca", min: 60 },
     { sel: "#contato", giro: 0, sobe: 0, tema: "chegada", min: 44 },
     { sel: ".rodape", L: 120, giro: 0, sobe: 0, tema: "chegada", fixo: true }
   ];
@@ -403,6 +403,47 @@
       const luz = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.5), aditivo([COR.c, COR.r, COR.m][k], 1)); luz.position.copy(lado(p, o, 3.4)); luz.rotation.y = anguloFrente(p.h); luz.translateZ(1.55); cena.add(luz);
     });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { pintarPedagio(c.getContext("2d"), 1536, 256); tPed.needsUpdate = true; });
+  }
+
+  /* praça de pedágio das perguntas: cobertura, cabines, semáforos e cancelas que levantam quando a câmera chega */
+  const pracaTr = trechoDo("praca");
+  let cancelas = [], dPraca = 0;
+  if (pracaTr) {
+    dPraca = pracaTr.ini + pracaTr.L * 0.62;
+    const p = em(dPraca);
+    const largura = LARG + 10;
+    const cobertura = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: 0x10143a })); cobertura.position.copy(lado(p, 0, 7.4)); cobertura.rotation.y = -p.h; cobertura.scale.set(largura, 0.7, 6); cena.add(cobertura);
+    const filete = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: COR.c })); filete.position.copy(lado(p, 0, 7.05)); filete.rotation.y = -p.h; filete.translateZ(-3.02); filete.scale.set(largura, 0.12, 0.05); cena.add(filete);
+    const desenharPraca = (g, w, h) => {
+      g.clearRect(0, 0, w, h); g.fillStyle = "#070920"; g.fillRect(0, 0, w, h);
+      g.strokeStyle = "#ffb84d"; g.lineWidth = 6; g.shadowColor = "#ffb84d"; g.shadowBlur = 20; g.strokeRect(10, 10, w - 20, h - 20); g.shadowBlur = 0;
+      g.fillStyle = "#ffb84d"; g.font = "800 120px 'Archivo', 'Arial Black', sans-serif"; g.textBaseline = "middle"; g.fillText("PEDÁGIO", 60, h / 2 + 6);
+      g.fillStyle = "#eef1ff"; g.font = "600 70px 'Plus Jakarta Sans', sans-serif"; g.fillText("das perguntas", 690, h / 2 + 6);
+      ["?", "?", "?", "?"].forEach((t, k) => { const x = 1300 + k * 175; g.strokeStyle = ["#29ecff", "#b350ff", "#ff3df2", "#3dffa2"][k]; g.lineWidth = 7; g.beginPath(); g.arc(x, h / 2, 62, 0, Math.PI * 2); g.stroke(); g.fillStyle = g.strokeStyle; g.font = "800 90px 'Plus Jakarta Sans', sans-serif"; g.textAlign = "center"; g.fillText(t, x, h / 2 + 8); g.textAlign = "left"; });
+    };
+    const c = tela(2048, 256, desenharPraca);
+    const tPlaca = textura(c);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { desenharPraca(c.getContext("2d"), 2048, 256); tPlaca.needsUpdate = true; });
+    const placaP = new THREE.Mesh(new THREE.PlaneGeometry(largura - 2, (largura - 2) / 8), new THREE.MeshBasicMaterial({ map: tPlaca, side: THREE.DoubleSide }));
+    placaP.position.copy(lado(p, 0, 8.9)); placaP.rotation.y = anguloFrente(p.h); placaP.translateZ(3.05); cena.add(placaP);
+    const ilhas = [-LARG / 2 - 1, -LARG / 4 - 0.4, 0, LARG / 4 + 0.4, LARG / 2 + 1];
+    ilhas.forEach((x, k) => {
+      const cab = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: 0x151a42 })); cab.position.copy(lado(p, x, 1.6)); cab.rotation.y = -p.h; cab.scale.set(1.3, 3.2, 3.2); cena.add(cab);
+      const vidro = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.2), aditivo([COR.c, COR.r, COR.m, COR.v, COR.c][k], 0.55)); vidro.position.copy(lado(p, x, 2.3)); vidro.rotation.y = anguloFrente(p.h); vidro.translateZ(1.62); cena.add(vidro);
+      const pilar = new THREE.Mesh(caixa, matEscuro); pilar.position.copy(lado(p, x, 5.3)); pilar.rotation.y = -p.h; pilar.scale.set(0.35, 4.4, 0.35); cena.add(pilar);
+    });
+    /* uma cancela e um semáforo por faixa (4 faixas) */
+    for (let k = 0; k < 4; k++) {
+      const x0 = ilhas[k] + 0.65, x1 = ilhas[k + 1] - 0.65, comp = x1 - x0;
+      const base = new THREE.Group(); base.position.copy(lado(p, x0, 1.05)); base.rotation.y = -p.h; base.translateZ(-1.9); cena.add(base);
+      const braco = new THREE.Group(); base.add(braco);
+      const texCancela = textura(tela(256, 16, (g, w, h) => { for (let i = 0; i < 8; i++) { g.fillStyle = i % 2 ? "#ffffff" : "#ff2a5a"; g.fillRect(i * 32, 0, 32, h); } }));
+      const barra = new THREE.Mesh(new THREE.BoxGeometry(comp, 0.16, 0.12), new THREE.MeshBasicMaterial({ map: texCancela }));
+      barra.position.x = comp / 2; braco.add(barra);
+      const luz = new THREE.Sprite(new THREE.SpriteMaterial({ map: texBrilho, color: 0xff2a5a, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+      luz.scale.set(1.8, 1.8, 1); luz.position.copy(lado(p, (x0 + x1) / 2, 6.6)); luz.translateZ(0); cena.add(luz);
+      cancelas.push({ braco, luz, ang: 0, atraso: k * 0.12 });
+    }
   }
 
   /* túnel de anéis neon */
@@ -737,6 +778,15 @@
     moverCarros(dt);
     if (texLed && !reduz) texLed.offset.x = (texLed.offset.x + dt * 0.06) % 1;
     if (luzAntena) luzAntena.material.opacity = Math.sin(tempo * 3) > 0.2 ? 1 : 0.15;
+    if (cancelas.length) {
+      cancelas.forEach((cc) => {
+        const perto = dCam > dPraca - 34 + cc.atraso * 20;
+        const alvoA = perto ? 1.35 : 0;
+        cc.ang += (alvoA - cc.ang) * Math.min(1, dt * 2.6);
+        cc.braco.rotation.z = cc.ang;
+        cc.luz.material.color.setHex(cc.ang > 0.9 ? 0x3dffa2 : 0xff2a5a);
+      });
+    }
     if (pino) { pino.position.y = em(chegTr.ini + chegTr.L * 0.85).y + 3 + Math.sin(tempo * 2) * 0.6; pino.rotation.y += dt * 0.6; }
     if (anel) { const s = 1 + ((tempo * 0.6) % 1) * 2.2; anel.scale.set(s, s, s); anel.material.opacity = 0.8 * (1 - ((tempo * 0.6) % 1)); }
     posicionar();

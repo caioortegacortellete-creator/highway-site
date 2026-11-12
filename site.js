@@ -725,11 +725,14 @@
     s.addEventListener("click", (e) => {
       e.preventDefault();
       if (d.open) {
-        gsap.to(corpo, { height: 0, opacity: 0, duration: 0.45, ease: "power2.inOut", onComplete: () => { d.open = false; gsap.set(corpo, { clearProps: "all" }); ScrollTrigger.refresh(); } });
+        d.classList.add("fechando");
+        gsap.to(corpo, { height: 0, opacity: 0, duration: 0.45, ease: "power2.inOut", onComplete: () => { d.open = false; d.classList.remove("fechando"); gsap.set(corpo, { clearProps: "all" }); ScrollTrigger.refresh(); } });
       } else {
         d.open = true;
         gsap.fromTo(corpo, { height: 0, opacity: 0 }, { height: "auto", opacity: 1, duration: 0.55, ease: "power2.out", onComplete: () => { gsap.set(corpo, { clearProps: "all" }); ScrollTrigger.refresh(); } });
         if (d.id === "comparativo") gsap.from($$("tbody tr", d), { x: -20, opacity: 0, stagger: 0.03, duration: 0.4, delay: 0.1 });
+        const tk = $(".ticket", d);
+        if (tk) gsap.fromTo(tk, { y: -26, clipPath: "inset(0 0 100% 0)" }, { y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.7, delay: 0.15, ease: "power3.out" });
       }
     });
   });
@@ -819,7 +822,8 @@
   /* ---------- KM 10 · dúvidas ---------- */
   if (animar) {
     entrar(".duvidas .cab > *", { y: 30, opacity: 0, stagger: 0.08, duration: 0.8, scrollTrigger: { trigger: ".duvidas", start: "top 75%" } });
-    entrar(".faq details", { y: 24, opacity: 0, stagger: 0.06, duration: 0.6, scrollTrigger: { trigger: ".faq", start: "top 85%" } });
+    entrar(".faq details", { x: 50, opacity: 0, stagger: 0.07, duration: 0.7, scrollTrigger: { trigger: ".faq", start: "top 85%" } });
+    entrar(".faq-placa", { rotationX: -90, opacity: 0, duration: 1, ease: "back.out(1.6)", scrollTrigger: { trigger: ".duvidas", start: "top 70%" } });
   }
 
   /* ---------- KM 11 · destino ---------- */
