@@ -82,7 +82,7 @@
     { sel: "#quiz", giro: -70, sobe: 0, tema: "elevado", min: 50 },
     { sel: "#como-funciona", giro: 0, sobe: -18, tema: "descida", min: 64 },
     { sel: ".porque", giro: 35, sobe: 0, tema: "tunel", min: 50 },
-    { sel: "#equipe", giro: 30, sobe: 0, tema: "cidade", min: 50 },
+    { sel: "#equipe", giro: 0, sobe: 0, tema: "passarela", min: 70 },
     { sel: "#duvidas", giro: 0, sobe: 0, tema: "praca", min: 60 },
     { sel: "#contato", giro: 0, sobe: 0, tema: "chegada", min: 44 },
     { sel: ".rodape", L: 120, giro: 0, sobe: 0, tema: "chegada", fixo: true }
@@ -312,7 +312,7 @@
   };
   const coresPlaca = ["#29ecff", "#ff3df2", "#b350ff"];
   TRECHOS.forEach((tr, i) => {
-    if (i === 0 || tr.sel === ".rodape") return;
+    if (i === 0 || tr.sel === ".rodape" || ["pedagio", "praca", "passarela", "chegada"].includes(tr.tema)) return;
     const [km, titulo] = tr.sel === ".nichos" ? ["PÓRTICO", "Sites sob medida"] : textoKm(tr.sel, ["", tr.tema]);
     portico(tr.ini + 6, km || "", titulo || "", coresPlaca[i % 3]);
   });
@@ -384,6 +384,7 @@
   const pedTr = trechoDo("pedagio");
   if (pedTr) {
     const p = em(pedTr.ini + pedTr.L * 0.82);
+    pedTr.parada = pedTr.ini + pedTr.L * 0.82 - 24;
     const teto = new THREE.Mesh(caixa, matEscuro); teto.position.copy(lado(p, 0, 8)); teto.rotation.y = -p.h; teto.scale.set(LARG + 8, 0.9, 7); cena.add(teto);
     const pintarPedagio = (g, w, h) => {
       g.clearRect(0, 0, w, h); g.fillStyle = "#070920"; g.fillRect(0, 0, w, h);
@@ -410,6 +411,7 @@
   let cancelas = [], dPraca = 0;
   if (pracaTr) {
     dPraca = pracaTr.ini + pracaTr.L * 0.62;
+    pracaTr.parada = dPraca - 30;
     const p = em(dPraca);
     const largura = LARG + 10;
     const cobertura = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: 0x10143a })); cobertura.position.copy(lado(p, 0, 7.4)); cobertura.rotation.y = -p.h; cobertura.scale.set(largura, 0.7, 6); cena.add(cobertura);
@@ -418,7 +420,7 @@
       g.clearRect(0, 0, w, h); g.fillStyle = "#070920"; g.fillRect(0, 0, w, h);
       g.strokeStyle = "#ffb84d"; g.lineWidth = 6; g.shadowColor = "#ffb84d"; g.shadowBlur = 20; g.strokeRect(10, 10, w - 20, h - 20); g.shadowBlur = 0;
       g.fillStyle = "#ffb84d"; g.font = "800 120px 'Archivo', 'Arial Black', sans-serif"; g.textBaseline = "middle"; g.fillText("PEDÁGIO", 60, h / 2 + 6);
-      g.fillStyle = "#eef1ff"; g.font = "600 70px 'Plus Jakarta Sans', sans-serif"; g.fillText("das perguntas", 760, h / 2 + 6);
+      g.fillStyle = "#eef1ff"; g.font = "600 70px 'Plus Jakarta Sans', sans-serif"; g.fillText("das perguntas", 830, h / 2 + 6);
       ["?", "?", "?", "?"].forEach((t, k) => { const x = 1300 + k * 175; g.strokeStyle = ["#29ecff", "#b350ff", "#ff3df2", "#3dffa2"][k]; g.lineWidth = 7; g.beginPath(); g.arc(x, h / 2, 62, 0, Math.PI * 2); g.stroke(); g.fillStyle = g.strokeStyle; g.font = "800 90px 'Plus Jakarta Sans', sans-serif"; g.textAlign = "center"; g.fillText(t, x, h / 2 + 8); g.textAlign = "left"; });
     };
     const c = tela(2048, 256, desenharPraca);
@@ -444,6 +446,45 @@
       luz.scale.set(1.8, 1.8, 1); luz.position.copy(lado(p, (x0 + x1) / 2, 6.6)); luz.translateZ(0); cena.add(luz);
       cancelas.push({ braco, luz, ang: 0, atraso: k * 0.12 });
     }
+  }
+
+  /* passarela da equipe: uma ponte de pedestres sobre a rodovia com um telão para cada sócio */
+  const passTr = trechoDo("passarela");
+  if (passTr) {
+    const dP = passTr.ini + passTr.L * 0.6, p = em(dP);
+    passTr.parada = dP - 42;
+    const ALT = 8.5, larg = LARG + 14, virado = anguloFrente(p.h);
+    const deck = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: 0x141838 })); deck.position.copy(lado(p, 0, ALT)); deck.rotation.y = -p.h; deck.scale.set(larg, 1.1, 4); cena.add(deck);
+    [[-1.95, COR.c], [1.95, COR.m]].forEach(([z, cor]) => {
+      const f = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: cor })); f.position.copy(lado(p, 0, ALT + 0.6)); f.rotation.y = -p.h; f.translateZ(z); f.scale.set(larg, 0.12, 0.12); cena.add(f);
+      const gr = new THREE.Mesh(new THREE.PlaneGeometry(larg, 1.4), aditivo(cor, 0.12, texDegrade)); gr.position.copy(lado(p, 0, ALT + 1.3)); gr.rotation.y = virado; gr.translateZ(z > 0 ? -1.95 : 1.95); cena.add(gr);
+    });
+    [-1, 1].forEach((sl) => {
+      const torre = new THREE.Mesh(caixa, new THREE.MeshBasicMaterial({ color: 0x10143a })); torre.position.copy(lado(p, sl * (larg / 2 + 1.5), (ALT + 2) / 2)); torre.rotation.y = -p.h; torre.scale.set(3, ALT + 2, 4.4); cena.add(torre);
+      const luz = new THREE.Mesh(new THREE.PlaneGeometry(0.4, ALT), aditivo(sl < 0 ? COR.c : COR.m, 0.9)); luz.position.copy(lado(p, sl * (larg / 2 + 1.5), ALT / 2 + 1)); luz.rotation.y = virado; luz.translateZ(2.25); cena.add(luz);
+    });
+    const loader = new THREE.TextureLoader();
+    [["caio", "CAIO", "CRIAÇÃO", -LARG / 2 + 0.6, "#29ecff", COR.c], ["carlos", "CARLOS", "COMERCIAL", LARG / 2 - 0.6, "#ff3df2", COR.m]].forEach(([slug, nome, papel, off, corCss, cor]) => {
+      const W = 7.2, Hh = 9.6, cy = ALT + 0.6 + Hh / 2 + 0.6;
+      const foto = new THREE.Mesh(new THREE.PlaneGeometry(W, Hh), new THREE.MeshBasicMaterial({ map: loader.load(`imagens/equipe/${slug}.webp`) }));
+      foto.position.copy(lado(p, off, cy)); foto.rotation.y = virado; foto.translateZ(2.1); cena.add(foto);
+      const moldura = new THREE.Mesh(new THREE.PlaneGeometry(W + 0.7, Hh + 0.7), aditivo(cor, 0.95)); moldura.position.copy(foto.position); moldura.rotation.y = virado; moldura.translateZ(-0.05); cena.add(moldura);
+      const halo = new THREE.Mesh(new THREE.PlaneGeometry(W * 2.4, Hh * 1.9), aditivo(cor, 0.3, texBrilho)); halo.position.copy(foto.position); halo.rotation.y = virado; halo.translateZ(-0.12); cena.add(halo);
+      const desenhar = (g, w, h) => {
+        g.clearRect(0, 0, w, h); g.fillStyle = "#070920"; g.fillRect(0, 0, w, h);
+        g.strokeStyle = corCss; g.lineWidth = 6; g.shadowColor = corCss; g.shadowBlur = 18; g.strokeRect(6, 6, w - 12, h - 12); g.shadowBlur = 0;
+        g.textAlign = "center"; g.fillStyle = "#ffffff"; g.font = "800 64px 'Plus Jakarta Sans', sans-serif"; g.fillText(nome, w / 2, 80);
+        g.fillStyle = corCss; g.font = "500 30px 'JetBrains Mono', monospace"; g.fillText(papel + " · HIGHWAY", w / 2, 122);
+      };
+      const cv = tela(512, 150, desenhar), t = textura(cv);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { desenhar(cv.getContext("2d"), 512, 150); t.needsUpdate = true; });
+      const nomeP = new THREE.Mesh(new THREE.PlaneGeometry(W + 0.7, (W + 0.7) * 150 / 512), new THREE.MeshBasicMaterial({ map: t })); nomeP.position.copy(lado(p, off, ALT - 0.3)); nomeP.rotation.y = virado; nomeP.translateZ(2.15); cena.add(nomeP);
+    });
+    /* placa da seção sobre a passarela */
+    const cS = tela(1024, 140, (g, w, h) => { g.fillStyle = "#070920"; g.fillRect(0, 0, w, h); g.strokeStyle = "#b350ff"; g.lineWidth = 5; g.shadowColor = "#b350ff"; g.shadowBlur = 16; g.strokeRect(6, 6, w - 12, h - 12); g.shadowBlur = 0; g.fillStyle = "#eef1ff"; g.font = "700 62px 'Plus Jakarta Sans', sans-serif"; g.textAlign = "center"; g.fillText("Quem dirige a Highway", w / 2, 92); });
+    const tS = textura(cS);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { tS.needsUpdate = true; });
+    const placaS = new THREE.Mesh(new THREE.PlaneGeometry(7, 0.96), new THREE.MeshBasicMaterial({ map: tS })); placaS.position.copy(lado(p, 0, ALT + 0.2)); placaS.rotation.y = virado; placaS.translateZ(2.15); cena.add(placaS);
   }
 
   /* túnel de anéis neon */
@@ -489,6 +530,8 @@
     pino.add(corpo, cabeca, miolo, halo);
     /* ---------- o destino: a rodovia termina numa praça em frente ao prédio "Seu site no ar" ---------- */
     const fimP = A[A.length - 1], hF = fimP.h;
+    chegTr.parada = TOTAL - 16;
+    TRECHOS[TRECHOS.length - 1].parada = TOTAL - 16;
     const aqui = (dist, off = 0, alt = 0) => new THREE.Vector3(fimP.x + Math.sin(hF) * dist + Math.cos(hF) * off, fimP.y + alt, fimP.z - Math.cos(hF) * dist + Math.sin(hF) * off);
     const virado = anguloFrente(hF);
     const semNevoa = (m) => { m.fog = false; return m; };
@@ -714,7 +757,7 @@
       if (i === 0) return;
       const el = $(tr.sel); if (!el) return;
       const T = el.getBoundingClientRect().top + sy;
-      const parada = tr.sel === ".rodape" ? TOTAL - 16 : Math.max(dAnt, tr.ini - 22);
+      const parada = Math.max(dAnt, tr.parada !== undefined ? tr.parada : (tr.sel === ".rodape" ? TOTAL - 16 : tr.ini - 22));
       const s0 = clamp(T - vh * 0.95, ultS + 1, maxS);
       const s1 = clamp(T - vh * 0.12, s0 + 1, maxS + 0.5);
       ancoras.push({ s: s0, d: dAnt, fixo: true }, { s: s1, d: parada });
