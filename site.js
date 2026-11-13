@@ -604,6 +604,7 @@
       }
       $("#visorFechar").focus();
     };
+    window.HighwayAbrirSite = (href) => { const i = cards.findIndex((c) => c.getAttribute("href") === href); if (i >= 0) abrirVisor(i); else window.open(href, "_blank", "noopener"); };
     fecharVisor = () => {
       if (!visorAberto) return;
       visorAberto = false;

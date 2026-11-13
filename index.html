@@ -318,6 +318,33 @@
     </div>
   </section>
 
+  <!-- KM TESTE · PISTA DOS SITES (pista.js) -->
+  <section class="pista" id="pista" aria-labelledby="pista-titulo">
+    <div class="faixa-int pista-grade">
+      <div class="pista-txt">
+        <span class="km"><b>KM TESTE</b> Pista dos sites</span>
+        <h2 id="pista-titulo">Os sites correndo <em>na pista.</em></h2>
+        <ul class="pista-legenda" aria-hidden="true">
+          <li class="nv1"><i></i>N1 · R$ 597,90</li>
+          <li class="nv2"><i></i>N2 · R$ 997,90</li>
+          <li class="nv3"><i></i>N3 · R$ 1.297,90</li>
+        </ul>
+        <div class="pista-info" id="pistaInfo" aria-live="polite"><p class="pi-nome pi-dica">Passe o mouse para parar a pista, arraste para girar e clique num site para abrir.</p></div>
+        <a class="btn s mag" href="#portfolio">Ver o portfólio</a>
+      </div>
+      <div class="pista-lado">
+        <div class="pista-palco" id="pistaPalco" role="group" aria-label="Pista com os sites conceito da Highway" aria-roledescription="pista">
+          <svg class="pista-svg" id="pistaSvg" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <div class="pista-ctrl">
+          <button type="button" id="pistaAnt" aria-label="Site anterior"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg></button>
+          <button type="button" id="pistaPausa" aria-label="Pausar a pista" aria-pressed="false"><svg class="ic-pausa" viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="2.6" height="10" rx=".8"/><rect x="9.4" y="3" width="2.6" height="10" rx=".8"/></svg><svg class="ic-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.4v9.2a.6.6 0 0 0 .9.5l7.4-4.6a.6.6 0 0 0 0-1L5.9 2.9a.6.6 0 0 0-.9.5Z"/></svg></button>
+          <button type="button" id="pistaProx" aria-label="Próximo site"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- KM 06 · TRÊS NÍVEIS -->
   <section class="niveis" id="niveis" aria-labelledby="niveis-titulo">
     <div class="niveis-pino">
@@ -821,5 +848,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="site.js"></script>
 <script src="estrada3d.js"></script>
+<script src="pista.js"></script>
 </body>
 </html>
