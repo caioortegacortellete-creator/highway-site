@@ -1264,3 +1264,5 @@ h1 em, h2 em, .hist-legenda em, .quiz-resultado h3 em { font-family: var(--f-des
 .chegou-destino .mapa-saida.ativa .predio .jan { fill: #ffe7a8; filter: drop-shadow(0 0 3px #ffb84d); }
 .chegou-destino .mapa-saida.ativa .predio .bandeira { opacity: 1; transform: scaleY(1); }
 .mapa-pino { pointer-events: none; }
+.pino path { filter: none; }
+.pino svg { overflow: visible; }
