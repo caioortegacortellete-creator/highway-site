@@ -77,7 +77,7 @@
     { sel: "#caminho", giro: -60, sobe: 0, tema: "curva", min: 50 },
     { sel: ".nichos", giro: 0, sobe: 0, tema: "portico", min: 24 },
     { sel: "#portfolio", giro: 0, sobe: 0, tema: "outdoors", min: 100 },
-    { sel: "#niveis", giro: 45, sobe: 18, tema: "rampa", min: 64 },
+    { sel: "#pista", giro: 45, sobe: 18, tema: "rampa", min: 64 },
     { sel: "#planos", giro: 0, sobe: 0, tema: "pedagio", min: 50 },
     { sel: "#quiz", giro: -70, sobe: 0, tema: "elevado", min: 50 },
     { sel: "#como-funciona", giro: 0, sobe: -18, tema: "descida", min: 64 },
